@@ -1,0 +1,26 @@
+# Default config for Suricata
+
+# set to yes to start the server in the init.d script
+RUN=yes
+
+# Configuration file to load
+SURCONF=/etc/suricata/suricata.yaml
+
+# Listen mode: pcap, nfqueue or af-packet
+# depending on this value, only one of the two following options
+# will be used (af-packet uses neither).
+# Please note that IPS mode is only available when using nfqueue
+LISTENMODE=af-packet
+
+# Interface to listen on (for pcap mode)
+IFACE=eth0
+
+# Queue number to listen on (for nfqueue mode)
+NFQUEUE=0
+
+# Load Google TCMALLOC if libtcmalloc-minimal0 is installed
+# This _might_ give you very very small performance gain....
+TCMALLOC="YES"
+
+# Pid file
+PIDFILE=/var/run/suricata.pid
