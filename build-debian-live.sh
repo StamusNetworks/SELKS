@@ -7,9 +7,6 @@
 
 set -e
 
-# install needed packages
-apt-get -y install xorriso live-build syslinux squashfs-tools
-
 # Begin
 # Pre staging
 #
