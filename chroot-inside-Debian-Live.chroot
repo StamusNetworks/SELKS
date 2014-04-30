@@ -46,7 +46,8 @@ update-rc.d logstash defaults
 update-rc.d suricata defaults
 
 # set up a cron job for oinkmaster
-echo "0 3 * * * oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules" >> /etc/crontab
+echo "0 3 * * * root /usr/sbin/oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules" >> /etc/crontab
+echo "0 4 * * * root /etc/init.d/suricata restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
