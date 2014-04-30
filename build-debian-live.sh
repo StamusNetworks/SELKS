@@ -11,7 +11,7 @@ set -e
 # Pre staging
 #
 mkdir -p Stamus-Live-Build
-cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
+cd Stamus-Live-Build && lb init && lb config -a amd64 -d wheezy --debian-installer live \
 --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
 --iso-preparer Stamus Networks --iso-publisher Stamus Networks \
 --iso-volume Stamus-SELKS
