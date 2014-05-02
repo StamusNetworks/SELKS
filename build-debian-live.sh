@@ -23,15 +23,20 @@ mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
+mkidr -p config/includes.chroot/var/log/suricata/StatsByDate/
 cd ..
 
 # add config and menu colored files
+# logstash
 cp staging/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
+# suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
+# menu colors
 cp staging/stdmenu.cfg Stamus-Live-Build/config/includes.binary/isolinux/
 cp staging/etc/oinkmaster.conf Stamus-Live-Build/config/includes.chroot/etc/
-
+# logrotate config for eve.json
+cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
 # add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
 
