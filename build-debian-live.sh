@@ -23,7 +23,8 @@ mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
-mkidr -p config/includes.chroot/var/log/suricata/StatsByDate/
+mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
+mkdir -p config/includes.chroot/etc/logrotate.d/
 cd ..
 
 # add config and menu colored files
