@@ -16,10 +16,9 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 --iso-preparer Stamus Networks --iso-publisher Stamus Networks \
 --iso-volume Stamus-SELKS
 
-echo $PWD
-
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
+mkdir -p config/includes.chroot/etc/elasticsearch/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
@@ -29,7 +28,11 @@ cd ..
 
 # add config and menu colored files
 # logstash
-cp staging/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
+cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
+# elasticsearch config with multicasting disbaled 
+# to remedy errs when chnaging IPs of the system/server
+# (also threadpooling increased for perf)
+cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes.chroot/etc/elasticsearch/
 # suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
@@ -51,8 +54,6 @@ cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
 # mkdir -p ~/Debian-Live/chroot/var/lib/django/scirius/django_tables2/
 # cp -r ~/Debian-Live/staging/scirius/django_tables2/*  ~/Debian-Live/chroot/var/lib/django/scirius/django_tables2/
 # ### pre staging Scirius ###
-
-echo $PWD
 
 # add packages to be installed
 echo "
