@@ -30,7 +30,7 @@ cd ..
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # elasticsearch config with multicasting disbaled 
-# to remedy errs when chnaging IPs of the system/server
+# to remedy errs when changing IPs of the system/server
 # (also threadpooling increased for perf)
 cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes.chroot/etc/elasticsearch/
 # suricata init script
