@@ -71,7 +71,9 @@ python-jinja2 python-httplib2 " \
 
 # add specific tasks(script file) to be executed 
 # inside the chroot environment
-cp chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
+cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
+# Edit the menues names - add  Stamus
+cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
 
 # debian installer preseed.cfg
 echo "
