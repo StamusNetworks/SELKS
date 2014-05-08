@@ -1,0 +1,11 @@
+/var/log/suricata/eve.json {
+	daily
+	rotate 30
+        olddir /var/log/suricata/StatsByDate/
+	compress
+	missingok
+	notifempty
+	dateext
+	copytruncate
+}
+

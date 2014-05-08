@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# changes of the wording (adding Stamus) in the 
+# menu names 
+
+sed -i -e 's|menu label \^Live|menu label \^Stamus SELKS Live|'  binary/isolinux/live.cfg
+sed -i -e 's|menu label \^Install|menu label \^Stamus SELKS Install|' binary/isolinux/install.cfg
+sed -i -e 's|menu label \^Graphical install|menu label \^Stamus SELKS Graphical install|' binary/isolinux/install.cfg
+
