@@ -57,10 +57,10 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core subversion libmagic-dev libnuma-dev pkg-config 
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
 libgeoip1 libgeoip-dev apache2 openjdk-7-jdk openjdk-7-jre-headless 
-rsync 
+rsync wireshark tcpreplay sysstat 
 python-crypto libgmp10 libyaml-0-2  
 python-yaml ssh sudo tcpdump oinkmaster 
-python-pip " \
+python-pip task-lxde-desktop debian-installer-launcher " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 
 
