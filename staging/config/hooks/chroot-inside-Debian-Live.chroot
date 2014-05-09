@@ -66,13 +66,9 @@ tar -C /var/www -xzf kibana-3.0.0.tar.gz && \
 
 ### Get and set up templates/dashboards for Kibana ###
 
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/ALL -O /var/www/kibana-3.0.0/app/dashboards/ALL.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/ALERTS -O /var/www/kibana-3.0.0/app/dashboards/ALERTS.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/HTTP -O /var/www/kibana-3.0.0/app/dashboards/HTTP.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/SSH -O /var/www/kibana-3.0.0/app/dashboards/SSH.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/TLS -O /var/www/kibana-3.0.0/app/dashboards/TLS.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/DNS -O /var/www/kibana-3.0.0/app/dashboards/DNS.json
-wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/FILE-Transactions -O /var/www/kibana-3.0.0/app/dashboards/FILE-Transactions.json
+cd /opt && \
+git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
+mv Suricata-Logstash-Templates/ /var/www/kibana-3.0.0/app/dashboards/
 
 ### Get and set up templates/dashboards for Kibana ###
 
