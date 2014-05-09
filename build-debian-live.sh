@@ -18,7 +18,8 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
-mkdir -p config/includes.chroot/etc/elasticsearch/
+#mkdir -p config/includes.chroot/etc/elasticsearch/
+mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
@@ -39,10 +40,14 @@ cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.c
 # elasticsearch config with multicasting disbaled 
 # to remedy errs when changing IPs of the system/server
 # (also threadpooling increased for perf)
-cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes.chroot/etc/elasticsearch/
+#cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes.chroot/etc/elasticsearch/
 # suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
+# menu colors
+#cp staging/stdmenu.cfg Stamus-Live-Build/config/includes.binary/isolinux/
+# Iceweasel bookmarks
+cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
 # oinkmaster config
 cp staging/etc/oinkmaster.conf Stamus-Live-Build/config/includes.chroot/etc/
 # logrotate config for eve.json
@@ -64,7 +69,7 @@ make flex bison git git-core subversion libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
 libgeoip1 libgeoip-dev apache2 openjdk-7-jdk openjdk-7-jre-headless 
-rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow
+rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
 dsniff mc 
 python-crypto libgmp10 libyaml-0-2  
 python-yaml ssh sudo tcpdump oinkmaster 
@@ -82,7 +87,7 @@ cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
 echo "
 d-i netcfg/get_hostname string SELKS
 
-d-i passwd/user-fullname string selks-user selks-user
+d-i passwd/user-fullname string selks-user User
 d-i passwd/username string selks-user
 d-i passwd/user-password password selks-user
 d-i passwd/user-password-again password selks-user

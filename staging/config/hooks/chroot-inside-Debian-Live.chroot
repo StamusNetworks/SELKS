@@ -11,8 +11,12 @@
 
 set -e
 
+#setting up the LIVE selks-user (during install on disk it is preseeded)
+useradd selks-user; echo -e "selks-user\nselks-user" | passwd selks-user
+adduser selks-user sudo
+
+#setting up the LIVE root (during install on disk it is preseeded)
 echo "root:StamusNetworks" | chpasswd
-#echo -e "StamusNetworks\nStamusNetworks" | passwd &> /dev/null
 
 ###  Scirius ###
 # NOTE python-pip is already installed in the build script
@@ -22,6 +26,17 @@ cd /opt/scirius/ && echo "no" | python manage.py syncdb
 
 ###  Scirius ###
 
+### Libcap-ng for dropping privilegies with Suricata ###
+
+cd /opt && \
+wget http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-0.7.4.tar.gz && \
+tar -zxf libcap-ng-0.7.4.tar.gz && \
+cd libcap-ng-0.7.4 && \
+./configure && make && make install
+
+### Libcap-ng for dropping privilegies with Suricata ###
+
+### Suricata ###
 
 cd /opt && \
 wget http://www.openinfosecfoundation.org/download/suricata-2.0.tar.gz && \
@@ -31,10 +46,14 @@ cd suricata-2.0
 ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --disable-gccmarch-native \
  --enable-geoip --with-libnss-libraries=/usr/lib --with-libnss-includes=/usr/include/nss/ \
  --enable-nfqueue \
+ --with-libcap_ng-libraries=/usr/local/lib --with-libcap_ng-includes=/usr/local/include \
  --with-libnspr-libraries=/usr/lib --with-libnspr-includes=/usr/include/nspr && \
- make clean && make && make install-full && ldconfig
+ make clean && make && make install-full && ldconfig 
+
+### Suricata ### 
  
- 
+### ELK ###
+
 cd .. && \
 wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.deb && \
 wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.0-1-c82dc09_all.deb && \
@@ -42,13 +61,33 @@ wget https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.tar.gz && \
 dpkg -i --force-confdef  elasticsearch-1.1.0.deb && \
 dpkg -i logstash_1.4.0-1-c82dc09_all.deb && \
 tar -C /var/www -xzf kibana-3.0.0.tar.gz && \
+
+### ELK ###
+
+### Get and set up templates/dashboards for Kibana ###
+
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/ALL -O /var/www/kibana-3.0.0/app/dashboards/default.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/ALERTS -O /var/www/kibana-3.0.0/app/dashboards/ALERTS.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/HTTP -O /var/www/kibana-3.0.0/app/dashboards/HTTP.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/SSH -O /var/www/kibana-3.0.0/app/dashboards/SSH.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/TLS -O /var/www/kibana-3.0.0/app/dashboards/TLS.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/DNS -O /var/www/kibana-3.0.0/app/dashboards/DNS.json
+wget https://github.com/pevma/Suricata-Logstash-Templates/blob/master/Templates/FILE-Transactions -O /var/www/kibana-3.0.0/app/dashboards/FILE-Transactions.json
+
+### Get and set up templates/dashboards for Kibana ###
+
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suricata defaults
 
-# set up a cron job for oinkmaster
+# set the right permissions for th elogstash user to run suricata
+chown -R logstash:logstash /var/log/suricata
+
+# set up a cron jobs for oinkmaster,ES,Logstash,Suricata
 echo "0 3 * * * root /usr/sbin/oinkmaster -C /etc/oinkmaster.conf -o /etc/suricata/rules" >> /etc/crontab
-echo "0 4 * * * root /etc/init.d/suricata restart" >> /etc/crontab
+echo "15 3 * * * logstash /etc/init.d/suricata restart" >> /etc/crontab
+echo "0 2 * * * root /etc/init.d/elasticsearch restart" >> /etc/crontab
+echo "5 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
@@ -56,6 +95,25 @@ echo "SELKS" > /etc/hostname
 
 # enable the ssh banners
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
+
+# elasticsearch configuration
+sed -i -e 's|\# discovery\.zen\.ping\.multicast\.enabled\: false| discovery\.zen\.ping\.multicast\.enabled\: false|' /etc/elasticsearch/elasticsearch.yml
+echo "
+ES_HEAP_SIZE=1g
+ES_MIN_MEM=1g
+ES_MAX_MEM=1g
+
+" >> /etc/default/elasticsearch 
+
+echo "
+## Incease Thread poools for longterm perf > 3 months ##
+threadpool:
+    search:
+        type: fixed
+        size: 10000
+
+" >> /etc/elasticsearch/elasticsearch.yml
+
 
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c
