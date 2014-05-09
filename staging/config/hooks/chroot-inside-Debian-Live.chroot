@@ -30,6 +30,7 @@ cd suricata-2.0
  
 ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --disable-gccmarch-native \
  --enable-geoip --with-libnss-libraries=/usr/lib --with-libnss-includes=/usr/include/nss/ \
+ --enable-nfqueue \
  --with-libnspr-libraries=/usr/lib --with-libnspr-includes=/usr/include/nspr && \
  make clean && make && make install-full && ldconfig
  
@@ -52,6 +53,9 @@ echo "0 4 * * * root /etc/init.d/suricata restart" >> /etc/crontab
 echo "" >> /etc/crontab
 
 echo "SELKS" > /etc/hostname
+
+# enable the ssh banners
+sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c

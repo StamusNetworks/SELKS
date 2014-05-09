@@ -19,11 +19,13 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/elasticsearch/
+mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
 mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/etc/logrotate.d/
+mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/opt/
 cd config/includes.chroot/opt/ && \
 git clone https://github.com/StamusNetworks/scirius.git 
@@ -41,13 +43,17 @@ cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes
 # suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
-# menu colors
-cp staging/stdmenu.cfg Stamus-Live-Build/config/includes.binary/isolinux/
+# oinkmaster config
 cp staging/etc/oinkmaster.conf Stamus-Live-Build/config/includes.chroot/etc/
 # logrotate config for eve.json
 cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
 # add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
+# add the SELKS wallpaper
+cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/usr/share/images/desktop-base/
+# copy banners
+cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
+cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 
 # add packages to be installed
 echo "
@@ -55,9 +61,11 @@ libpcre3 libpcre3-dbg libpcre3-dev
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
 make flex bison git git-core subversion libmagic-dev libnuma-dev pkg-config 
+libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
 libgeoip1 libgeoip-dev apache2 openjdk-7-jdk openjdk-7-jre-headless 
-rsync wireshark tcpreplay sysstat 
+rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow
+dsniff mc 
 python-crypto libgmp10 libyaml-0-2  
 python-yaml ssh sudo tcpdump oinkmaster 
 python-pip task-lxde-desktop debian-installer-launcher " \
@@ -74,7 +82,7 @@ cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
 echo "
 d-i netcfg/get_hostname string SELKS
 
-d-i passwd/user-fullname string selks-user User
+d-i passwd/user-fullname string selks-user selks-user
 d-i passwd/username string selks-user
 d-i passwd/user-password password selks-user
 d-i passwd/user-password-again password selks-user
