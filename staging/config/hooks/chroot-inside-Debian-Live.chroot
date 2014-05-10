@@ -68,7 +68,7 @@ tar -C /var/www -xzf kibana-3.0.0.tar.gz && \
 
 cd /opt && \
 git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
-mv Suricata-Logstash-Templates/ /var/www/kibana-3.0.0/app/dashboards/
+cp Suricata-Logstash-Templates/Templates/* /var/www/kibana-3.0.0/app/dashboards/
 
 ### Get and set up templates/dashboards for Kibana ###
 
