@@ -80,7 +80,7 @@ case "$LISTENMODE" in
     ;;
 esac
 
-SURICATA_OPTIONS=" -c $SURCONF --pidfile $PIDFILE $LISTEN_OPTIONS -D -v"
+SURICATA_OPTIONS=" -c $SURCONF --pidfile $PIDFILE $LISTEN_OPTIONS -D -v --user=logstash"
 
 # See how we were called.
 case "$1" in
