@@ -19,6 +19,7 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
+mkdir -p config/includes.chroot//usr/share/applications/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
@@ -35,6 +36,8 @@ cd ../../../../
 
 
 # add config and menu colored files
+# Launch-Scirius desktop/menu icon/launcher
+cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # suricata init script

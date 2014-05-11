@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=Launch-Scirius-Daemon
+Comment=Launch-Scirius-Daemon
+Exec=/usr/bin/python /opt/Scirius/manage.py runserver
+#Icon=
+Type=Application
+Categories=Application;System;
+StartupNotify=true
+Terminal=true
