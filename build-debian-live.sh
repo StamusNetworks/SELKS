@@ -40,8 +40,6 @@ cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.c
 # suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
-# menu colors
-#cp staging/stdmenu.cfg Stamus-Live-Build/config/includes.binary/isolinux/
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
 # oinkmaster config
