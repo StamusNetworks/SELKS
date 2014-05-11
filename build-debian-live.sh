@@ -12,13 +12,13 @@ set -e
 #
 mkdir -p Stamus-Live-Build
 cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
+--bootappend-live "boot=live config username=selks-user" \
 --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
 --iso-preparer Stamus Networks --iso-publisher Stamus Networks \
 --iso-volume Stamus-SELKS
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
-#mkdir -p config/includes.chroot/etc/elasticsearch/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
@@ -37,10 +37,6 @@ cd ../../../../
 # add config and menu colored files
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
-# elasticsearch config with multicasting disbaled 
-# to remedy errs when changing IPs of the system/server
-# (also threadpooling increased for perf)
-#cp staging/etc/elasticsearch/elasticsearch.yml Stamus-Live-Build/config/includes.chroot/etc/elasticsearch/
 # suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/

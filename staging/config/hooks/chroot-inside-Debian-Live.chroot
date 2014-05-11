@@ -6,14 +6,7 @@
 #
 
 
-#echo "root:password" | chpasswd
-#(echo 123 ; sleep 3; echo 123) | passwd
-
 set -e
-
-#setting up the LIVE selks-user (during install on disk it is preseeded)
-useradd selks-user; echo -e "selks-user\nselks-user" | passwd selks-user
-adduser selks-user sudo
 
 #setting up the LIVE root (during install on disk it is preseeded)
 echo "root:StamusNetworks" | chpasswd
@@ -109,6 +102,10 @@ threadpool:
         size: 10000
 
 " >> /etc/elasticsearch/elasticsearch.yml
+
+# Edit the Icon "Install Debian Wheezy" name on a Live Desktop 
+# to "Install SELKS"
+sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
 
 apt-get clean && \
