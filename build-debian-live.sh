@@ -12,13 +12,14 @@ set -e
 #
 mkdir -p Stamus-Live-Build
 cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
---bootappend-live "boot=live config username=selks-user" \
+--bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
 --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
 --iso-preparer Stamus Networks --iso-publisher Stamus Networks \
 --iso-volume Stamus-SELKS
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
+mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot//usr/share/applications/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
@@ -36,8 +37,9 @@ cd ../../../../
 
 
 # add config and menu colored files
-# Launch-Scirius desktop/menu icon/launcher
+# Launch-Scirius menu icon/launcher under "SystemTools" in LXDE for root plus every user
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
+cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/.local/share/applications/
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # suricata init script
@@ -88,6 +90,7 @@ d-i passwd/user-fullname string selks-user User
 d-i passwd/username string selks-user
 d-i passwd/user-password password selks-user
 d-i passwd/user-password-again password selks-user
+d-i passwd/user-default-groups string audio cdrom floppy video dip plugdev scanner bluetooth netdev sudo
 
 d-i passwd/root-password password StamusNetworks
 d-i passwd/root-password-again password StamusNetworks
