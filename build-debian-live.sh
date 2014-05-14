@@ -33,7 +33,8 @@ mkdir -p config/includes.chroot/opt/
 mkdir -p config/includes.chroot/etc/suricata/rules/
 cd config/includes.chroot/opt/ && \
 git clone https://github.com/StamusNetworks/scirius.git 
-
+# FIXME Temporaty fix to have a working scirus
+chown -R 1000.1000 scirius
 cd ../../../../
 
 
@@ -61,6 +62,8 @@ cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/scirius/
 # install default scirius ruleset
 tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scirius/ruleset.tgz
+# FIXME Temporaty fix to have a working scirus
+chown -R 1000.1000 Stamus-Live-Build/config/includes.chroot/etc/suricata/rules/
 # copy suricata.yaml using scirius.rules
 cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
 # copy init script for suri_reloader
