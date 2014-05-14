@@ -72,6 +72,11 @@ update-rc.d suri_reloader defaults
 # set the right permissions for th elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
 
+# FIXME Temporaty fix to have a working scirus
+chown -R 1000.1000 /etc/suricata/rules/
+# FIXME Temporaty fix to have a working scirus
+chown -R 1000.1000 /opt/scirius
+
 # set up a cron jobs for oinkmaster,ES,Logstash,Suricata
 echo "15 3 * * * logstash /etc/init.d/suricata restart" >> /etc/crontab
 echo "0 2 * * * root /etc/init.d/elasticsearch restart" >> /etc/crontab
