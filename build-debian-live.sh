@@ -58,6 +58,8 @@ cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includ
 # copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
+# install scirius db
+cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/scirius/
 
 # add packages to be installed
 echo "
