@@ -79,7 +79,7 @@ libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
 libgeoip1 libgeoip-dev apache2 openjdk-7-jdk openjdk-7-jre-headless 
 rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
-dsniff mc 
+dsniff mc python-daemon
 python-crypto libgmp10 libyaml-0-2  
 python-yaml ssh sudo tcpdump
 python-pip task-lxde-desktop debian-installer-launcher " \

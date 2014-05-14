@@ -14,7 +14,7 @@ echo "root:StamusNetworks" | chpasswd
 ###  Scirius ###
 # NOTE python-pip is already installed in the build script
 
-pip install django django-tables2 South GitPython pyinotify daemon
+pip install django django-tables2 South GitPython pyinotify
 
 ###  Scirius ###
 
