@@ -65,6 +65,8 @@ cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/sciri
 tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scirius/ruleset.tgz
 # copy suricata.yaml using scirius.rules
 cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
+# copy init script for suri_reloader
+cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
 
 # add packages to be installed
 echo "

@@ -68,6 +68,7 @@ cp Suricata-Logstash-Templates/Templates/* /var/www/kibana-3.0.0/app/dashboards/
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suricata defaults
+update-rc.d suri_reloader defaults
 
 # set the right permissions for th elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
