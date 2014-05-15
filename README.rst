@@ -20,7 +20,7 @@ SELKS is comprised of the following major components:
 USAGE
 =====
 
-Default user ::
+Default user:
 * user: ''selks-user''
 * password: ''selks-user''
 
