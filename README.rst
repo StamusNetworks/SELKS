@@ -141,7 +141,7 @@ By default there are no firewall rules implemented.
 Getting help
 ============
 
-You can get more information on SELKS wiki: https://github.com/StamusNetworks/scirius/wiki
+You can get more information on SELKS wiki: https://github.com/StamusNetworks/SELKS/wiki
 
 You can get help about SELKS on Freenode IRC on the #SELKS channel.
 
