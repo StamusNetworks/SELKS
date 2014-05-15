@@ -20,6 +20,7 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
+mkdir -p config/includes.chroot/etc/skel/.local/Desktop/
 mkdir -p config/includes.chroot//usr/share/applications/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
@@ -40,6 +41,9 @@ cd ../../../../
 # Launch-Scirius menu icon/launcher under "SystemTools" in LXDE for root plus every user
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/.local/share/applications/
+# cp README and LICENSE files to the user's desktop
+cp staging/etc/skel/.local/Desktop/LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/.local/Desktop/
+cp staging/etc/skel/.local/Desktop/README.rst Stamus-Live-Build/config/includes.chroot/etc/skel/.local/Desktop/
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # suricata init script
