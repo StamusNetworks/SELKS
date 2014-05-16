@@ -21,10 +21,10 @@ USAGE
 =====
 
 Default user:
-* user: ''selks-user''
-* password: ''selks-user''
+* user: ``selks-user``
+* password: ``selks-user``
 
-The default root password is ''StamusNetworks''
+The default root password is ``StamusNetworks``
 
 SELKS has 7 default IDS dashboards (found under Iceweasel, Bookmarks) - 
 ALERTS,HTTP,DNS,TLS,SSH,File Transactions,ALL
@@ -95,20 +95,20 @@ Elasticsearch and Logstash
 --------------------------
 
 Elasticsearch and Logstash use the default configuration settings and directories 
-with only the following changes/additions for Elasticsearch in ''/etc/default/elasticsearch'' ::
+with only the following changes/additions for Elasticsearch in ``/etc/default/elasticsearch`` ::
 
  ES_HEAP_SIZE=1g
  ES_MIN_MEM=1g
  ES_MAX_MEM=1g
 
-and in ''/etc/elasticsearch/elasticsearch.yml'' ::
+and in ``/etc/elasticsearch/elasticsearch.yml`` ::
 
  discovery.zen.ping.multicast.enabled: false
 
 Logrotate
 ---------
 
-There is also automatic log rotation implemented in /etc/logrotate.d/suricata  ::
+There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata``  ::
 
  /var/log/suricata/eve.json {
 	daily
