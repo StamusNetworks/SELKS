@@ -85,7 +85,7 @@ rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow
 dsniff mc python-daemon
 python-crypto libgmp10 libyaml-0-2  
 python-yaml ssh sudo tcpdump
-python-pip task-lxde-desktop debian-installer-launcher " \
+python-pip lxde debian-installer-launcher " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 
 
