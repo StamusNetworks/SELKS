@@ -8,4 +8,4 @@
 set -e
 
 # install needed packages
-apt-get -y install xorriso live-build syslinux squashfs-tools
+apt-get -y install xorriso live-build syslinux squashfs-tools python-docutils
