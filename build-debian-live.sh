@@ -32,6 +32,7 @@ mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/opt/
 mkdir -p config/includes.chroot/etc/suricata/rules/
+mkdir -p config/includes.chroot/root/Desktop/
 cd config/includes.chroot/opt/ && \
 git clone https://github.com/StamusNetworks/scirius.git 
 cd ../../../../
