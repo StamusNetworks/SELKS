@@ -43,10 +43,10 @@ cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/confi
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/.local/share/applications/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-cp README.rst Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+rst2html README.rst > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
 # the same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
-cp README.rst Stamus-Live-Build/config/includes.chroot/root/Desktop/
+rst2html README.rst > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # suricata init script
