@@ -17,6 +17,38 @@ SELKS is comprised of the following major components:
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
 
+HOWTO RUN SELKS
+===============
+
+Prerequisites
+-------------
+
+The minimal configuration is one single core and 2 Go of memory. A virtual machine with 2 Go of RAM should provide a basic test system.
+
+The recommended configuration is two cores and 4 Go of memory.
+
+Running on a virtual machine
+----------------------------
+
+You need to create or reuse a virtual machine.
+
+For VirtualBox, the recommended network setup is to use a ``Bridged adapter`` and to allow
+``Promiscuous mode`` on the interface. This way, SELKS will be able to analyse the traffic from the physical host.
+
+To run SELKS, you need to add declare that the ISO image of SELKS is in the CDROM. You can then
+reboot the virtual machine. If all goes well, you should see SELKS boot menu. Pressing enter will
+lead you to the graphical interface.
+
+
+Running on a physical box
+-------------------------
+
+To run SELKS, you need to burn the ISO image of SELKS on a DVD. After inserting
+the DVD into the host drive, you can reboot.
+
+If all goes well, you should see SELKS boot menu. Pressing enter will
+lead you to the graphical interface.
+
 USAGE
 =====
 
