@@ -52,7 +52,7 @@ wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logsta
 wget https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.tar.gz && \
 dpkg -i --force-confdef  elasticsearch-1.1.0.deb && \
 dpkg -i logstash_1.4.0-1-c82dc09_all.deb && \
-tar -C /var/www -xzf kibana-3.0.0.tar.gz && \
+tar -C /var/www --strip=1 -xzf kibana-3.0.1.tar.gz && \
 
 ### ELK ###
 
@@ -60,7 +60,7 @@ tar -C /var/www -xzf kibana-3.0.0.tar.gz && \
 
 cd /opt && \
 git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
-cp Suricata-Logstash-Templates/Templates/* /var/www/kibana-3.0.0/app/dashboards/
+cp Suricata-Logstash-Templates/Templates/* /var/www/app/dashboards/
 
 ### Get and set up templates/dashboards for Kibana ###
 
