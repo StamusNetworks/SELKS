@@ -5,7 +5,7 @@ SELKS
 INTRO
 =====
 
-SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform released under GPLv3 from Stamus Networks.
+SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
 The SELKS ISO is both Live and Installable ISO in one. 
 
 SELKS is comprised of the following major components:
@@ -52,7 +52,7 @@ Suricata Configuration ::
  Suricata Configuration
   AF_PACKET support:                       yes
   PF_RING support:                         no
-  NFQueue support:                         no
+  NFQueue support:                         yes
   IPFW support:                            no
   DAG enabled:                             no
   Napatech enabled:                        no
