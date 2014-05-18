@@ -49,12 +49,12 @@ cd suricata-2.0
 ### ELK ###
 
 cd .. && \
-wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.deb && \
-wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.0-1-c82dc09_all.deb && \
-wget https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz && \
-dpkg -i --force-confdef  elasticsearch-1.1.0.deb && \
-dpkg -i logstash_1.4.0-1-c82dc09_all.deb && \
-tar -C /var/www --strip=1 -xzf kibana-3.0.1.tar.gz && \
+wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.deb && \
+wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.1-1-bd507eb_all.deb && \
+wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz && \
+dpkg -i --force-confdef  elasticsearch-1.1.1.deb && \
+dpkg -i logstash_1.4.1-1-bd507eb_all.deb && \
+tar -C /var/www --strip=1 -xzf kibana-3.1.0.tar.gz && \
 
 ### ELK ###
 
