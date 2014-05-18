@@ -3,7 +3,7 @@
 Version=1.0
 Name=Launch-Scirius-Daemon
 Comment=Launch-Scirius-Daemon
-Exec=/usr/bin/python /opt/scirius/manage.py runserver
+Exec=/usr/bin/python /opt/selks/scirius/manage.py runserver
 #Icon=
 Type=Application
 Categories=Application;System;
