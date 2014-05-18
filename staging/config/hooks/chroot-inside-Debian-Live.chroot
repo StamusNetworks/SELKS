@@ -109,6 +109,7 @@ sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/ssh
 
 # elasticsearch configuration
 sed -i -e 's|\# discovery\.zen\.ping\.multicast\.enabled\: false| discovery\.zen\.ping\.multicast\.enabled\: false|' /etc/elasticsearch/elasticsearch.yml
+sed -i -e 's|\# bootstrap\.mlockall\: true| bootstrap\.mlockall\: true|' /etc/elasticsearch/elasticsearch.yml
 echo "
 ES_HEAP_SIZE=1g
 ES_MIN_MEM=1g
