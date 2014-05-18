@@ -21,24 +21,26 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
-mkdir -p config/includes.chroot//usr/share/applications/
+mkdir -p config/includes.chroot/usr/share/applications/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
+mkdir -p config/includes.chroot/etc/nginx/sites-available/
 mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
-mkdir -p config/includes.chroot/opt/
+mkdir -p config/includes.chroot/opt/selks/
 mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/root/Desktop/
-cd config/includes.chroot/opt/ && \
+cd config/includes.chroot/opt/selks/ && \
 git clone https://github.com/StamusNetworks/scirius.git 
-cd ../../../../
+cd ../../../../../
 
 
-# add config and menu colored files
+# reverse proxy with nginx and ssl
+cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
 # Launch-Scirius menu icon/launcher under "SystemTools" in LXDE for root plus every user
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/.local/share/applications/
@@ -65,7 +67,7 @@ cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includ
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 # install scirius db
-cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/scirius/
+cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/
 # install default scirius ruleset
 tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scirius/ruleset.tgz
 # copy suricata.yaml using scirius.rules
@@ -83,9 +85,9 @@ libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
 libgeoip1 libgeoip-dev apache2 openjdk-7-jdk openjdk-7-jre-headless 
 rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
-dsniff mc python-daemon
+dsniff mc python-daemon 
 python-crypto libgmp10 libyaml-0-2  
-python-yaml ssh sudo tcpdump
+python-yaml ssh sudo tcpdump nginx openssl 
 python-pip lxde debian-installer-launcher " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 

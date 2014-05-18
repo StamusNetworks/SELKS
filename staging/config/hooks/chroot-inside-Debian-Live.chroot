@@ -18,9 +18,11 @@ pip install django django-tables2 South GitPython pyinotify
 
 ###  Scirius ###
 
+mkdir -p  /opt/selks/
+
 ### Libcap-ng for dropping privilegies with Suricata ###
 
-cd /opt && \
+cd /opt/selks/ && \
 wget http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-0.7.4.tar.gz && \
 tar -zxf libcap-ng-0.7.4.tar.gz && \
 cd libcap-ng-0.7.4 && \
@@ -30,7 +32,7 @@ cd libcap-ng-0.7.4 && \
 
 ### Suricata ###
 
-cd /opt && \
+cd /opt/selks && \
 wget http://www.openinfosecfoundation.org/download/suricata-2.0.tar.gz && \
 tar -xzf suricata-2.0.tar.gz && \
 cd suricata-2.0
@@ -49,7 +51,7 @@ cd suricata-2.0
 cd .. && \
 wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.deb && \
 wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.0-1-c82dc09_all.deb && \
-wget https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.tar.gz && \
+wget https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz && \
 dpkg -i --force-confdef  elasticsearch-1.1.0.deb && \
 dpkg -i logstash_1.4.0-1-c82dc09_all.deb && \
 tar -C /var/www --strip=1 -xzf kibana-3.0.1.tar.gz && \
@@ -58,7 +60,7 @@ tar -C /var/www --strip=1 -xzf kibana-3.0.1.tar.gz && \
 
 ### Get and set up templates/dashboards for Kibana ###
 
-cd /opt && \
+cd /opt/selks/ && \
 git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
 cp Suricata-Logstash-Templates/Templates/* /var/www/app/dashboards/
 
@@ -75,7 +77,23 @@ chown -R logstash:logstash /var/log/suricata
 # FIXME Temporaty fix to have a working scirus
 chown -R 1000.1000 /etc/suricata/rules/
 # FIXME Temporaty fix to have a working scirus
-chown -R 1000.1000 /opt/scirius
+chown -R 1000.1000 /opt/selks/scirius
+
+### nginx, revrse proxy and ssl ###
+
+mkdir -p /etc/nginx/ssl
+openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
+
+ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.conf
+sed -i -e '/^fastcgi_param\s+SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
+rm /etc/nginx/sites-enabled/default
+
+mkdir -p /var/www/static
+echo "STATIC_ROOT=\"/var/www/static/\"" > /opt/selks/scirius/scirius/local_settings.py
+cd /opt/selks/scirius/ && \
+echo "yes" | python manage.py collectstatic
+
+### nginx, revrse proxy and ssl ###
 
 # set up a cron jobs for oinkmaster,ES,Logstash,Suricata
 echo "15 3 * * * logstash /etc/init.d/suricata restart" >> /etc/crontab
