@@ -96,7 +96,7 @@ echo "yes" | python manage.py collectstatic
 ### nginx, revrse proxy and ssl ###
 
 # set up a cron jobs for oinkmaster,ES,Logstash,Suricata
-echo "15 3 * * * logstash /etc/init.d/suricata restart" >> /etc/crontab
+echo "15 3 * * * root /etc/init.d/suricata restart" >> /etc/crontab
 echo "0 2 * * * root /etc/init.d/elasticsearch restart" >> /etc/crontab
 echo "5 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
