@@ -61,8 +61,6 @@ The default root password is ``StamusNetworks``
 SELKS has 7 default IDS dashboards (found under Iceweasel, Bookmarks) - 
 ALERTS,HTTP,DNS,TLS,SSH,File Transactions,ALL
 
-The Scirius service can be started from the LXDE's "Menu", "System Tools" -> "Launch-Scirius-Daemon"
-
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
 
  service suricata restart
@@ -153,16 +151,10 @@ There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata`
 	copytruncate
  }
 
-Running services
-----------------
-
-All services (except Scirius) are up and enabled during boot time
-
 NOTE
-~~~~
+----
 
-The web interfaces of Kibana and Scirius are without httpS
-Remote access to Kibana can be protected with firewall rules, implementations of httpS or simply by using "service apache2 start/stop"
+Remote access to web interfaces is currently not protected. It can be protected with firewall rules or simply by using "service nginx start/stop"
 
 Firewall rules
 --------------
