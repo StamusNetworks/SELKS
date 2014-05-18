@@ -66,6 +66,7 @@ cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 # install scirius db
 mkdir -p Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
 cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
+cp staging/scirius/local_settings.py Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/scirius/
 # install default scirius ruleset
 tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scirius/ruleset.tgz
 # copy suricata.yaml using scirius.rules
