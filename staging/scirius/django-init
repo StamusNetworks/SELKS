@@ -32,7 +32,7 @@ set -e
 DJANGO_SITES="scirius"
 
 # path to the directory with your django projects
-SITES_PATH=/var/lib/django
+SITES_PATH=/opt/selks/
 
 # path to the directory conrtaining all site-specific virtualenvs 
 # (see http://pypi.python.org/pypi/virtualenv for more information)
@@ -69,6 +69,8 @@ if [ -n "$SITE" ]; then
     DJANGO_SITES=$SITE
 fi
 
+DJANGO_SITES="scirius"
+
 #
 #       Function that starts the daemon/service.
 #
@@ -94,7 +96,7 @@ d_start()
                        --chuid $RUN_AS --exec /usr/bin/env -- $PYTHON \
                        $SITES_PATH/$SITE/manage.py runfcgi \
                        protocol=fcgi method=threaded maxrequests=$MAXREQUESTS \
-                       host=172.20.0.4 port=8080 \
+                       host=127.0.0.1 port=8080 \
                        pidfile=$RUNFILES_PATH/$SITE.pid
             chmod 400 $RUNFILES_PATH/$SITE.pid
         fi

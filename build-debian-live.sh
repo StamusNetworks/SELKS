@@ -74,6 +74,8 @@ tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scir
 cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
 # copy init script for suri_reloader
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
+# copy init script for djando
+cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init.d/django
 
 # add packages to be installed
 echo "

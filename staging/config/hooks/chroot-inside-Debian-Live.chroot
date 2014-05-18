@@ -14,7 +14,7 @@ echo "root:StamusNetworks" | chpasswd
 ###  Scirius ###
 # NOTE python-pip is already installed in the build script
 
-pip install django django-tables2 South GitPython pyinotify
+pip install django django-tables2 South GitPython pyinotify flup
 
 ###  Scirius ###
 
@@ -70,14 +70,16 @@ update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
+update-rc.d django defaults 95 10
 
 # set the right permissions for th elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
 
-# FIXME Temporaty fix to have a working scirus
-chown -R 1000.1000 /etc/suricata/rules/
-# FIXME Temporaty fix to have a working scirus
-chown -R 1000.1000 /opt/selks/scirius
+# www-data needs to write Suricata rules
+chown -R www-data.www-data /etc/suricata/rules/
+# SCirius needs to put data into git-sources
+mkdir -p /opt/selks/scirius/git-sources/
+chown -R www-data.www-data /opt/selks/scirius/git-sources/
 
 ### nginx, revrse proxy and ssl ###
 
@@ -85,7 +87,7 @@ mkdir -p /etc/nginx/ssl
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
 
 ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.conf
-sed -i -e '/^fastcgi_param\s+SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
+sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 mkdir -p /var/www/static
