@@ -41,9 +41,6 @@ cd ../../../../../
 
 # reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
-# Launch-Scirius menu icon/launcher under "SystemTools" in LXDE for root plus every user
-cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-cp staging/usr/share/applications/Launch-Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/.local/share/applications/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 rst2html README.rst > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
@@ -67,7 +64,8 @@ cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includ
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 # install scirius db
-cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/
+mkdir -p Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
+cp staging/scirius/db.sqlite3 Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
 # install default scirius ruleset
 tar -x -C Stamus-Live-Build/config/includes.chroot/etc/suricata/ -f staging/scirius/ruleset.tgz
 # copy suricata.yaml using scirius.rules

@@ -20,24 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # FIXME: generate this
 SECRET_KEY = 'p8o5%vq))8h2li08c%k3id(wwo*u(^dbdmx2tv#t(tb2pr9@n-'
 
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'django',
-#        'USER': 'django',
-#        'PASSWORD': 'django',
-#        'HOST': '192.168.1.192',
-#        'PORT': '5432',
-#    },
-#}
-
 USE_ELASTICSEARCH = True
 ELASTICSEARCH_ADDRESS = "localhost:9200"
 
-#INSTALLED_APPS.append('appliances')
-RULESET_MIDDLEWARE = 'appliances'
+STATIC_ROOT="/var/www/static/"
 
-RULES_BASE_DIR = '/var/lib/ansible/rules'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db', 'db.sqlite3'),
+    }
+}

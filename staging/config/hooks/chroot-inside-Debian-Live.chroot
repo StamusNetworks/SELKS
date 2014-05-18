@@ -80,6 +80,7 @@ chown -R www-data.www-data /etc/suricata/rules/
 # SCirius needs to put data into git-sources
 mkdir -p /opt/selks/scirius/git-sources/
 chown -R www-data.www-data /opt/selks/scirius/git-sources/
+chown -R www-data.www-data /opt/selks/scirius/db/
 
 ### nginx, revrse proxy and ssl ###
 
@@ -91,7 +92,6 @@ sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 mkdir -p /var/www/static
-echo "STATIC_ROOT=\"/var/www/static/\"" > /opt/selks/scirius/scirius/local_settings.py
 cd /opt/selks/scirius/ && \
 echo "yes" | python manage.py collectstatic
 
