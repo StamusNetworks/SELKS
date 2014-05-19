@@ -33,6 +33,7 @@ mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/opt/selks/
 mkdir -p config/includes.chroot/etc/suricata/rules/
+mkdir -p config/includes.chroot/etc/kibana/
 mkdir -p config/includes.chroot/root/Desktop/
 cd config/includes.chroot/opt/selks/ && \
 git clone https://github.com/StamusNetworks/scirius.git 
@@ -41,6 +42,8 @@ cd ../../../../../
 
 # reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
+# copy kibana config
+cp staging/etc/kibana/config.js  Stamus-Live-Build/config/includes.chroot/etc/kibana/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 rst2html README.rst > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html

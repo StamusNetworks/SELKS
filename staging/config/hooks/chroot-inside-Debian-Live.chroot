@@ -56,6 +56,7 @@ dpkg -i --force-confdef  elasticsearch-1.1.1.deb && \
 dpkg -i logstash_1.4.1-1-bd507eb_all.deb && \
 mkdir -p /var/www && \
 tar -C /var/www --strip=1 -xzf kibana-3.1.0.tar.gz && \
+cp /etc/kibana/config.js /var/www && \
 
 ### ELK ###
 
