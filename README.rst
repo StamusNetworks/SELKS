@@ -71,11 +71,12 @@ TUNING,CONFIGURATION AND CONSIDERATIONS
 =======================================
 
 Each major component can be independently upgraded of the others.
-Tuning suricata.yaml is left up to the end user depending on the specific traffic needs and speeds.
+Tuning suricata.yaml and Elasticsearch is left up to the end user depending on the specific traffic needs and speeds.
 
 Suricata
 --------
 
+Suricata is build with dropping privileges capability.
 Suricata (2.0 stable at the moment of this release) is installed and configured with the following:
 Suricata Configuration ::
 
@@ -134,6 +135,7 @@ with only the following changes/additions for Elasticsearch in ``/etc/default/el
 and in ``/etc/elasticsearch/elasticsearch.yml`` ::
 
  discovery.zen.ping.multicast.enabled: false
+ bootstrap.mlockall: true
 
 Logrotate
 ---------
