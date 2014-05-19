@@ -72,7 +72,7 @@ update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
 update-rc.d django defaults 95 10
 
-# set the right permissions for th elogstash user to run suricata
+# set the right permissions for the elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
 
 # www-data needs to write Suricata rules
