@@ -134,6 +134,10 @@ threadpool:
 # to "Install SELKS"
 sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
+# Install exception for local certificate
+certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
+chmod a+r /etc/iceweasel/profile/*db
+
 
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c
