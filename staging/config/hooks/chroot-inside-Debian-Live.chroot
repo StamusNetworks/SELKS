@@ -33,9 +33,9 @@ cd libcap-ng-0.7.4 && \
 ### Suricata ###
 
 cd /opt/selks && \
-wget http://www.openinfosecfoundation.org/download/suricata-2.0.tar.gz && \
+wget http://www.openinfosecfoundation.org/download/suricata-2.0.1.tar.gz && \
 tar -xzf suricata-2.0.1.tar.gz && \
-cd suricata-2.0
+cd suricata-2.0.1
  
 ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --disable-gccmarch-native \
  --enable-geoip --with-libnss-libraries=/usr/lib --with-libnss-includes=/usr/include/nss/ \
