@@ -67,17 +67,22 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
  service logstash stop
 
 
+
 TUNING,CONFIGURATION AND CONSIDERATIONS
 =======================================
 
 Each major component can be independently upgraded of the others.
-Tuning suricata.yaml and Elasticsearch is left up to the end user depending on the specific traffic needs and speeds.
+
+Tuning Suricata and Elasticsearch is left up to the end user depending 
+on the specific traffic needs and volume.
+
+Please carefully consider and test HW needs before putting into production.
 
 Suricata
 --------
 
 Suricata is build with dropping privileges capability.
-Suricata (2.0 stable at the moment of this release) is installed and configured with the following:
+Suricata (2.0.1 stable at the moment of this release) is installed and configured with the following:
 Suricata Configuration ::
 
  Suricata Configuration
@@ -118,7 +123,7 @@ Suricata Configuration ::
   Host:                                    x86_64-unknown-linux-gnu
   GCC binary:                              gcc
   GCC Protect enabled:                     no
-  GCC march native enabled:                yes
+  GCC march native enabled:                no
   GCC Profile enabled:                     no
 
 
@@ -156,15 +161,39 @@ There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata`
 NOTE
 ----
 
-Remote access to web interfaces is currently not protected. It can be protected with firewall rules or simply by using "service nginx start/stop"
+Remote access to web interfaces is currently only httpS protected. It can be 
+further protected with firewall rules and/or authentication or simply by using 
+"service nginx start/stop"
 
 Firewall rules
 --------------
  
 By default there are no firewall rules implemented.
 
+SSH
+----
 
-Getting help
+SSH is enabled and both the root user and the ``selks-user`` can ssh to the box
+by default.
+
+
+DESKTOP MANAGER
+===============
+
+SELKS uses LXDE as a desktop windows manager. If you wish to uninstall 
+the Desktop Manager (GUI) and run the server/machine just with command shell 
+you can remove the desktop installation as follows after the installation:
+
+"
+apt-get remove lxde lxde-common lxde-core lxde-icon-theme lightdm \
+hunspell-en-us hyphen-en-us iceweasel lxlauncher lxtask
+"
+
+This will not affect the services and/or scripts. SELKS would still continue 
+to operate and function as desired.
+
+
+GETTING HELP
 ============
 
 You can get more information on SELKS wiki: https://github.com/StamusNetworks/SELKS/wiki
