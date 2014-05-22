@@ -5,8 +5,11 @@ SELKS
 INTRO
 =====
 
-SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
-The SELKS ISO is both Live and Installable ISO in one. 
+SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform 
+released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
+
+The SELKS ISO is both Live and Installable ISO in one. Once installed it is 
+ready to use out of the box solution.
 
 SELKS is comprised of the following major components:
 
@@ -158,10 +161,29 @@ There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata`
 	copytruncate
  }
 
+HTTPS ACCESS
+===========
+
+The Scirius and Kibana dashboards are bookmarked in Iceweasel and could be used 
+directly with just a click once logged in the SELKS desktop.
+
+If you wish to remotelly (from a different PC on your network) access the 
+dashboards you could do that as follows (in your browser):
+
+https://your.selks.IP.here/rules/ - Scirius ruleset management
+https://your.selks.IP.here/log/#/dashboard/file/ALL
+https://your.selks.IP.here/log/#/dashboard/file/ALERTS
+https://your.selks.IP.here/log/#/dashboard/file/HTTP
+https://your.selks.IP.here/log/#/dashboard/file/DNS
+https://your.selks.IP.here/log/#/dashboard/file/TLS
+https://your.selks.IP.here/log/#/dashboard/file/FILE-Transactions
+https://your.selks.IP.here/log/#/dashboard/file/SSH
+
+
 NOTE
 ----
 
-Remote access to web interfaces is currently only httpS protected. It can be 
+Remote access to the web interfaces is currently only httpS protected. It can be 
 further protected with firewall rules and/or authentication or simply by using 
 "service nginx start/stop"
 
