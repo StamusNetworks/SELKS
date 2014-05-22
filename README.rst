@@ -162,7 +162,7 @@ There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata`
  }
 
 HTTPS ACCESS
-===========
+============
 
 The Scirius and Kibana dashboards are bookmarked in Iceweasel and could be used 
 directly with just a click once logged in the SELKS desktop.
