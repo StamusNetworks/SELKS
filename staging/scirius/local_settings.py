@@ -31,3 +31,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db', 'db.sqlite3'),
     }
 }
+
+USE_KIBANA = False
+KIBANA_URL = "/log/"
