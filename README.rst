@@ -167,7 +167,7 @@ HTTPS ACCESS
 The Scirius and Kibana dashboards are bookmarked in Iceweasel and could be used 
 directly with just a click once logged in the SELKS desktop.
 
-If you wish to remotelly (from a different PC on your network) access the 
+If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
 
 https://your.selks.IP.here/rules/ - Scirius ruleset management
