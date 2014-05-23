@@ -139,6 +139,7 @@ with only the following changes/additions for Elasticsearch in ``/etc/default/el
  ES_HEAP_SIZE=1g
  ES_MIN_MEM=1g
  ES_MAX_MEM=1g
+ JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
 
 and in ``/etc/elasticsearch/elasticsearch.yml`` ::
 
