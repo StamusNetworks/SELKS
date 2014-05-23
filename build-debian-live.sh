@@ -84,10 +84,10 @@ echo "
 libpcre3 libpcre3-dbg libpcre3-dev 
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
-make flex bison git git-core subversion libmagic-dev libnuma-dev pkg-config 
+make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
-libgeoip1 libgeoip-dev openjdk-7-jdk openjdk-7-jre-headless 
+libgeoip1 libgeoip-dev openjdk-7-jre-headless
 rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
 dsniff mc python-daemon libnss3-tools curl 
 python-crypto libgmp10 libyaml-0-2  

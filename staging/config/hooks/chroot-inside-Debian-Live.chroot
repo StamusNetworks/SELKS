@@ -163,6 +163,13 @@ sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/appli
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
 
+# clean devel and some others packages
+apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
+	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
+	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
+	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
+	icedtea-7-jre-jamvm rpm alien sane-utils libsane rpm2cpio \
+	libx11-dev libx11-doc m4
 
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c
