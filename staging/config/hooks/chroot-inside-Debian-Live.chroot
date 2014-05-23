@@ -45,6 +45,22 @@ cd suricata-2.0.1
  make clean && make && make install-full && ldconfig 
 
 ### Suricata ### 
+
+### Oracle JAVA for ELK ###
+
+mkdir -p /opt/selks/java-oracle/ && \
+cd /opt/selks/ && \
+wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.tar.gz"  && \
+tar -zxf jdk-7u55-linux-x64.tar.gz -C /opt/selks/java-oracle && \
+JHome=/opt/java-oracle/jdk1.7.0_55 && \
+update-alternatives --install /usr/bin/java java ${JHome%*/}/bin/java 20000 && \
+update-alternatives --install /usr/bin/javac javac ${JHome%*/}/bin/javac 20000
+
+# the bellow is added at the end of this script in /etc/default/elastisearch
+# it is a dependency/recommendation for ES >= 1.2.0 
+# JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
+
+### Oracle JAVA for ELK ###
  
 ### ELK ###
 
@@ -118,6 +134,8 @@ echo "
 ES_HEAP_SIZE=1g
 ES_MIN_MEM=1g
 ES_MAX_MEM=1g
+# Java Oracle 7 for ES 1.2.0 and above
+JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
 
 " >> /etc/default/elasticsearch 
 
