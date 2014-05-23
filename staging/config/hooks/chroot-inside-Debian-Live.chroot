@@ -60,6 +60,7 @@ tar -zxf jdk-7u55-linux-x64.tar.gz -C /opt/selks/java-oracle && \
 JHome=/opt/java-oracle/jdk1.7.0_55 && \
 update-alternatives --install /usr/bin/java java ${JHome%*/}/bin/java 20000 && \
 update-alternatives --install /usr/bin/javac javac ${JHome%*/}/bin/javac 20000
+rm jdk-7u55-linux-x64.tar.gz
 
 # the bellow is added at the end of this script in /etc/default/elastisearch
 # it is a dependency/recommendation for ES >= 1.2.0 
