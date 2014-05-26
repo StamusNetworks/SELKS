@@ -57,7 +57,7 @@ mkdir -p /opt/selks/java-oracle/ && \
 cd /opt/selks/ && \
 wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.tar.gz"  && \
 tar -zxf jdk-7u55-linux-x64.tar.gz -C /opt/selks/java-oracle && \
-JHome=/opt/java-oracle/jdk1.7.0_55 && \
+JHome=/opt/selks/java-oracle/jdk1.7.0_55 && \
 update-alternatives --install /usr/bin/java java ${JHome%*/}/bin/java 20000 && \
 update-alternatives --install /usr/bin/javac javac ${JHome%*/}/bin/javac 20000
 rm jdk-7u55-linux-x64.tar.gz
