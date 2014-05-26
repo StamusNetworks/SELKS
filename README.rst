@@ -2,7 +2,7 @@
 SELKS
 =====
 
-INTRO
+Intro
 =====
 
 SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform 
@@ -20,7 +20,7 @@ SELKS is comprised of the following major components:
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
 
-HOWTO RUN SELKS
+Howto run selks
 ===============
 
 Prerequisites
@@ -52,7 +52,7 @@ the DVD into the host drive, you can reboot.
 If all goes well, you should see SELKS boot menu. Pressing enter will
 lead you to the graphical interface.
 
-USAGE
+Usage
 =====
 
 Default user:
@@ -72,7 +72,7 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
 
 
 
-TUNING, CONFIGURATION AND CONSIDERATIONS
+Tuning, configuration and considerations
 ========================================
 
 Each major component can be independently upgraded of the others.
@@ -165,7 +165,7 @@ There is also automatic log rotation implemented in ``/etc/logrotate.d/suricata`
 	copytruncate
  }
 
-HTTPS ACCESS
+HTTPS access
 ============
 
 The Scirius and Kibana dashboards are bookmarked in Iceweasel and could be used 
@@ -184,7 +184,7 @@ dashboards you could do that as follows (in your browser):
 * https://your.selks.IP.here/log/#/dashboard/file/SSH
 
 
-NOTE
+Note
 ----
 
 Remote access to the web interfaces is currently only httpS protected. It can be 
@@ -203,7 +203,7 @@ SSH is enabled and both the ``root`` user and the ``selks-user`` can ssh to the 
 by default.
 
 
-DESKTOP MANAGER
+Desktop manager
 ===============
 
 SELKS uses LXDE as a desktop windows manager. If you wish to uninstall 
@@ -219,7 +219,7 @@ This will not affect the services and/or scripts. SELKS would still continue
 to operate and function as desired.
 
 
-GETTING HELP
+Getting help
 ============
 
 You can get more information on SELKS wiki: https://github.com/StamusNetworks/SELKS/wiki
