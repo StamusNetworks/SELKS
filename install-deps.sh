@@ -2,7 +2,7 @@
 
 # Copyright Stamus Networks
 # All rights reserved
-# Debian Live ISO script - pmanev@stamus-networks.com
+# Debian Live ISO script - oss@stamus-networks.com
 #
 
 set -e
