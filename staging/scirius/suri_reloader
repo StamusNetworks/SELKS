@@ -17,7 +17,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Suricata reload handling"
 NAME=suri_reloader
-DAEMON=/opt/scirius/suricata/scripts/$NAME
+DAEMON=/opt/selks/scirius/suricata/scripts/$NAME
 DAEMON_ARGS="-p /etc/suricata/rules -l /var/log/suri-reload.log  -D"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
