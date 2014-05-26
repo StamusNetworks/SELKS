@@ -2,8 +2,10 @@
 
 # Copyright Stamus Networks
 # All rights reserved
-# Debian Live ISO script - pmanev@stamus-networks.com
+# Debian Live/Install ISO script - oss@stamus-networks.com
 #
+# Please run on Debian Wheezy
+
 
 
 set -e
