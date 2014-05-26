@@ -71,8 +71,8 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
 
 
 
-TUNING,CONFIGURATION AND CONSIDERATIONS
-=======================================
+TUNING, CONFIGURATION AND CONSIDERATIONS
+========================================
 
 Each major component can be independently upgraded of the others.
 
@@ -80,6 +80,8 @@ Tuning Suricata and Elasticsearch is left up to the end user depending
 on the specific traffic needs and volume.
 
 Please carefully consider and test HW needs before putting into production.
+
+SELKS is based on `Debian live <http://live.debian.net/>`_.
 
 Suricata
 --------
