@@ -56,6 +56,7 @@ USAGE
 =====
 
 Default user:
+
 * user: ``selks-user``
 * password: ``selks-user``
 
@@ -198,7 +199,7 @@ By default there are no firewall rules implemented.
 SSH
 ----
 
-SSH is enabled and both the root user and the ``selks-user`` can ssh to the box
+SSH is enabled and both the ``root`` user and the ``selks-user`` can ssh to the box
 by default.
 
 
@@ -207,12 +208,12 @@ DESKTOP MANAGER
 
 SELKS uses LXDE as a desktop windows manager. If you wish to uninstall 
 the Desktop Manager (GUI) and run the server/machine just with command shell 
-you can remove the desktop installation as follows after the installation:
+you can remove the desktop installation as follows after the installation: ::
 
-"
-apt-get remove lxde lxde-common lxde-core lxde-icon-theme lightdm \
-hunspell-en-us hyphen-en-us iceweasel lxlauncher lxtask
-"
+
+ apt-get remove lxde lxde-common lxde-core lxde-icon-theme lightdm \
+                hunspell-en-us hyphen-en-us iceweasel lxlauncher lxtask
+
 
 This will not affect the services and/or scripts. SELKS would still continue 
 to operate and function as desired.
