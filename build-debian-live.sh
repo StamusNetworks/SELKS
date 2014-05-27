@@ -47,10 +47,10 @@ cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/inclu
 cp staging/etc/kibana/config.js  Stamus-Live-Build/config/includes.chroot/etc/kibana/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-rst2html README.rst > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
+cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
 # the same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
-rst2html README.rst > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
+cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 # logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
 # suricata init script
