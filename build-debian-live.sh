@@ -16,7 +16,7 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
 --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
 --iso-preparer Stamus Networks --iso-publisher Stamus Networks \
---iso-volume Stamus-SELKS
+--iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
