@@ -70,7 +70,7 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
  service suricata restart
  service logstash stop
 
-
+Suricata ruleset is updated and Suricata is restarted every days at 3:15AM.
 
 Tuning, configuration and considerations
 ========================================

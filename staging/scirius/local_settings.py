@@ -32,5 +32,5 @@ DATABASES = {
     }
 }
 
-USE_KIBANA = False
+USE_KIBANA = True
 KIBANA_URL = "/log/"

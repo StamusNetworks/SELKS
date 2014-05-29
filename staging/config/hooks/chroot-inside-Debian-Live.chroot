@@ -122,10 +122,16 @@ mkdir -p /var/www/static
 cd /opt/selks/scirius/ && \
 echo "yes" | python manage.py collectstatic
 
+echo "no" | su www-data -c  "python manage.py syncdb"
+su www-data -c 'python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.1/emerging.rules.tar.gz http sigs'
+su www-data -c 'python manage.py defaultruleset "ETOpen based ruleset"'
+su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "ETOpen based ruleset"'
+su www-data -c 'python manage.py updatesuricata'
+
 ### nginx, revrse proxy and ssl ###
 
 # set up a cron jobs for oinkmaster,ES,Logstash,Suricata
-echo "15 3 * * * root /etc/init.d/suricata restart" >> /etc/crontab
+echo "15 3 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
 echo "0 2 * * * root /etc/init.d/elasticsearch restart" >> /etc/crontab
 echo "5 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
