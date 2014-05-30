@@ -37,7 +37,7 @@ mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/kibana/
 mkdir -p config/includes.chroot/root/Desktop/
 cd config/includes.chroot/opt/selks/ && \
-git clone -b scirius-0.3 https://github.com/StamusNetworks/scirius.git
+git clone -b scirius-0.4 https://github.com/StamusNetworks/scirius.git
 cd ../../../../../
 
 
