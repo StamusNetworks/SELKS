@@ -53,6 +53,7 @@ check_run_dir() {
     if [ ! -d /var/run/suricata ]; then
 	mkdir /var/run/suricata
 	chmod 0755 /var/run/suricata
+	chown logstash:logstash /var/run/suricata
     fi
 }
 

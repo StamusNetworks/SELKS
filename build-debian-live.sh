@@ -35,6 +35,7 @@ mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/opt/selks/
 mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/kibana/
+mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 cd config/includes.chroot/opt/selks/ && \
 git clone -b scirius-0.4 https://github.com/StamusNetworks/scirius.git
@@ -72,6 +73,7 @@ mkdir -p Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
 cp staging/scirius/local_settings.py Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/scirius/
 # copy suricata.yaml using scirius.rules
 cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
+cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/etc/profile.d/
 # copy init script for suri_reloader
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # copy init script for djando
@@ -88,7 +90,7 @@ ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev
 libgeoip1 libgeoip-dev openjdk-7-jre-headless
 rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
 dsniff mc python-daemon libnss3-tools curl 
-python-crypto libgmp10 libyaml-0-2  
+python-crypto libgmp10 libyaml-0-2 python-simplejson
 python-yaml ssh sudo tcpdump nginx openssl 
 python-pip lxde debian-installer-launcher " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot

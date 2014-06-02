@@ -69,7 +69,7 @@ default-log-dir: /var/log/suricata/
 # to activate the feature. You can use the filename variable to set
 # the file name of the socket.
 unix-command:
-  enabled: no
+  enabled: yes
   #filename: custom.socket
 
 # Configure the type of alert (and other) logging you would like.
