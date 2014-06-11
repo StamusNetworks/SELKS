@@ -247,10 +247,10 @@ outputs:
   # - http request / response body sizes. Again set to 0 for optimal results.
   # - rules that contain the "filestore" keyword.
   - file-store:
-      enabled: no       # set to yes to enable
+      enabled: yes       # set to yes to enable
       log-dir: files    # directory to store the files
-      force-magic: no   # force logging magic on all stored files
-      force-md5: no     # force logging of md5 checksums
+      force-magic: yes   # force logging magic on all stored files
+      force-md5: yes     # force logging of md5 checksums
       #waldo: file.waldo # waldo file to store the file_id across runs
 
   # output module to log files tracked in a easily parsable json format
@@ -700,7 +700,7 @@ stream:
   inline: auto                  # auto will use inline mode in IPS mode, yes or no set it statically
   reassembly:
     memcap: 128mb
-    depth: 1mb                  # reassemble 1mb into a stream
+    depth: 6mb                  # reassemble 1mb into a stream
     toserver-chunk-size: 2560
     toclient-chunk-size: 2560
     randomize-chunk-size: yes
@@ -1176,8 +1176,8 @@ app-layer:
 
            # Can be specified in kb, mb, gb.  Just a number indicates
            # it's in bytes.
-           request-body-limit: 3072
-           response-body-limit: 3072
+           request-body-limit: 6mb
+           response-body-limit: 6mb
 
            # inspection limits
            request-body-minimal-inspect-size: 32kb
