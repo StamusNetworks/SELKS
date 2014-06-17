@@ -73,12 +73,12 @@ rm jdk-7u55-linux-x64.tar.gz
 ### ELK ###
 
 cd .. && \
-wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.0.deb && \
+wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb && \
 wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.1-1-bd507eb_all.deb && \
-dpkg -i --force-confdef  elasticsearch-1.2.0.deb && \
+dpkg -i --force-confdef  elasticsearch-1.2.1.deb && \
 dpkg -i logstash_1.4.1-1-bd507eb_all.deb && \
 cp /etc/kibana/config.js /var/www && \
-rm elasticsearch-1.2.0.deb logstash_1.4.1-1-bd507eb_all.deb && \
+rm elasticsearch-1.2.1.deb logstash_1.4.1-1-bd507eb_all.deb && \
 
 ### ELK ###
 
