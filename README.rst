@@ -26,9 +26,9 @@ Howto run selks
 Prerequisites
 -------------
 
-The minimal configuration is one single core and 2 Go of memory. A virtual machine with 2 Go of RAM should provide a basic test system.
+The minimal configuration is one single core and 2 Gb of memory. A virtual machine with 2 Gb of RAM should provide a basic test system.
 
-The recommended configuration is two cores and 4 Go of memory.
+The recommended configuration is two cores and 4 Gb of memory.
 
 Running on a virtual machine
 ----------------------------
