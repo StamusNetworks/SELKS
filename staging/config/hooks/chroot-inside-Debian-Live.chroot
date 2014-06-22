@@ -127,10 +127,9 @@ su www-data -c 'python manage.py updatesuricata'
 
 ### nginx, revrse proxy and ssl ###
 
-# set up a cron jobs for oinkmaster,ES,Logstash,Suricata
-echo "15 3 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
-echo "0 2 * * * root /etc/init.d/elasticsearch restart" >> /etc/crontab
-echo "5 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
+# set up a cron jobs for Logstash,Suricata, rule updates
+echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
+echo "7 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
@@ -139,26 +138,43 @@ echo "SELKS" > /etc/hostname
 # enable the ssh banners
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
-# elasticsearch configuration
-sed -i -e 's|\# discovery\.zen\.ping\.multicast\.enabled\: false| discovery\.zen\.ping\.multicast\.enabled\: false|' /etc/elasticsearch/elasticsearch.yml
-sed -i -e 's|\# bootstrap\.mlockall\: true| bootstrap\.mlockall\: true|' /etc/elasticsearch/elasticsearch.yml
+### elasticsearch configuration ###
+
 echo "
+# prevent swapping
 ES_HEAP_SIZE=1g
-ES_MIN_MEM=1g
-ES_MAX_MEM=1g
+MAX_LOCKED_MEMORY=unlimited
+
 # Java Oracle 7 for ES 1.2.0 and above
 JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
 
 " >> /etc/default/elasticsearch 
 
 echo "
-## Incease Thread poools for longterm perf > 3 months ##
+
+# Prevent swapping
+# as explained here - 
+# http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html 
+bootstrap.mlockall: true
+
+#Disable multicast discovery
+discovery.zen.ping.multicast.enabled: false
+
+# Incease Thread poools #
 threadpool:
     search:
         type: fixed
         size: 10000
 
+# Increase memory for indexing
+indices.memory.index_buffer_size: 25%
+
+# Increase the refresh interval
+index.refresh_interval: 20s
+
 " >> /etc/elasticsearch/elasticsearch.yml
+
+### elasticsearch configuration ###
 
 # Edit the Icon "Install Debian Wheezy" name on a Live Desktop 
 # to "Install SELKS"
