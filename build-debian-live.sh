@@ -8,6 +8,17 @@
 
 set -e
 
+
+no_desktop=$1
+ARGS=1         # Script can have 1 argument.
+
+
+if [ $# -eq "$ARGS" ] && [ "$1" != "--no-desktop"  ];  then
+    echo -e "\n USAGE: `basename $0` script can have ONE or NO arguments"
+    echo -e "\n Only \"--no-desktop\" is allowed as an optional argument. Please check your spelling.\n"
+    exit 1;
+fi
+
 # Begin
 # Pre staging
 #
@@ -22,8 +33,7 @@ cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
-mkdir -p config/includes.chroot/usr/share/applications/
-mkdir -p config/includes.chroot/etc/iceweasel/profile/
+mkdir -p config/includes.chroot/usr/share/applications
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
@@ -37,6 +47,8 @@ mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/kibana/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
+mkdir -p config/includes.chroot/etc/iceweasel/profile/
+
 # kibana install
 mkdir -p config/includes.chroot/var/www && \
 tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.1.0-stamus.tgz
@@ -96,8 +108,13 @@ rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow
 dsniff mc python-daemon libnss3-tools curl 
 python-crypto libgmp10 libyaml-0-2 python-simplejson
 python-yaml ssh sudo tcpdump nginx openssl 
-python-pip lxde debian-installer-launcher " \
+python-pip debian-installer-launcher " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+
+# unless otherwise specified the ISO will be with a Desktop Environment
+if [[ -z "$no_desktop" ]]; then 
+  echo " lxde " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+fi
 
 
 # add specific tasks(script file) to be executed 
