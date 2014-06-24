@@ -20,15 +20,15 @@ SELKS is comprised of the following major components:
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
 
-Howto run selks
+Howto run SELKS
 ===============
 
 Prerequisites
 -------------
 
-The minimal configuration is one single core and 2 Gb of memory. A virtual machine with 2 Gb of RAM should provide a basic test system.
+The minimal configuration for SELKS without desktop is one single core and 3 Gb of memory. A virtual machine with 3 Gb of RAM should provide a basic test system. If you want to run the desktop version of SELKS, an extra Gb of RAM is necessary.
 
-The recommended configuration is two cores and 4 Gb of memory.
+The recommended configuration is 2 cores and 4 Gb of memory. As Suricata and Elastisearch are multithreaded, the more cores you have the better it is. Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting. 
 
 Running on a virtual machine
 ----------------------------
