@@ -22,11 +22,8 @@ SELKS is comprised of the following major components:
 Downloading SELKS
 =================
 
-This git repository allow you to build your ISO. But the easiest way to use SELKS
-is to directly download generated images.
-
-To do so, please go to `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_ where
-you will find various download links.
+You can either `build the SELKS ISO <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_
+or download ready to use images on `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
 
 Howto run SELKS
 ===============
