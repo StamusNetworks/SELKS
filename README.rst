@@ -19,6 +19,14 @@ SELKS is comprised of the following major components:
 * K - Kibana - http://www.elasticsearch.org/overview/
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
+Downloading SELKS
+=================
+
+This git repository allow you to build your ISO. But the easiest way to use SELKS
+is to directly download generated images.
+
+To do so, please go to `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_ where
+you will find various download links.
 
 Howto run SELKS
 ===============
@@ -71,6 +79,12 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
  service logstash stop
 
 Suricata ruleset is updated and Suricata is restarted every days at 3:15AM.
+
+Building SELKS
+==============
+
+Extended information on how to build SELKS ISO can be found on
+`Building SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_.
 
 Tuning, configuration and considerations
 ========================================
