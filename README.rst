@@ -19,8 +19,8 @@ SELKS is comprised of the following major components:
 * K - Kibana - http://www.elasticsearch.org/overview/
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
-Downloading SELKS
-=================
+Getting SELKS
+=============
 
 You can either `build the SELKS ISO <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_
 or download ready to use images on `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
