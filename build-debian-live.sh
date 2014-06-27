@@ -54,7 +54,7 @@ mkdir -p config/includes.chroot/var/www && \
 tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.1.0-stamus.tgz
 
 cd config/includes.chroot/opt/selks/ && \
-git clone -b scirius-0.4 https://github.com/StamusNetworks/scirius.git
+git clone -b scirius-0.5 https://github.com/StamusNetworks/scirius.git
 cd ../../../../../
 
 
