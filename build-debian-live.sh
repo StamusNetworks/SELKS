@@ -164,6 +164,7 @@ mkdir -p config/includes.chroot/etc/kibana/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
+mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 
 
 
@@ -213,6 +214,9 @@ cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # copy init script for djando
 cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init.d/django
+# copy elasticsearch repo file
+cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+
 
 # add packages to be installed
 echo "
