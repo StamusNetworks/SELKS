@@ -238,8 +238,15 @@ fi
 # add specific tasks(script file) to be executed 
 # inside the chroot environment
 cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
-# Edit the menue names - add  Stamus
-cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+
+# Edit menu names for Live and Install
+if [[ -n "$KERNEL_VER" ]]; then 
+  # Edit the menue names - remove Live
+  cp staging/config/hooks/menues-changes-kernel-version-choice.binary Stamus-Live-Build/config/hooks/
+else
+  # Edit the menue names - add  Stamus
+  cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+fi
 
 # debian installer preseed.cfg
 echo "
