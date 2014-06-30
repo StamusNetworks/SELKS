@@ -46,7 +46,7 @@ cd suricata-2.0.2
  --enable-nfqueue \
  --with-libcap_ng-libraries=/usr/local/lib --with-libcap_ng-includes=/usr/local/include \
  --with-libnspr-libraries=/usr/lib --with-libnspr-includes=/usr/include/nspr && \
- make clean && make && make install-full && ldconfig 
+ make clean && make && make install && make install-conf && ldconfig
 
 cd ..
 rm -rf suricata-2.0.2 suricata-2.0.2.tar.gz
