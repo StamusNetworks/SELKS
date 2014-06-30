@@ -4,30 +4,145 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please run on Debian Wheezy
+# Please RUN ON Debian Wheezy only !!!
 
 set -e
 
+usage()
+{
+cat << EOF
 
-no_desktop=$1
-ARGS=1         # Script can have 1 argument.
+usage: $0 options
 
+SELKS build your own ISO options
 
-if [ $# -eq "$ARGS" ] && [ "$1" != "--no-desktop"  ];  then
-    echo -e "\n USAGE: `basename $0` script can have ONE or NO arguments"
-    echo -e "\n Only \"--no-desktop\" is allowed as an optional argument. Please check your spelling.\n"
-    exit 1;
-fi
+OPTIONS:
+   -h      Help info
+   -g      GUI option - can be "no-desktop"
+   -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
+           aka "3.8" or "3.10" or "3.15.1" 
+   
+   By default no options are required. The options presented here are if you wish to enable/disable/add components.
+   By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
+   
+EOF
+}
+
+GUI=
+KERNEL_VER=
+
+while getopts “hg:k:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         g)
+             GUI=$OPTARG
+             if [[ "$GUI" != "no-desktop" ]]; 
+             then
+               echo -e "\n Please check the option's spelling \n"
+               usage
+               exit 1;
+             fi
+             ;;
+         k)
+             KERNEL_VER=$OPTARG
+             if [[ "$KERNEL_VER" =~ ^[3-4]\.[0-9]+?\.?[0-9]+$ ]];
+             then
+               echo -e "\n Kernel version set to ${KERNEL_VER} \n"
+             else
+               echo -e "\n Please check the option's spelling \n"
+               usage
+               exit 1;
+             fi
+             ;;
+         ?)
+             GUI=
+             KERNEL_VER=
+             echo -e "\n Using the default options for the SELKS ISO build \n"
+             ;;
+     esac
+done
 
 # Begin
 # Pre staging
 #
+
 mkdir -p Stamus-Live-Build
-cd Stamus-Live-Build && lb config -a amd64 -d wheezy --debian-installer live \
---bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
---iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
---iso-preparer Stamus Networks --iso-publisher Stamus Networks \
---iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS
+
+if [[ -n "$KERNEL_VER" ]] 
+then 
+  
+  ### Kernel Version choice ###
+  
+  cd Stamus-Live-Build && \
+  wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  if [ $? -eq 0 ];
+  then
+    echo -e "Downloaded successfully linux-${KERNEL_VER}.tar.xz "
+  else
+    echo -e "\n Please check your connection \n"
+    echo -e "CAN NOT download the requested kernel from - \n"
+    echo -e "https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz \n"
+    exit 1;
+  fi
+
+  tar xfJ linux-${KERNEL_VER}.tar.xz 
+  cd linux-${KERNEL_VER}
+  
+  #default linux kernel config
+  make defconfig 
+  make-kpkg clean
+  
+  #set up concurrent jobs with respect to number of CPUs
+  export CONCURRENCY_LEVEL=$(( $(awk '/^processor/{print $3}' /proc/cpuinfo |wc -l) + 1 ))
+  
+  #create the packaged kernel image and headers
+  fakeroot make-kpkg --append-to-version=-selks --revision=${KERNEL_VER}  \
+  --initrd kernel_image kernel_headers modules_image
+  
+  cd ..
+  
+  # directory where the kernel image and headers are copied to
+  mkdir -p config/packages.chroot/
+  # directory that needs to be present for the Kernel Version choice to work
+  mkdir -p cache/contents.chroot/
+  
+  # copy the kernel image and headers
+  mv  linux-headers-${KERNEL_VER}-selks_${KERNEL_VER}_amd64.deb config/packages.chroot/
+  mv  linux-image-${KERNEL_VER}-selks_${KERNEL_VER}_amd64.deb config/packages.chroot/
+  
+  ### Kernel Version choice ## 
+  
+  
+  lb config \
+  -a amd64 -d wheezy  \
+  --swap-file-size 2048 \
+  --bootloader syslinux \
+  --linux-packages linux-image-${KERNEL_VER} \
+  --linux-flavour selks \
+  --debian-installer live \
+  --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
+  --iso-preparer Stamus Networks \
+  --iso-publisher Stamus Networks \
+  --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS
+  
+else
+
+  cd Stamus-Live-Build && lb config \
+  -a amd64 -d wheezy \
+  --swap-file-size 2048 \
+  --debian-installer live \
+  --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
+  --iso-preparer Stamus Networks \
+  --iso-publisher Stamus Networks \
+  --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS
+  
+fi
 
 # create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
@@ -49,9 +164,12 @@ mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 
+
+
 # kibana install
 mkdir -p config/includes.chroot/var/www && \
 tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.1.0-stamus.tgz
+
 
 cd config/includes.chroot/opt/selks/ && \
 git clone -b scirius-0.5 https://github.com/StamusNetworks/scirius.git
@@ -108,11 +226,11 @@ rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow
 dsniff mc python-daemon libnss3-tools curl 
 python-crypto libgmp10 libyaml-0-2 python-simplejson
 python-yaml ssh sudo tcpdump nginx openssl 
-python-pip debian-installer-launcher " \
+python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 
 # unless otherwise specified the ISO will be with a Desktop Environment
-if [[ -z "$no_desktop" ]]; then 
+if [[ -z "$GUI" ]]; then 
   echo " lxde " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 fi
 
@@ -120,7 +238,7 @@ fi
 # add specific tasks(script file) to be executed 
 # inside the chroot environment
 cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
-# Edit the menues names - add  Stamus
+# Edit the menue names - add  Stamus
 cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
 
 # debian installer preseed.cfg
