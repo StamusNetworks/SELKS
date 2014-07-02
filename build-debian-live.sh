@@ -22,6 +22,8 @@ OPTIONS:
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
            aka "3.8" or "3.10" or "3.15.1" 
    
+   Example: ./build-debian-live.sh -k 3.15.3 -g no-desktop
+   
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
    By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
    
@@ -77,7 +79,7 @@ then
   
   ### Kernel Version choice ###
   
-  cd Stamus-Live-Build && \
+  cd Stamus-Live-Build && mkdir -p kernel-misc && cd kernel-misc 
   wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
   if [ $? -eq 0 ];
   then
@@ -94,32 +96,32 @@ then
   
   #default linux kernel config
   make defconfig 
-  make-kpkg clean
   
-  #set up concurrent jobs with respect to number of CPUs
-  export CONCURRENCY_LEVEL=$(( $(awk '/^processor/{print $3}' /proc/cpuinfo |wc -l) + 1 ))
-  
-  #create the packaged kernel image and headers
-  fakeroot make-kpkg --append-to-version=-selks --revision=${KERNEL_VER}  \
-  --initrd kernel_image kernel_headers modules_image
-  
-  cd ..
+  #set up concurrent jobs with respect to number of CPUs +1
+  # make deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=3.15.2
+  make defconfig && \
+  make clean && \
+  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=${KERNEL_VER}
+  cd ../../
   
   # directory where the kernel image and headers are copied to
   mkdir -p config/packages.chroot/
   # directory that needs to be present for the Kernel Version choice to work
   mkdir -p cache/contents.chroot/
+  # hook directory for the initramfs script to be copied to
+  mkdir -p config/hooks/
   
   # copy the kernel image and headers
-  mv  linux-headers-${KERNEL_VER}-selks_${KERNEL_VER}_amd64.deb config/packages.chroot/
-  mv  linux-image-${KERNEL_VER}-selks_${KERNEL_VER}_amd64.deb config/packages.chroot/
+  mv kernel-misc/*.deb config/packages.chroot/
+  cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
+  
   
   ### Kernel Version choice ## 
-  
   
   lb config \
   -a amd64 -d wheezy  \
   --swap-file-size 2048 \
+  --binary-images iso \
   --bootloader syslinux \
   --linux-packages linux-image-${KERNEL_VER} \
   --linux-flavour selks \
@@ -240,13 +242,7 @@ fi
 cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
 
 # Edit menu names for Live and Install
-if [[ -n "$KERNEL_VER" ]]; then 
-  # Edit the menue names - remove Live
-  cp staging/config/hooks/menues-changes-kernel-version-choice.binary Stamus-Live-Build/config/hooks/
-else
-  # Edit the menue names - add  Stamus
-  cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
-fi
+cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
 
 # debian installer preseed.cfg
 echo "
