@@ -121,7 +121,6 @@ then
   lb config \
   -a amd64 -d wheezy  \
   --swap-file-size 2048 \
-  --binary-images iso \
   --bootloader syslinux \
   --linux-packages linux-image-${KERNEL_VER} \
   --linux-flavour selks \
