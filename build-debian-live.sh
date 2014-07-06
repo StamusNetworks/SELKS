@@ -19,13 +19,21 @@ SELKS build your own ISO options
 OPTIONS:
    -h      Help info
    -g      GUI option - can be "no-desktop"
+   -p      Add package(s) to the build - can be one-package or "package1 package2 package3...." (should be confined to up to 10 packages)
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
            aka "3.8" or "3.10" or "3.15.1" 
-   
-   Example: ./build-debian-live.sh -k 3.15.3 -g no-desktop
-   
+           
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
    By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
+   
+   Example: 
+   ./build-debian-live.sh 
+   ./build-debian-live.sh -k 3.15.3 
+   ./build-debian-live.sh -k 3.10.44 -p one-package
+   ./build-debian-live.sh -k 3.9.0 -g no-desktop -p one-package
+   ./build-debian-live.sh -k 3.14.10 -g no-desktop -p "package1 package2 package3"
+   
+   
    
 EOF
 }
@@ -33,7 +41,7 @@ EOF
 GUI=
 KERNEL_VER=
 
-while getopts “hg:k:” OPTION
+while getopts “hg:k:p:” OPTION
 do
      case $OPTION in
          h)
@@ -60,13 +68,22 @@ do
                exit 1;
              fi
              ;;
+         p)
+             PKG_ADD+=("$OPTARG")
+             #echo "The first value of the pkg array 'PKG_ADD' is '$PKG_ADD'"
+             #echo "The whole list of values is '${PKG_ADD[@]}'"
+             echo "Packages to be added to the build: ${PKG_ADD[@]} "
+             #exit 1;
+             ;;
          ?)
              GUI=
              KERNEL_VER=
+             PKG_ADD=
              echo -e "\n Using the default options for the SELKS ISO build \n"
              ;;
      esac
 done
+shift $((OPTIND -1))
 
 # Begin
 # Pre staging
@@ -74,7 +91,7 @@ done
 
 mkdir -p Stamus-Live-Build
 
-if [[ -n "$KERNEL_VER" ]] 
+if [[ -n "$KERNEL_VER" ]]; 
 then 
   
   ### Kernel Version choice ###
@@ -239,6 +256,10 @@ if [[ -z "$GUI" ]]; then
   echo " lxde " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
 fi
 
+# if -p (add packages) option is used - add those packages to the build
+if [[ -n "${PKG_ADD}" ]]; then 
+  echo " ${PKG_ADD[@]} " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+fi
 
 # add specific tasks(script file) to be executed 
 # inside the chroot environment
