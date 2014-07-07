@@ -235,30 +235,37 @@ cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init
 cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
 
 
-# add packages to be installed
+# add core system packages to be installed
 echo "
 libpcre3 libpcre3-dbg libpcre3-dev 
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
-ethtool bwm-ng iptraf htop libjansson-dev libjansson4 libnss3-dev libnspr4-dev 
-libgeoip1 libgeoip-dev openjdk-7-jre-headless
-rsync wireshark tcpreplay sysstat hping3 screen terminator ngrep tcpflow 
-dsniff mc python-daemon libnss3-tools curl 
+libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
+rsync mc python-daemon libnss3-tools curl 
 python-crypto libgmp10 libyaml-0-2 python-simplejson
 python-yaml ssh sudo tcpdump nginx openssl 
 python-pip debian-installer-launcher live-build " \
->> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+>> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
+
+# add system tools packages to be installed
+echo "
+ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
+tcpflow dsniff mc python-daemon wget curl " \
+>> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  echo " lxde " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+  echo "
+  lxde wireshark conky terminator " \
+  >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
 fi
 
 # if -p (add packages) option is used - add those packages to the build
 if [[ -n "${PKG_ADD}" ]]; then 
-  echo " ${PKG_ADD[@]} " >> Stamus-Live-Build/config/package-lists/StamusNetworks.list.chroot
+  echo " ${PKG_ADD[@]} " >> \
+  Stamus-Live-Build/config/package-lists/StamusNetworks-UsrPkgAdd.list.chroot
 fi
 
 # add specific tasks(script file) to be executed 
