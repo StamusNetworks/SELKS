@@ -278,7 +278,7 @@ tcpflow dsniff mc python-daemon wget curl " \
 # unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
   echo "
-  lxde wireshark " \
+  lxde wireshark terminator " \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
 fi
 
