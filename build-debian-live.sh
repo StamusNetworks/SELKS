@@ -14,6 +14,10 @@ cat << EOF
 
 usage: $0 options
 
+###################################
+#!!! RUN on Debian Wheezy ONLY !!!#
+###################################
+
 SELKS build your own ISO options
 
 OPTIONS:
@@ -21,17 +25,35 @@ OPTIONS:
    -g      GUI option - can be "no-desktop"
    -p      Add package(s) to the build - can be one-package or "package1 package2 package3...." (should be confined to up to 10 packages)
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
-           aka "3.8" or "3.10" or "3.15.1" 
+           aka "3.8" or "3.10" or "3.15.6" 
+           
+           More info on kernel versions and support:
+           https://www.kernel.org/
+           https://www.kernel.org/category/releases.html
            
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
    By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
    
-   Example: 
+   EXAMPLE (default): 
    ./build-debian-live.sh 
-   ./build-debian-live.sh -k 3.15.3 
+   The example above (is the default) will build a SELKS standard Debian Wheezy 64 bit distro (with kernel ver 3.2)
+   
+   EXAMPLE (customizations): 
+   
+   ./build-debian-live.sh -k 3.15.6 
+   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.15.6
+   
    ./build-debian-live.sh -k 3.10.44 -p one-package
+   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.10.44
+   and add the extra package named  "one-package" to the build.
+   
    ./build-debian-live.sh -k 3.9.0 -g no-desktop -p one-package
+   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.9.0
+   and add the extra package named  "one-package" to the build.
+   
    ./build-debian-live.sh -k 3.14.10 -g no-desktop -p "package1 package2 package3"
+   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.14.10
+   and add the extra packages named  "package1", "package2", "package3" to the build.
    
    
    
@@ -112,10 +134,8 @@ then
   cd linux-${KERNEL_VER}
   
   #default linux kernel config
-  make defconfig 
+  #set up concurrent jobs with respect to number of CPUs
   
-  #set up concurrent jobs with respect to number of CPUs +1
-  # make deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=3.15.2
   make defconfig && \
   make clean && \
   make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=${KERNEL_VER}
@@ -131,18 +151,18 @@ then
   # copy the kernel image and headers
   mv kernel-misc/*.deb config/packages.chroot/
   cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
-  
+    
   
   ### Kernel Version choice ## 
   
   lb config \
   -a amd64 -d wheezy  \
-  --swap-file-size 2048 \
+  --swap-file-size 2048MB \
   --bootloader syslinux \
-  --linux-packages linux-image-${KERNEL_VER} \
-  --linux-flavour selks \
   --debian-installer live \
   --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --linux-packages linux-image-${KERNEL_VER} \
+  --linux-flavour selks \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
@@ -152,7 +172,7 @@ else
 
   cd Stamus-Live-Build && lb config \
   -a amd64 -d wheezy \
-  --swap-file-size 2048 \
+  --swap-file-size 2048MB \
   --debian-installer live \
   --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
@@ -258,7 +278,7 @@ tcpflow dsniff mc python-daemon wget curl " \
 # unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
   echo "
-  lxde wireshark conky terminator " \
+  lxde wireshark " \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
 fi
 
@@ -273,7 +293,22 @@ fi
 cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
 
 # Edit menu names for Live and Install
-cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+if [[ -n "$KERNEL_VER" ]]; 
+then
+  
+   # IF kustom kernel option is chosen "-k ...":
+   # remove the live menu since different kernel versions and custom flavours  
+   # can potentially fail to load in LIVE depending on the given environment.
+   # so we create a file for execution at the binary stage to remove the 
+   # live menu choice. That leaves the options to install.
+   cp staging/config/hooks/menues-changes-live-custom-kernel-choice.binary Stamus-Live-Build/config/hooks/
+   cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+   
+else
+  
+  cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+  
+fi
 
 # debian installer preseed.cfg
 echo "

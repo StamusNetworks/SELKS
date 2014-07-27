@@ -1,0 +1,10 @@
+#!/bin/sh
+ 
+ # IF kustom kernel option is chosen:
+ # remove the live menu since different kernel versions and custom flavours  
+ # can potentially fail to load in LIVE depending on the given environment.
+ # so we create a file for execution at the binary stage to remove the 
+ # live menu choice. That leaves the options to install.
+
+sed -i -e 's|include live\.cfg| |'  binary/isolinux/menu.cfg
+
