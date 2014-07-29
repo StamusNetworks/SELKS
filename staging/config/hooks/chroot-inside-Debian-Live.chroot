@@ -119,8 +119,10 @@ echo "yes" | python manage.py collectstatic
 
 echo "no" | su www-data -c  "python manage.py syncdb"
 su www-data -c 'python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.1/emerging.rules.tar.gz http sigs'
-su www-data -c 'python manage.py defaultruleset "ETOpen based ruleset"'
-su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "ETOpen based ruleset"'
+su www-data -c 'python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig'
+su www-data -c 'python manage.py defaultruleset "Default SELKS ruleset"'
+su www-data -c 'python manage.py disablecategory "Default SELKS ruleset" stream-events'
+su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"'
 su www-data -c 'python manage.py updatesuricata'
 
 ### nginx, revrse proxy and ssl ###
