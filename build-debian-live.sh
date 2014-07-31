@@ -211,7 +211,7 @@ tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.
 
 
 cd config/includes.chroot/opt/selks/ && \
-git clone -b scirius-0.5 https://github.com/StamusNetworks/scirius.git
+git clone -b scirius-0.6 https://github.com/StamusNetworks/scirius.git
 cd ../../../../../
 
 
