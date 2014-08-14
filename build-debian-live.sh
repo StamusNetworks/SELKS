@@ -275,7 +275,7 @@ python-pip debian-installer-launcher live-build " \
 # add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
-tcpflow dsniff mc python-daemon wget curl " \
+tcpflow dsniff mc python-daemon wget curl vim" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # unless otherwise specified the ISO will be with a Desktop Environment
