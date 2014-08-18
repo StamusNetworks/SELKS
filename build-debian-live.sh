@@ -283,7 +283,7 @@ make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
 rsync mc python-daemon libnss3-tools curl 
-python-crypto libgmp10 libyaml-0-2 python-simplejson
+python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
 python-yaml ssh sudo tcpdump nginx openssl 
 python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
