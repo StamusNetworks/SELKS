@@ -93,6 +93,7 @@ update-rc.d logstash defaults
 update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
 update-rc.d django defaults 95 10
+update-rc.d kibana-templates-load-in-es defaults 99
 
 # set the right permissions for the elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata

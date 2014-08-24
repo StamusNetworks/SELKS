@@ -207,6 +207,7 @@ mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
+mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 
 
 
@@ -261,6 +262,13 @@ cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/in
 cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init.d/django
 # copy elasticsearch repo file
 cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+# copy Kibana Templates to be loaded form cmd line with curl (not from GUI "Load")
+cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
+# copy Kibana Templates curl load script for non-GUI template loads
+# the actual load script resides in /etc/init.d/kibana-templates-load-in-es
+# and is executed at every boot time
+# step 3 is in the chroot file in the section -  updaterc.d 
+cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/includes.chroot/etc/init.d/
 
 
 # add core system packages to be installed
@@ -280,7 +288,7 @@ python-pip debian-installer-launcher live-build " \
 # add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
-tcpflow dsniff mc python-daemon wget curl vim" \
+tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # unless otherwise specified the ISO will be with a Desktop Environment
