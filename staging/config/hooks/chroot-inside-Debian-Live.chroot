@@ -74,7 +74,6 @@ cd .. && \
 wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
 apt-get update && \
 apt-get install -y elasticsearch logstash && \
-cp /etc/kibana/config.js /var/www
 
 ### ELK ###
 
