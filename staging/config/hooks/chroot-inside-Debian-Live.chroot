@@ -42,6 +42,9 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### Suricata ### 
 
+### Install kibana ###
+apt-get install -y kibana-stamus
+### Install kibana ###
 
 ### Scirius ###
 apt-get install -y scirius

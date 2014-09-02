@@ -202,7 +202,6 @@ mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/opt/selks/
 mkdir -p config/includes.chroot/etc/suricata/rules/
-mkdir -p config/includes.chroot/etc/kibana/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
@@ -211,15 +210,8 @@ mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 
 
 
-# kibana install
-mkdir -p config/includes.chroot/var/www && \
-tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.1.0-stamus.tgz
-
-
 # reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
-# copy kibana config
-cp staging/etc/kibana/config.js  Stamus-Live-Build/config/includes.chroot/etc/kibana/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
