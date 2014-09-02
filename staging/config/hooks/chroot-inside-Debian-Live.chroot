@@ -42,6 +42,12 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### Suricata ### 
 
+
+### Scirius ###
+apt-get install -y scirius
+### Scirius ###
+
+
 ### Oracle JAVA for ELK ###
 
 mkdir -p /opt/selks/java-oracle/ && \
@@ -81,7 +87,6 @@ update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
-update-rc.d django defaults 95 10
 update-rc.d kibana-templates-load-in-es defaults 99
 
 # set the right permissions for the elogstash user to run suricata
@@ -89,10 +94,6 @@ chown -R logstash:logstash /var/log/suricata
 
 # www-data needs to write Suricata rules
 chown -R www-data.www-data /etc/suricata/rules/
-# SCirius needs to put data into git-sources
-mkdir -p /opt/selks/scirius/git-sources/
-chown -R www-data.www-data /opt/selks/scirius/git-sources/
-chown -R www-data.www-data /opt/selks/scirius/db/
 
 ### nginx, revrse proxy and ssl ###
 
@@ -103,11 +104,7 @@ ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.con
 sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
-mkdir -p /var/www/static
-cd /opt/selks/scirius/ && \
-echo "yes" | python manage.py collectstatic
-
-echo "no" | su www-data -c  "python manage.py syncdb"
+cd /opt/selks/scirius/
 su www-data -c 'python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.1/emerging.rules.tar.gz http sigs'
 su www-data -c 'python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig'
 su www-data -c 'python manage.py defaultruleset "Default SELKS ruleset"'

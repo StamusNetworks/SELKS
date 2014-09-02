@@ -216,11 +216,6 @@ mkdir -p config/includes.chroot/var/www && \
 tar -C config/includes.chroot/var/www --strip=1 -xzf ../staging/stamus/kibana-3.1.0-stamus.tgz
 
 
-cd config/includes.chroot/opt/selks/ && \
-git clone -b scirius-0.6 https://github.com/StamusNetworks/scirius.git
-cd ../../../../../
-
-
 # reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
 # copy kibana config
@@ -250,16 +245,11 @@ cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includ
 # copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
-# install scirius db
-mkdir -p Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/db/
-cp staging/scirius/local_settings.py Stamus-Live-Build/config/includes.chroot/opt/selks/scirius/scirius/
 # copy suricata.yaml using scirius.rules
 cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
 cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/etc/profile.d/
 # copy init script for suri_reloader
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
-# copy init script for djando
-cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init.d/django
 # copy elasticsearch repo file
 cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
 # copy stamus debian repo list file - 
