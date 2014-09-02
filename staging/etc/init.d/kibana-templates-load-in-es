@@ -30,10 +30,10 @@ case "$1" in
     while ! echo exit | nc localhost 9200; do 
       counter=$((counter + 1))
       echo  "Port 9200 is NOT listening/open !!";
-      echo  "The script will retry to connect 6 times - once every 5 sec"; 
+      echo  "The script will retry to connect 6 times - once every 10 sec"; 
       echo  "and exit afterwords if not successful!"; echo;
       if [ "$counter" -lt 6 ]; then
-        sleep 5 
+        sleep 10 
       else
         echo "Tried to connect 6 times already...exiting!"
         exit 1

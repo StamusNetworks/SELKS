@@ -36,20 +36,9 @@ rm -rf libcap-ng-0.7.4 libcap-ng-0.7.4.tar.gz
 
 ### Suricata ###
 
-cd /opt/selks && \
-wget http://www.openinfosecfoundation.org/download/suricata-2.0.3.tar.gz && \
-tar -xzf suricata-2.0.3.tar.gz && \
-cd suricata-2.0.3
- 
-./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --disable-gccmarch-native \
- --enable-geoip --with-libnss-libraries=/usr/lib --with-libnss-includes=/usr/include/nss/ \
- --enable-nfqueue \
- --with-libcap_ng-libraries=/usr/local/lib --with-libcap_ng-includes=/usr/local/include \
- --with-libnspr-libraries=/usr/lib --with-libnspr-includes=/usr/include/nspr && \
- make clean && make && make install && make install-conf && ldconfig
-
-cd ..
-rm -rf suricata-2.0.3 suricata-2.0.3.tar.gz
+wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - && \
+apt-get update && \
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
 ### Suricata ### 
 

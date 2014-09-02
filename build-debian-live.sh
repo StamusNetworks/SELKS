@@ -262,6 +262,9 @@ cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/in
 cp staging/scirius/django-init Stamus-Live-Build/config/includes.chroot/etc/init.d/django
 # copy elasticsearch repo file
 cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+# copy stamus debian repo list file - 
+# holding latest Suricata,libhtp,Scirius and kernel packages
+cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
 # copy Kibana Templates to be loaded form cmd line with curl (not from GUI "Load")
 cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 # copy Kibana Templates curl load script for non-GUI template loads
