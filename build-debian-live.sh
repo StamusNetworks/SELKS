@@ -209,6 +209,7 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 
 
+cd ../
 
 # reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
