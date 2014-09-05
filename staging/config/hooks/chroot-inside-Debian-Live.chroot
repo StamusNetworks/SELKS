@@ -40,6 +40,17 @@ wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gp
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
+# adjusting config options in suricata.yaml
+sed -i 's/ checksum-validation: yes      # reject wrong csums/ checksum-validation: no      # reject wrong csums/g' /etc/suricata/suricata.yaml
+sed -i -e '/  - unified2-alert:/{$!N; s/yes/no/}' /etc/suricata/suricata.yaml
+sed -i '/#runmode: autofp/a runmode: workers' /etc/suricata/suricata.yaml
+sed -i 's/   inline: auto/  inline: no/g' /etc/suricata/suricata.yaml
+
+# editing the rules section  - to use with Scirius
+# order is important
+sed -i -e '/.rules/s/ - /# - /g' /etc/suricata/suricata.yaml
+sed -i '/rule-files:/a \ - scirius.rules' /etc/suricata/suricata.yaml
+
 ### Suricata ### 
 
 ### Install kibana ###

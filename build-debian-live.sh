@@ -239,7 +239,7 @@ cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includ
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
 # copy suricata.yaml using scirius.rules
-cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
+# cp staging/scirius/suricata.yaml Stamus-Live-Build/config/includes.chroot/etc/suricata
 cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/etc/profile.d/
 # copy init script for suri_reloader
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
