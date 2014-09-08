@@ -10,19 +10,19 @@
 
 set -e
 
-#setting up the LIVE root (during install on disk it is preseeded)
+# Setting up the LIVE root (during install on disk it is preseeded)
 echo "root:StamusNetworks" | chpasswd
 
-###  Scirius ###
+###  START Scirius ###
 # NOTE python-pip is already installed in the build script
 
 pip install django==1.6.6 django-tables2 South GitPython pyinotify flup
 
-###  Scirius ###
+###  END Scirius ###
 
 mkdir -p  /opt/selks/
 
-### Libcap-ng for dropping privilegies with Suricata ###
+### START Libcap-ng for dropping privilegies with Suricata ###
 
 cd /opt/selks/ && \
 wget http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-0.7.4.tar.gz && \
@@ -32,32 +32,32 @@ cd libcap-ng-0.7.4 && \
 cd ..
 rm -rf libcap-ng-0.7.4 libcap-ng-0.7.4.tar.gz
 
-### Libcap-ng for dropping privilegies with Suricata ###
+### END Libcap-ng for dropping privilegies with Suricata ###
 
-### Suricata ###
+### START Suricata ###
 
 wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - && \
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
-# adjusting config options in suricata.yaml
-# disable checksum verification
+# Adjusting config options in suricata.yaml
+# Disable checksum verification
 sed -i 's/ checksum-validation: yes      # reject wrong csums/ checksum-validation: no      # reject wrong csums/g' /etc/suricata/suricata.yaml
-# disable unified output
+# Disable unified output
 sed -i -e '/  - unified2-alert:/{$!N; s/yes/no/}' /etc/suricata/suricata.yaml
-# switch to runmode workers
+# Switch to runmode workers
 sed -i '/#runmode: autofp/a runmode: workers' /etc/suricata/suricata.yaml
-# disable inline
+# Disable inline
 sed -i 's/  inline: auto/  inline: no/g' /etc/suricata/suricata.yaml
-# enable payload dumping
+# Enable payload dumping
 sed -i 's/# payload: yes           # enable dumping payload in Base64/payload: yes           # enable dumping payload in Base64/g' /etc/suricata/suricata.yaml
 sed -i 's/# payload-printable: yes # enable dumping payload in printable (lossy) format/payload-printable: yes # enable dumping payload in printable (lossy) format/g' /etc/suricata/suricata.yaml
 sed -i 's/# packet: yes            # enable dumping of packet (without stream segments)/packet: yes            # enable dumping of packet (without stream segments)/g' /etc/suricata/suricata.yaml
 sed -i 's/# http: yes              # enable dumping of http fields/http: yes              # enable dumping of http fields/g' /etc/suricata/suricata.yaml
-# enable flow
+# Enable flow
 sed -i '/- http:/i\ \ \ \ \ \ \ \ - flow' /etc/suricata/suricata.yaml
 
-# enable full http logging
+# Enable full http logging
 awk '/\[Accept-Encoding, Accept-Language, Authorization\]/{print $0 \
 RS "            custom: [accept, accept-charset, accept-encoding, accept-language," \
 RS "            accept-datetime, authorization, cache-control, cookie, from," \
@@ -71,23 +71,23 @@ RS "            set-cookie, trailer, transfer-encoding, upgrade, vary, warning,"
 RS "            www-authenticate]" \
 ;next}1' /etc/suricata/suricata.yaml > tmp && mv tmp /etc/suricata/suricata.yaml
 
-# editing the rules section  - to use with Scirius
-# order is important
+# Editing the rules section  - to use with Scirius
+# Order is important
 sed -i -e '/.rules/s/ - /# - /g' /etc/suricata/suricata.yaml
 sed -i '/rule-files:/a \ - scirius.rules' /etc/suricata/suricata.yaml
 
-### Suricata ###
+### END Suricata ###
 
-### Install kibana ###
+### START Install kibana ###
 apt-get install -y kibana-stamus
-### Install kibana ###
+### END Install kibana ###
 
-### Scirius ###
+### START Scirius ###
 apt-get install -y scirius
-### Scirius ###
+### END Scirius ###
 
 
-### Oracle JAVA for ELK ###
+### START Oracle JAVA for ELK ###
 
 mkdir -p /opt/selks/java-oracle/ && \
 cd /opt/selks/ && \
@@ -98,28 +98,28 @@ update-alternatives --install /usr/bin/java java ${JHome%*/}/bin/java 20000 && \
 update-alternatives --install /usr/bin/javac javac ${JHome%*/}/bin/javac 20000
 rm jdk-7u55-linux-x64.tar.gz
 
-# the bellow is added at the end of this script in /etc/default/elastisearch
+# The bellow is added at the end of this script in /etc/default/elastisearch
 # it is a dependency/recommendation for ES >= 1.2.0 
 # JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
 
-### Oracle JAVA for ELK ###
+### END Oracle JAVA for ELK ###
  
-### ELK ###
+### START ELK ###
 
 cd .. && \
 wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
 apt-get update && \
 apt-get install -y elasticsearch logstash && \
 
-### ELK ###
+### END ELK ###
 
-### Get and set up templates/dashboards for Kibana ###
+### START Get and set up templates/dashboards for Kibana ###
 
 cd /opt/selks/ && \
 git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
 cp Suricata-Logstash-Templates/Templates/* /var/www/app/dashboards/
 
-### Get and set up templates/dashboards for Kibana ###
+### END Get and set up templates/dashboards for Kibana ###
 
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
@@ -127,13 +127,13 @@ update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
 update-rc.d kibana-templates-load-in-es defaults 99
 
-# set the right permissions for the elogstash user to run suricata
+# Set the right permissions for the elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
 
 # www-data needs to write Suricata rules
 chown -R www-data.www-data /etc/suricata/rules/
 
-### nginx, revrse proxy and ssl ###
+### START nginx, revrse proxy and ssl ###
 
 mkdir -p /etc/nginx/ssl
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
@@ -150,9 +150,9 @@ su www-data -c 'python manage.py disablecategory "Default SELKS ruleset" stream-
 su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"'
 su www-data -c 'python manage.py updatesuricata'
 
-### nginx, revrse proxy and ssl ###
+### END nginx, revrse proxy and ssl ###
 
-# set up a cron jobs for Logstash,Suricata, rule updates
+# Set up a cron jobs for Logstash,Suricata, rule updates
 echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
 echo "7 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
 # alway leave a ampty line before cron files end
@@ -160,10 +160,10 @@ echo "" >> /etc/crontab
 
 echo "SELKS" > /etc/hostname
 
-# enable the ssh banners
+# Enable the ssh banners
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
-### elasticsearch configuration ###
+### START elasticsearch configuration ###
 
 echo "
 # prevent swapping
@@ -199,7 +199,7 @@ index.refresh_interval: 20s
 
 " >> /etc/elasticsearch/elasticsearch.yml
 
-### elasticsearch configuration ###
+### END elasticsearch configuration ###
 
 # Edit the Icon "Install Debian Wheezy" name on a Live Desktop 
 # to "Install SELKS"
@@ -209,7 +209,7 @@ sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/appli
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
 
-# clean devel and some others packages
+# Clean devel and some others packages
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
 	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \

@@ -121,7 +121,7 @@ mkdir -p Stamus-Live-Build
 if [[ -n "$KERNEL_VER" ]]; 
 then 
   
-  ### Kernel Version choice ###
+  ### START Kernel Version choice ###
   
   cd Stamus-Live-Build && mkdir -p kernel-misc && cd kernel-misc 
   wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
@@ -138,27 +138,27 @@ then
   tar xfJ linux-${KERNEL_VER}.tar.xz 
   cd linux-${KERNEL_VER}
   
-  #default linux kernel config
-  #set up concurrent jobs with respect to number of CPUs
+  # Default linux kernel config
+  # Set up concurrent jobs with respect to number of CPUs
   
   make defconfig && \
   make clean && \
   make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=${KERNEL_VER}
   cd ../../
   
-  # directory where the kernel image and headers are copied to
+  # Directory where the kernel image and headers are copied to
   mkdir -p config/packages.chroot/
-  # directory that needs to be present for the Kernel Version choice to work
+  # Directory that needs to be present for the Kernel Version choice to work
   mkdir -p cache/contents.chroot/
-  # hook directory for the initramfs script to be copied to
+  # Hook directory for the initramfs script to be copied to
   mkdir -p config/hooks/
   
-  # copy the kernel image and headers
+  # Copy the kernel image and headers
   mv kernel-misc/*.deb config/packages.chroot/
   cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
     
   
-  ### Kernel Version choice ## 
+  ### END Kernel Version choice ## 
   
   lb config \
   -a amd64 -d wheezy  \
@@ -187,7 +187,7 @@ else
   
 fi
 
-# create dirs if not existing for the custom config files
+# Create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
@@ -211,7 +211,7 @@ mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 
 cd ../
 
-# reverse proxy with nginx and ssl
+# Reverse proxy with nginx and ssl
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
@@ -219,45 +219,45 @@ cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
-# the same as above but for root
+# The same as above but for root
 cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
-# logstash
+# Logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
-# suricata init script
+# Suricata init script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
 cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
-# logrotate config for eve.json
+# Logrotate config for eve.json
 cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
-# add the Stmaus Networs logo for the boot screen
+# Add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
-# add the SELKS wallpaper
+# Add the SELKS wallpaper
 cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/usr/share/images/desktop-base/
-# copy banners
+# Copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
-# copy pythonpath.sh
+# Copy pythonpath.sh
 cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/etc/profile.d/
-# copy init script for suri_reloader
+# Copy init script for suri_reloader
 cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
-# copy elasticsearch repo file
+# Copy elasticsearch repo file
 cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# copy stamus debian repo list file - 
+# Copy stamus debian repo list file - 
 # holding latest Suricata,libhtp,Scirius and kernel packages
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# copy Kibana Templates to be loaded form cmd line with curl (not from GUI "Load")
+# Copy Kibana Templates to be loaded form cmd line with curl (not from GUI "Load")
 cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
-# copy Kibana Templates curl load script for non-GUI template loads
-# the actual load script resides in /etc/init.d/kibana-templates-load-in-es
-# and is executed at every boot time
-# step 3 is in the chroot file in the section -  updaterc.d 
+# Copy Kibana Templates curl load script for non-GUI template loads.
+# The actual load script resides in /etc/init.d/kibana-templates-load-in-es
+# and is executed at every boot time.
+# Step 3 is in the chroot file in the section -  updaterc.d 
 cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/includes.chroot/etc/init.d/
 
 
-# add core system packages to be installed
+# Add core system packages to be installed
 echo "
 libpcre3 libpcre3-dbg libpcre3-dev 
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
@@ -271,26 +271,26 @@ python-yaml ssh sudo tcpdump nginx openssl
 python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
-# add system tools packages to be installed
+# Add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
 tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
-# unless otherwise specified the ISO will be with a Desktop Environment
+# Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
   echo "
   lxde wireshark terminator " \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
 fi
 
-# if -p (add packages) option is used - add those packages to the build
+# If -p (add packages) option is used - add those packages to the build
 if [[ -n "${PKG_ADD}" ]]; then 
   echo " ${PKG_ADD[@]} " >> \
   Stamus-Live-Build/config/package-lists/StamusNetworks-UsrPkgAdd.list.chroot
 fi
 
-# add specific tasks(script file) to be executed 
+# Add specific tasks(script file) to be executed 
 # inside the chroot environment
 cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
 
@@ -301,7 +301,7 @@ then
    # IF kustom kernel option is chosen "-k ...":
    # remove the live menu since different kernel versions and custom flavours  
    # can potentially fail to load in LIVE depending on the given environment.
-   # so we create a file for execution at the binary stage to remove the 
+   # So we create a file for execution at the binary stage to remove the 
    # live menu choice. That leaves the options to install.
    cp staging/config/hooks/menues-changes-live-custom-kernel-choice.binary Stamus-Live-Build/config/hooks/
    cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
@@ -312,7 +312,7 @@ else
   
 fi
 
-# debian installer preseed.cfg
+# Debian installer preseed.cfg
 echo "
 d-i netcfg/get_hostname string SELKS
 
@@ -326,6 +326,6 @@ d-i passwd/root-password password StamusNetworks
 d-i passwd/root-password-again password StamusNetworks
 " > Stamus-Live-Build/config/debian-installer/preseed.cfg
 
-# build the ISO
+# Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
 mv binary.hybrid.iso SELKS.iso
