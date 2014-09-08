@@ -220,6 +220,7 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
 # the same as above but for root
+cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 # logstash
