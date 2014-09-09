@@ -101,6 +101,8 @@ dashboards you could do that as follows (in your browser):
 * https://your.selks.IP.here/log/#/dashboard/file/HTTP
 * https://your.selks.IP.here/log/#/dashboard/file/DNS
 * https://your.selks.IP.here/log/#/dashboard/file/TLS
+* https://your.selks.IP.here/log/#/dashboard/file/FLOW
+* https://your.selks.IP.here/log/#/dashboard/file/HTTP-Extended-Custom
 * https://your.selks.IP.here/log/#/dashboard/file/FILE-Transactions
 * https://your.selks.IP.here/log/#/dashboard/file/SSH
 
