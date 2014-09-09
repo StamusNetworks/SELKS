@@ -22,6 +22,9 @@
 case "$1" in
   start)
     
+    if [ -e "/etc/kibana/dashboards-loaded" ]; then
+	exit 0
+    fi
     # check if port 9200 is open/listening
     # sometimes afetr starting ES it takes 10-15 sec to 
     # get 9200 to open and accept connections
@@ -41,7 +44,12 @@ case "$1" in
     done
     
     cd /opt/selks/KibanaTemplatesCmdLoad/ && \
-    for i in $( dir -1 ); do  curl -v -X PUT http://localhost:9200/kibana-int/dashboard/${i} -T ${i} ; done
+    for i in $( dir -1 ); do  curl -v -X PUT http://localhost:9200/kibana-int/dashboard/${i} -T ${i} || fail=1; done
+
+    if [ -z $fail ]; then
+      touch /etc/kibana/dashboards-loaded
+    fi
+
   ;;
   stop|status|restart|reload|force-reload)
     # do nothing
