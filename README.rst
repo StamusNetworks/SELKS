@@ -96,15 +96,15 @@ If you wish to remotely (from a different PC on your network) access the
 dashboards you could do that as follows (in your browser):
 
 * https://your.selks.IP.here/rules/ - Scirius ruleset management
-* https://your.selks.IP.here/log/#/dashboard/file/ALL
-* https://your.selks.IP.here/log/#/dashboard/file/ALERTS
-* https://your.selks.IP.here/log/#/dashboard/file/HTTP
-* https://your.selks.IP.here/log/#/dashboard/file/DNS
-* https://your.selks.IP.here/log/#/dashboard/file/TLS
-* https://your.selks.IP.here/log/#/dashboard/file/FLOW
-* https://your.selks.IP.here/log/#/dashboard/file/HTTP-Extended-Custom
-* https://your.selks.IP.here/log/#/dashboard/file/FILE-Transactions
-* https://your.selks.IP.here/log/#/dashboard/file/SSH
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/ALL
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/ALERTS
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/HTTP
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/DNS
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/TLS
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/FLOW
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/HTTP-Extended-Custom
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/FILE-Transactions
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/SSH
 
 
 Note
