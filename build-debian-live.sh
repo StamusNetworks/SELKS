@@ -143,7 +143,7 @@ then
   
   make defconfig && \
   make clean && \
-  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-selks KDEB_PKGVERSION=${KERNEL_VER}
+  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-stamus KDEB_PKGVERSION=${KERNEL_VER}
   cd ../../
   
   # Directory where the kernel image and headers are copied to
@@ -167,7 +167,7 @@ then
   --debian-installer live \
   --bootappend-live "boot=live config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
-  --linux-flavour selks \
+  --linux-flavour stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
