@@ -40,42 +40,6 @@ wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gp
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
-# Adjusting config options in suricata.yaml
-# Disable checksum verification
-sed -i 's/ checksum-validation: yes      # reject wrong csums/ checksum-validation: no      # reject wrong csums/g' /etc/suricata/suricata.yaml
-# Disable unified output
-sed -i -e '/  - unified2-alert:/{$!N; s/yes/no/}' /etc/suricata/suricata.yaml
-# Switch to runmode workers
-sed -i '/#runmode: autofp/a runmode: workers' /etc/suricata/suricata.yaml
-# Disable inline
-sed -i 's/  inline: auto/  inline: no/g' /etc/suricata/suricata.yaml
-# Enable payload dumping
-sed -i 's/# payload: yes           # enable dumping payload in Base64/payload: yes           # enable dumping payload in Base64/g' /etc/suricata/suricata.yaml
-sed -i 's/# payload-printable: yes # enable dumping payload in printable (lossy) format/payload-printable: yes # enable dumping payload in printable (lossy) format/g' /etc/suricata/suricata.yaml
-sed -i 's/# packet: yes            # enable dumping of packet (without stream segments)/packet: yes            # enable dumping of packet (without stream segments)/g' /etc/suricata/suricata.yaml
-sed -i 's/# http: yes              # enable dumping of http fields/http: yes              # enable dumping of http fields/g' /etc/suricata/suricata.yaml
-# Enable flow
-sed -i '/- http:/i\ \ \ \ \ \ \ \ - flow' /etc/suricata/suricata.yaml
-
-# Enable full http logging
-awk '/\[Accept-Encoding, Accept-Language, Authorization\]/{print $0 \
-RS "            custom: [accept, accept-charset, accept-encoding, accept-language," \
-RS "            accept-datetime, authorization, cache-control, cookie, from," \
-RS "            max-forwards, origin, pragma, proxy-authorization, range, te, via," \
-RS "            x-requested-with, dnt, x-forwarded-proto, accept-range, age," \
-RS "            allow, connection, content-encoding, content-language," \
-RS "            content-length, content-location, content-md5, content-range," \
-RS "            content-type, date, etags, last-modified, link, location," \
-RS "            proxy-authenticate, referrer, refresh, retry-after, server," \
-RS "            set-cookie, trailer, transfer-encoding, upgrade, vary, warning," \
-RS "            www-authenticate]" \
-;next}1' /etc/suricata/suricata.yaml > tmp && mv tmp /etc/suricata/suricata.yaml
-
-# Editing the rules section  - to use with Scirius
-# Order is important
-sed -i -e '/.rules/s/ - /# - /g' /etc/suricata/suricata.yaml
-sed -i '/rule-files:/a \ - scirius.rules' /etc/suricata/suricata.yaml
-
 ### END Suricata ###
 
 ### START Install kibana ###
