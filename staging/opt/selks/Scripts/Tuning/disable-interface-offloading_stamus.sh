@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Copyright Stamus Networks
+# All rights reserved
+# Debian SELKS script - oss@stamus-networks.com
+#
+# Please run on Debian
+#
+# This script comes with ABSOLUTELY NO WARRANTY!
+# It can be used/modified/redistributed without any permission.
+
 interface=$1
 ARGS=1         # The script requires 1 argument.
 

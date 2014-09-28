@@ -5,6 +5,9 @@
 # Debian SELKS script - oss@stamus-networks.com
 #
 # Please run on Debian
+#
+# This script comes with ABSOLUTELY NO WARRANTY!
+# It can be used/modified/redistributed without any permission.
 
 
 echo -e "\n Adjusting kernel parameters in /etc/sysctl.conf ... \n";
