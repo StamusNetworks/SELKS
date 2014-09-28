@@ -207,6 +207,7 @@ mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
+mkdir -p config/includes.chroot/opt/selks/Scripts/Tuning/
 
 
 cd ../
@@ -255,7 +256,8 @@ cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.
 # and is executed at every boot time.
 # Step 3 is in the chroot file in the section -  updaterc.d 
 cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/includes.chroot/etc/init.d/
-
+# Copy tuning scripts
+cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Tuning/
 
 # Add core system packages to be installed
 echo "
