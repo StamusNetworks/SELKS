@@ -208,6 +208,7 @@ mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 mkdir -p config/includes.chroot/opt/selks/Scripts/Tuning/
+mkdir -p config/includes.chroot/opt/selks/Scripts/Setup/
 
 
 cd ../
@@ -258,6 +259,8 @@ cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.
 cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # Copy tuning scripts
 cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Tuning/
+# Copy setup scripts
+cp staging/opt/selks/Scripts/Setup/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Setup/
 
 # Add core system packages to be installed
 echo "
