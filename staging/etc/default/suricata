@@ -12,7 +12,7 @@ SURCONF=/etc/suricata/suricata.yaml
 # Please note that IPS mode is only available when using nfqueue
 LISTENMODE=af-packet
 
-# Interface to listen on (for pcap mode)
+# Interface to listen on (for pcap and/or af-packet mode)
 IFACE=eth0
 
 # Queue number to listen on (for nfqueue mode)
