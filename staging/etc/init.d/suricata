@@ -73,7 +73,7 @@ case "$LISTENMODE" in
     ;;
   af-packet)
     IDMODE="IDS (af-packet)"
-    LISTEN_OPTIONS=" --af-packet"
+    LISTEN_OPTIONS=" --af-packet=$IFACE"
     ;;
   *)
     echo "Unsupported listen mode $LISTENMODE, aborting"
