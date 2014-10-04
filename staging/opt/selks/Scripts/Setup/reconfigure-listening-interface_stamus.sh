@@ -41,11 +41,11 @@ sed -i -e "/^af-packet:/{\$!N; s/  - interface: .*/  - interface: ${interface}/}
 
 # Calling disable-interface-offloading_stamus.sh
 echo -e "\nCalling disable-interface-offloading_stamus.sh"
-./opt/selks/Scripts/Tuning/disable-interface-offloading_stamus.sh ${interface}
+/opt/selks/Scripts/Tuning/./disable-interface-offloading_stamus.sh ${interface}
 
 # Calling kernel-tuneup_stamus.sh
 echo -e "\nCalling kernel-tuneup_stamus.sh"
-./opt/selks/Scripts/Tuning/kernel-tuneup_stamus.sh
+./opt/selks/Scripts/Tuning/./kernel-tuneup_stamus.sh
 
 
 

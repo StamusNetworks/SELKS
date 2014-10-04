@@ -3,6 +3,9 @@
 # set to yes to start the server in the init.d script
 RUN=yes
 
+# set to user that will run suricata in the init.d script (used for dropping privileges only)
+RUN_AS_USER=logstash
+
 # Configuration file to load
 SURCONF=/etc/suricata/suricata.yaml
 
@@ -12,7 +15,7 @@ SURCONF=/etc/suricata/suricata.yaml
 # Please note that IPS mode is only available when using nfqueue
 LISTENMODE=af-packet
 
-# Interface to listen on (for pcap and/or af-packet mode)
+# Interface to listen on (for pcap mode)
 IFACE=eth0
 
 # Queue number to listen on (for nfqueue mode)
