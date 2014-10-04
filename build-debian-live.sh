@@ -227,9 +227,8 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 # Logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
-# Suricata init script
+# Overwrite Suricata default script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
-#cp staging/etc/init.d/suricata Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
 # Logrotate config for eve.json
