@@ -290,6 +290,21 @@ if [[ -z "$GUI" ]]; then
   echo "
   lxde wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+  
+  echo "
+  #!/usr/bin/env xdg-open
+  [Desktop Entry]
+  Version=1.0
+  Name=Launch-Interface-Reconfiguration
+  Comment=Launch-Interface-Reconfiguration
+  Exec=/bin/bash /opt/selks /Scripts /Setup/./reconfigure-listening-interface_stamus.sh
+  Terminal=true 
+  #Icon=
+  Type=Application
+  Categories=Application;System;
+  StartupNotify=true
+  " \
+  >> Stamus-Live-Build/config/includes.chroot/usr/share/applications/Launch-Interface-Reconfiguration.desktop
 fi
 
 # If -p (add packages) option is used - add those packages to the build

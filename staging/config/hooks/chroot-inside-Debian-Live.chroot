@@ -87,7 +87,6 @@ cp Suricata-Logstash-Templates/Templates/* /var/www/app/dashboards/
 
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
-update-rc.d suricata defaults
 update-rc.d suri_reloader defaults
 update-rc.d kibana-templates-load-in-es defaults 99
 
