@@ -261,9 +261,7 @@ cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/o
 # Copy setup scripts
 cp staging/opt/selks/Scripts/Setup/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Setup/
 # Copy the set up script to root/skel/Desktop folders
-cp staging/opt/selks/Scripts/Setup/reconfigure-listening-interface_stamus.sh Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp staging/opt/selks/Scripts/Setup/reconfigure-listening-interface_stamus.sh Stamus-Live-Build/config/includes.chroot/etc/skel/
-cp staging/opt/selks/Scripts/Setup/reconfigure-listening-interface_stamus.sh Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
 # Add core system packages to be installed
 echo "
