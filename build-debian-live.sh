@@ -260,8 +260,6 @@ cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/inclu
 cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Tuning/
 # Copy setup scripts
 cp staging/opt/selks/Scripts/Setup/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Setup/
-# Copy the set up script to root/skel/Desktop folders
-cp staging/opt/selks/Scripts/Setup/reconfigure-listening-interface_stamus.sh Stamus-Live-Build/config/includes.chroot/etc/skel/
 
 # Add core system packages to be installed
 echo "
@@ -289,20 +287,6 @@ if [[ -z "$GUI" ]]; then
   lxde wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
-  echo "
-  #!/usr/bin/env xdg-open
-  [Desktop Entry]
-  Version=1.0
-  Name=Launch-Interface-Reconfiguration
-  Comment=Launch-Interface-Reconfiguration
-  Exec=/bin/bash /opt/selks /Scripts /Setup/./reconfigure-listening-interface_stamus.sh
-  Terminal=true 
-  #Icon=
-  Type=Application
-  Categories=Application;System;
-  StartupNotify=true
-  " \
-  >> Stamus-Live-Build/config/includes.chroot/usr/share/applications/Launch-Interface-Reconfiguration.desktop
 fi
 
 # If -p (add packages) option is used - add those packages to the build
