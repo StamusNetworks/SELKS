@@ -42,6 +42,10 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### END Suricata ###
 
+### START Install SELKS/StamusN scripts ###
+apt-get install -y selks-scripts-stamus
+### END Install SELKS/StamusN scripts ###
+
 ### START Install kibana ###
 apt-get install -y kibana-stamus
 ### END Install kibana ###

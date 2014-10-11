@@ -200,14 +200,11 @@ mkdir -p config/includes.chroot/etc/nginx/sites-available/
 mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
-mkdir -p config/includes.chroot/opt/selks/
 mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
-mkdir -p config/includes.chroot/opt/selks/Scripts/Tuning/
-mkdir -p config/includes.chroot/opt/selks/Scripts/Setup/
 
 
 cd ../
@@ -248,10 +245,6 @@ cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/in
 # Copy stamus debian repo list file - 
 # holding latest Suricata,libhtp,Scirius and kernel packages
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Copy tuning scripts
-cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Tuning/
-# Copy setup scripts
-cp staging/opt/selks/Scripts/Setup/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Setup/
 
 # Add core system packages to be installed
 echo "
