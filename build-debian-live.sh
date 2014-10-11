@@ -206,7 +206,6 @@ mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
-mkdir -p config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
 mkdir -p config/includes.chroot/opt/selks/Scripts/Tuning/
 mkdir -p config/includes.chroot/opt/selks/Scripts/Setup/
 
@@ -249,13 +248,6 @@ cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/in
 # Copy stamus debian repo list file - 
 # holding latest Suricata,libhtp,Scirius and kernel packages
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Copy Kibana Templates to be loaded form cmd line with curl (not from GUI "Load")
-cp staging/opt/selks/KibanaTemplatesCmdLoad/* Stamus-Live-Build/config/includes.chroot/opt/selks/KibanaTemplatesCmdLoad/
-# Copy Kibana Templates curl load script for non-GUI template loads.
-# The actual load script resides in /etc/init.d/kibana-templates-load-in-es
-# and is executed at every boot time.
-# Step 3 is in the chroot file in the section -  updaterc.d 
-cp staging/etc/init.d/kibana-templates-load-in-es Stamus-Live-Build/config/includes.chroot/etc/init.d/
 # Copy tuning scripts
 cp staging/opt/selks/Scripts/Tuning/* Stamus-Live-Build/config/includes.chroot/opt/selks/Scripts/Tuning/
 # Copy setup scripts

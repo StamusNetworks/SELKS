@@ -77,18 +77,9 @@ apt-get install -y elasticsearch logstash && \
 
 ### END ELK ###
 
-### START Get and set up templates/dashboards for Kibana ###
-
-cd /opt/selks/ && \
-git clone https://github.com/pevma/Suricata-Logstash-Templates.git && \
-cp Suricata-Logstash-Templates/Templates/* /var/www/app/dashboards/
-
-### END Get and set up templates/dashboards for Kibana ###
-
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suri_reloader defaults
-update-rc.d kibana-templates-load-in-es defaults 99
 
 # Set the right permissions for the elogstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
@@ -114,6 +105,15 @@ su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suri
 su www-data -c 'python manage.py updatesuricata'
 
 ### END nginx, revrse proxy and ssl ###
+
+### START Get and set up templates/dashboards for Kibana ###
+
+touch /etc/kibana/dashboards-loaded
+apt-get install -y kibana-dashboards-stamus
+rm /etc/kibana/dashboards-loaded
+update-rc.d kibana-dashboards-stamus defaults 99
+
+### END Get and set up templates/dashboards for Kibana ###
 
 # Set up a cron jobs for Logstash,Suricata, rule updates
 echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
