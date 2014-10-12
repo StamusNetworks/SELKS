@@ -205,6 +205,7 @@ mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
+mkdir -p config/includes.chroot/etc/conky/
 
 
 cd ../
@@ -271,6 +272,8 @@ if [[ -z "$GUI" ]]; then
   echo "
   lxde wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+  # Copy conky conf file
+  cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   
 fi
 
