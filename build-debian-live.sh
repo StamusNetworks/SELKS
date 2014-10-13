@@ -270,7 +270,7 @@ tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
   echo "
-  lxde wireshark terminator conky" \
+  lxde fonts-lyx wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   # Copy conky conf file
   cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
