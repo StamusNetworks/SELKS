@@ -63,7 +63,7 @@ Usage
 Default user:
 
 * user: ``selks-user``
-* password: ``selks-user``
+* password: ``selks-user`` (password in Live mode is ``live``)
 
 The default root password is ``StamusNetworks``
 
