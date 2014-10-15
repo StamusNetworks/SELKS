@@ -67,7 +67,7 @@ Default user:
 
 The default root password is ``StamusNetworks``
 
-SELKS has 10 default IDS dashboards (found under Iceweasel, Bookmarks) - 
+SELKS has 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) - 
 ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
 
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
