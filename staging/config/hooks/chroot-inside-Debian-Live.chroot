@@ -134,8 +134,10 @@ sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/ssh
 
 echo "
 # prevent swapping
-ES_HEAP_SIZE=1g
-MAX_LOCKED_MEMORY=unlimited
+# uncomment following for improved ES performance
+# but more intensive memory usage
+#ES_HEAP_SIZE=1g
+#MAX_LOCKED_MEMORY=unlimited
 
 # Java Oracle 7 for ES 1.2.0 and above
 JAVA_HOME=/opt/selks/java-oracle/jdk1.7.0_55/
