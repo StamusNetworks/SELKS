@@ -31,9 +31,15 @@ Howto run SELKS
 Prerequisites
 -------------
 
-The minimal configuration for SELKS without desktop is one single core and 3 Gb of memory. A virtual machine with 3 Gb of RAM should provide a basic test system. If you want to run the desktop version of SELKS, an extra Gb of RAM is necessary.
+The minimal configuration for SELKS without desktop is one single core and 2 Gb of memory. A virtual machine
+with 2 Gb of RAM should provide a basic test system. If you want to run the desktop version of SELKS,
+we highly recommend to use at least two cores.
 
-The recommended configuration is 2 cores and 4 Gb of memory. As Suricata and Elastisearch are multithreaded, the more cores you have the better it is. Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting. 
+The minimal configuration for production usage is 2 cores and 4 Gb of memory. As Suricata
+and Elastisearch are multithreaded, the more cores you have the better it is.
+Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting.
+See `Running SELKS in production <https://github.com/StamusNetworks/SELKS/wiki/Running-SELKS-in-production>`_ page
+for more info.
 
 Running on a virtual machine
 ----------------------------
@@ -67,8 +73,11 @@ Default user:
 
 The default root password is ``StamusNetworks``
 
-SELKS has 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) - 
+SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) - 
 ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
+
+A link to Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
+Scirius, the rule management interface.
 
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
 
@@ -89,23 +98,14 @@ You can find information about tuning and other considerations on
 HTTPS access
 ============
 
-The Scirius and Kibana dashboards are bookmarked in Iceweasel and could be used 
+Scirius and Kibana are bookmarked in Iceweasel and could be used 
 directly with just a click once logged in the SELKS desktop.
 
 If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
 
 * https://your.selks.IP.here/rules/ - Scirius ruleset management
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/ALL
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/ALERTS
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/HTTP
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/DNS
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/TLS
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/FLOW
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/PRIVACY
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/HTTP-Extended-Custom
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/FILE-Transactions
-* https://your.selks.IP.here/log/#/dashboard/elasticsearch/SSH
+* https://your.selks.IP.here/log/ - Kibana and click the folder icon for a list of dashboards
 
 
 Note
