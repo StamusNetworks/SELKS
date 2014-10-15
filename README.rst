@@ -67,8 +67,8 @@ Default user:
 
 The default root password is ``StamusNetworks``
 
-SELKS has 7 default IDS dashboards (found under Iceweasel, Bookmarks) - 
-ALERTS,HTTP,DNS,TLS,SSH,File Transactions,ALL
+SELKS has 10 default IDS dashboards (found under Iceweasel, Bookmarks) - 
+ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
 
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
 
@@ -102,6 +102,7 @@ dashboards you could do that as follows (in your browser):
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/DNS
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/TLS
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/FLOW
+* https://your.selks.IP.here/log/#/dashboard/elasticsearch/PRIVACY
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/HTTP-Extended-Custom
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/FILE-Transactions
 * https://your.selks.IP.here/log/#/dashboard/elasticsearch/SSH
@@ -139,7 +140,8 @@ you can remove the desktop installation as follows after the installation: ::
 
 
 This will not affect the services and/or scripts. SELKS would still continue 
-to operate and function as desired.
+to operate and function as desired. If you wish you can also directly download 
+and use the SELKS no desktop edition from the download page.
 
 
 Getting help
