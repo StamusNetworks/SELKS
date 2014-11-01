@@ -214,12 +214,9 @@ cd ../
 cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
-cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
 # The same as above but for root
-cp JAVA-LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 # Logstash
