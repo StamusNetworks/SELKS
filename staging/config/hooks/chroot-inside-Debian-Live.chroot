@@ -40,10 +40,6 @@ wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gp
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
-# Set the right permissions for the logstash user to run suricata and 
-# use unix-socket (suricatasc)
-chown -R logstash:logstash /var/run/suricata
-
 ### END Suricata ###
 
 ### START Install SELKS/StamusN scripts ###
