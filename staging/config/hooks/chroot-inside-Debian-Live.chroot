@@ -66,7 +66,7 @@ apt-get install -y openjdk-7-jdk
 cd .. && \
 wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
 apt-get update && \
-apt-get install -y elasticsearch logstash && \
+apt-get install -y elasticsearch logstash
 
 ### END ELK ###
 
