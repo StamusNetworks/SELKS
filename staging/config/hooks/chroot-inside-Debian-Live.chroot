@@ -42,6 +42,21 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### END Suricata ###
 
+### START JAVA for ELK ###
+
+apt-get install -y openjdk-7-jdk
+
+### END JAVA for ELK ###
+ 
+### START ELK ###
+
+cd .. && \
+wget -O - -q http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
+apt-get update && \
+apt-get install elasticsearch logstash
+
+### END ELK ###
+
 ### START Install SELKS/StamusN scripts ###
 apt-get install -y selks-scripts-stamus
 ### END Install SELKS/StamusN scripts ###
@@ -54,21 +69,6 @@ apt-get install -y kibana-stamus
 apt-get install -y scirius
 ### END Scirius ###
 
-
-### START JAVA for ELK ###
-
-apt-get install -y openjdk-7-jdk
-
-### END JAVA for ELK ###
- 
-### START ELK ###
-
-cd .. && \
-wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
-apt-get update && \
-apt-get install -y elasticsearch logstash
-
-### END ELK ###
 
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
