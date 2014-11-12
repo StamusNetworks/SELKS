@@ -66,6 +66,7 @@ apt-get install -y kibana-stamus
 ### END Install kibana ###
 
 ### START Scirius ###
+mkdir -p /var/www/static
 apt-get install -y scirius
 ### END Scirius ###
 
