@@ -210,8 +210,6 @@ mkdir -p config/includes.chroot/etc/conky/
 
 cd ../
 
-# Reverse proxy with nginx and ssl
-cp staging/etc/nginx/sites-available/stamus.conf  Stamus-Live-Build/config/includes.chroot/etc/nginx/sites-available/
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
