@@ -244,7 +244,7 @@ cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.c
 
 # Add core system packages to be installed
 echo "
-libpcre3 libpcre3-dbg libpcre3-dev 
+libpcre3 libpcre3-dbg libpcre3-dev ntp
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
