@@ -66,7 +66,7 @@ lead you to the graphical interface.
 Usage
 =====
 
-Default user:
+Default OS user:
 
 * user: ``selks-user``
 * password: ``selks-user`` (password in Live mode is ``live``)
