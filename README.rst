@@ -73,7 +73,7 @@ Default OS user:
 
 The default root password is ``StamusNetworks``
 
-You need to authenticate to access to the web interface(see the HTTP access section below ). The default user/password is ``selks-user/selks-user``.
+You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user``.
 You can change credentials and user settings by using the top left menu in Scirius.  
 More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
