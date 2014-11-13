@@ -63,7 +63,7 @@ the DVD into the host drive, you can reboot.
 If all goes well, you should see SELKS boot menu. Pressing enter will
 lead you to the graphical interface.
 
-Usage
+Usage and logon credentials
 =====
 
 Default OS user:
@@ -73,8 +73,9 @@ Default OS user:
 
 The default root password is ``StamusNetworks``
 
-You need to authenticate to access to the web interface. The default user/password is ``selks-user/selks-user``.
-You can change credentials and user settings by using the top left menu in Scirius.
+You need to authenticate to access to the web interface(see the HTTP access section below ). The default user/password is ``selks-user/selks-user``.
+You can change credentials and user settings by using the top left menu in Scirius.  
+More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
 SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) -
 ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
