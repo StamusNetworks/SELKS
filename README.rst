@@ -110,6 +110,11 @@ dashboards you could do that as follows (in your browser):
 * https://your.selks.IP.here/rules/ - Scirius ruleset management
 * https://your.selks.IP.here/log/ - Kibana and click the folder icon for a list of dashboards
 
+You need to authenticate to access to the web interface. The default user/password is the
+same as for local access: ``selks-user/selks-user``. Don't forget to credentials at first
+login. You can do that by going to ``Account settings`` in the top left dropdown menu of
+Scirius.
+
 
 Note
 ----
