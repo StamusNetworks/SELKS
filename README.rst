@@ -79,7 +79,7 @@ You can change credentials and user settings by using the top left menu in Sciri
 SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) -
 ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
 
-A link to Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
+A link to the Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
 Scirius, the rule management interface.
 
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
