@@ -73,11 +73,11 @@ Default user:
 
 The default root password is ``StamusNetworks``
 
-SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) - 
-ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
-
 You need to authenticate to access to the web interface. The default user/password is ``selks-user/selks-user``.
 You can change credentials and user settings by using the top left menu in Scirius.
+
+SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) -
+ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
 
 A link to Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
 Scirius, the rule management interface.
