@@ -78,7 +78,7 @@ You can change credentials and user settings by using the top left menu in Sciri
 More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
 SELKS has more than 10 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) -
-ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SSH,TLS
+ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SMTP,SSH,TLS
 
 A link to the Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
 Scirius, the rule management interface.
