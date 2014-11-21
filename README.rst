@@ -22,8 +22,7 @@ SELKS is comprised of the following major components:
 Getting SELKS
 =============
 
-You can either `build the SELKS ISO <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_
-or download ready to use images on `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
+You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
 
 Howto run SELKS
 ===============
@@ -93,9 +92,12 @@ Suricata ruleset is updated and Suricata is restarted every days at 3:15AM.
 Building SELKS
 ==============
 
-Extended information on how to build SELKS ISO can be found on
+If you would like to build an installable SELKS ISO from scratch and add extra packages of your choice to it - 
+extended information on how to build SELKS ISO can be found on
 `Building SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_.
 
+Tuning SELKS
+==============
 You can find information about tuning and other considerations on
 `SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/>`_.
 
