@@ -63,7 +63,7 @@ If all goes well, you should see SELKS boot menu. Pressing enter will
 lead you to the graphical interface.
 
 Usage and logon credentials
-=====
+===========================
 
 Default OS user:
 
