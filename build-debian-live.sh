@@ -213,7 +213,12 @@ cd ../
 # cp README and LICENSE files to the user's desktop
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
-cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
+# some README adjustments - in order to add a http link
+# to point to the latest README version located on SELKS github
+echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS \n\n" > TMP.rst
+cat README.rst >> TMP.rst
+cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
+rm TMP.rst 
 # The same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
