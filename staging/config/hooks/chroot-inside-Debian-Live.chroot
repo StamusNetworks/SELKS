@@ -153,6 +153,9 @@ indices.memory.index_buffer_size: 25%
 # Increase the refresh interval
 index.refresh_interval: 20s
 
+# Enable Kibana logging
+http.cors.enabled: true
+
 " >> /etc/elasticsearch/elasticsearch.yml
 
 ### END elasticsearch configuration ###

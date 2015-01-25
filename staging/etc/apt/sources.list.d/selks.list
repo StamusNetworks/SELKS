@@ -1,2 +1,3 @@
 deb http://packages.stamus-networks.com/debian/ wheezy main
 deb http://packages.stamus-networks.com/debian-kernel/ wheezy main
+#deb http://packages.stamus-networks.com/debian-test/ wheezy main
