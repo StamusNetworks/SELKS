@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=Scirius
+Icon=preferences-other
+Comment=Launch-Kibana-Web-Access
+Exec=iceweasel https://selks/rules/
+Type=Application
+Categories=Application;System;
+StartupNotify=true
+Terminal=false
+

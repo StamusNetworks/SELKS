@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=Dashboards
+Icon=utilities-system-monitor
+Comment=Launch-Kibana-Web-Access
+Exec=iceweasel https://selks/accounts/login/log/#/dashboard/elasticsearch/ALL
+Type=Application
+Categories=Application;System;
+StartupNotify=true
+Terminal=false
+
