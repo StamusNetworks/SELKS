@@ -161,7 +161,8 @@ then
   ### END Kernel Version choice ## 
   
   lb config \
-  -a amd64 -d wheezy  \
+  -a amd64 -d jessie  \
+  --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --bootloader syslinux \
   --debian-installer live \
@@ -176,7 +177,8 @@ then
 else
 
   cd Stamus-Live-Build && lb config \
-  -a amd64 -d wheezy \
+  -a amd64 -d jessie \
+  --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
@@ -261,9 +263,9 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
-rsync mc python-daemon libnss3-tools curl 
+rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
 python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl virtualbox-guest-utils
+python-yaml ssh sudo tcpdump nginx openssl 
 python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
@@ -317,7 +319,7 @@ fi
 
 # Debian installer preseed.cfg
 echo "
-d-i netcfg/get_hostname string SELKS
+d-i netcfg/hostname string SELKS
 
 d-i passwd/user-fullname string selks-user User
 d-i passwd/username string selks-user
@@ -327,8 +329,9 @@ d-i passwd/user-default-groups string audio cdrom floppy video dip plugdev scann
 
 d-i passwd/root-password password StamusNetworks
 d-i passwd/root-password-again password StamusNetworks
-" > Stamus-Live-Build/config/debian-installer/preseed.cfg
+" > Stamus-Live-Build/config/includes.installer/preseed.cfg
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
-mv binary.hybrid.iso SELKS.iso
+#mv binary.hybrid.iso SELKS.iso
+mv live-image-amd64.hybrid.iso SELKS.iso

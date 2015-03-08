@@ -70,7 +70,6 @@ mkdir -p /var/www/static
 apt-get install -y scirius
 ### END Scirius ###
 
-
 update-rc.d elasticsearch defaults 95 10 && \
 update-rc.d logstash defaults
 update-rc.d suri_reloader defaults
@@ -91,12 +90,12 @@ sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 cd /opt/selks/scirius/
-su www-data -c 'python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.1/emerging.rules.tar.gz http sigs'
-su www-data -c 'python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig'
-su www-data -c 'python manage.py defaultruleset "Default SELKS ruleset"'
-su www-data -c 'python manage.py disablecategory "Default SELKS ruleset" stream-events'
-su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"'
-su www-data -c 'python manage.py updatesuricata'
+sudo -u www-data python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.1/emerging.rules.tar.gz http sigs
+sudo -u www-data python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
+sudo -u www-data python manage.py defaultruleset "Default SELKS ruleset"
+sudo -u www-data python manage.py disablecategory "Default SELKS ruleset" stream-events
+sudo -u www-data python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
+sudo -u www-data python manage.py updatesuricata
 
 ### END nginx, revrse proxy and ssl ###
 
