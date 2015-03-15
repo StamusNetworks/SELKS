@@ -86,7 +86,7 @@ mkdir -p /etc/nginx/ssl
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
 
 ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.conf
-sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
+sed -i -e '/^fastcgi_param  SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 cd /opt/selks/scirius/
