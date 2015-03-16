@@ -166,7 +166,7 @@ then
   --swap-file-size 2048 \
   --bootloader syslinux \
   --debian-installer live \
-  --bootappend-live "boot=live swap config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
   --linux-flavour stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
@@ -181,7 +181,7 @@ else
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \
-  --bootappend-live "boot=live swap config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
