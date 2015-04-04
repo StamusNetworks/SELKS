@@ -241,7 +241,7 @@ cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc
 # Add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
 # Add the SELKS wallpaper
-cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/usr/share/images/desktop-base/
+cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/etc/alternatives/desktop-background
 # Copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
