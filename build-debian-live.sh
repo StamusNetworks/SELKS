@@ -191,7 +191,6 @@ fi
 
 # Create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
-#mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
 mkdir -p config/includes.chroot/usr/share/applications
 mkdir -p config/includes.chroot/etc/logrotate.d/
@@ -208,6 +207,7 @@ mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
+mkdir -p config/includes.chroot/etc/alternatives/
 
 
 cd ../
