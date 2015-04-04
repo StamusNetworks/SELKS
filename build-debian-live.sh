@@ -224,8 +224,7 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
 echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS \n\n" > TMP.rst
 cat README.rst >> TMP.rst
 cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
-# The same as above but for root
-cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
+# same as above but for root
 cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 rm TMP.rst 
 # cp Dashboards and Scirius desktop shortcuts
