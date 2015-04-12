@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please run on Debian Wheezy
+# Please run on Debian Jessie
 
 
 
@@ -159,9 +159,9 @@ http.cors.enabled: true
 
 ### END elasticsearch configuration ###
 
-# Edit the Icon "Install Debian Wheezy" name on a Live Desktop 
+# Edit the Icon "Install Debian Jessie" name on a Live Desktop 
 # to "Install SELKS"
-sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
+sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
 # Install exception for local certificate
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/

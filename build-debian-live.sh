@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please RUN ON Debian Wheezy only !!!
+# Please RUN ON Debian Jessie only !!!
 
 set -e
 
@@ -15,7 +15,7 @@ cat << EOF
 usage: $0 options
 
 ###################################
-#!!! RUN on Debian Wheezy ONLY !!!#
+#!!! RUN on Debian Jessie ONLY !!!#
 ###################################
 
 SELKS build your own ISO options
@@ -32,27 +32,27 @@ OPTIONS:
            https://www.kernel.org/category/releases.html
            
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
-   By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
+   By default SELKS will be build with a standard Debian Jessie 64 bit distro and kernel ver 3.16.
    
    EXAMPLE (default): 
    ./build-debian-live.sh 
-   The example above (is the default) will build a SELKS standard Debian Wheezy 64 bit distro (with kernel ver 3.2)
+   The example above (is the default) will build a SELKS standard Debian Jessie 64 bit distro (with kernel ver 3.16)
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 3.15.6 
-   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.15.6
+   ./build-debian-live.sh -k 3.18.6 
+   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.6
    
-   ./build-debian-live.sh -k 3.10.44 -p one-package
-   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.10.44
+   ./build-debian-live.sh -k 3.18.11 -p one-package
+   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.9.0 -g no-desktop -p one-package
-   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.9.0
+   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p one-package
+   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.14.10 -g no-desktop -p "package1 package2 package3"
-   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.14.10
+   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p "package1 package2 package3"
+   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra packages named  "package1", "package2", "package3" to the build.
    
    
