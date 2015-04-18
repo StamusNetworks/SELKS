@@ -134,8 +134,7 @@ By default there are no firewall rules implemented.
 SSH
 ----
 
-SSH is enabled and both the ``root`` user and the ``selks-user`` can ssh to the box
-by default.
+SSH is enabled and the ``selks-user`` can ssh to the box by default.
 
 
 Desktop manager
