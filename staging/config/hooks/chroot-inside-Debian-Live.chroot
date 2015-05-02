@@ -128,6 +128,22 @@ echo "
 #ES_HEAP_SIZE=8g
 #MAX_LOCKED_MEMORY=unlimited
 
+# enable dirs
+# Elasticsearch log directory
+LOG_DIR=/var/log/elasticsearch
+
+# Elasticsearch data directory
+DATA_DIR=/var/lib/elasticsearch
+
+# Elasticsearch work directory
+WORK_DIR=/tmp/elasticsearch
+
+# Elasticsearch configuration directory
+CONF_DIR=/etc/elasticsearch
+
+# Elasticsearch configuration file (elasticsearch.yml)
+CONF_FILE=/etc/elasticsearch/elasticsearch.yml
+
 " >> /etc/default/elasticsearch 
 
 echo "
