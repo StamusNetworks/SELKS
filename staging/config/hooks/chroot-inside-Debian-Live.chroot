@@ -70,9 +70,9 @@ mkdir -p /var/www/static
 apt-get install -y scirius
 ### END Scirius ###
 
-update-rc.d elasticsearch defaults 95 10 && \
-update-rc.d logstash defaults
-update-rc.d suri_reloader defaults
+systemctl enable elasticsearch.service && \
+systemctl enable logstash.service && \
+systemctl enable suri_reloader.service
 
 # Set the right permissions for the logstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
@@ -104,13 +104,13 @@ sudo -u www-data python manage.py updatesuricata
 touch /etc/kibana/dashboards-loaded
 apt-get install -y kibana-dashboards-stamus
 rm /etc/kibana/dashboards-loaded
-update-rc.d kibana-dashboards-stamus defaults 99
+systemctl enable kibana-dashboards-stamus.service
 
 ### END Get and set up templates/dashboards for Kibana ###
 
 # Set up a cron jobs for Logstash,Suricata, rule updates
 echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
-echo "7 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
+echo "7 2 * * * root /bin/systemctl restart logstash.service" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
@@ -128,7 +128,10 @@ echo "
 #ES_HEAP_SIZE=8g
 #MAX_LOCKED_MEMORY=unlimited
 
-# enable dirs
+# enable dirs and future upgrades
+# Configure restart on package upgrade (true, every other setting will lead to not restarting)
+RESTART_ON_UPGRADE=true
+
 # Elasticsearch log directory
 LOG_DIR=/var/log/elasticsearch
 
