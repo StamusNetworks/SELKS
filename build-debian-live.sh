@@ -25,7 +25,8 @@ OPTIONS:
    -g      GUI option - can be "no-desktop"
    -p      Add package(s) to the build - can be one-package or "package1 package2 package3...." (should be confined to up to 10 packages)
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
-           aka "3.8" or "3.10" or "3.15.6" 
+           aka you can choose any kernel "3.x.x" you want.
+           Example: "3.10" or "3.19.6" or "3.18.11" 
            
            More info on kernel versions and support:
            https://www.kernel.org/
@@ -40,8 +41,8 @@ OPTIONS:
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 3.18.6 
-   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.6
+   ./build-debian-live.sh -k 3.19.6 
+   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.19.6
    
    ./build-debian-live.sh -k 3.18.11 -p one-package
    The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.11
