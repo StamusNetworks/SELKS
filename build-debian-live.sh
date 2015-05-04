@@ -125,7 +125,13 @@ then
   ### START Kernel Version choice ###
   
   cd Stamus-Live-Build && mkdir -p kernel-misc && cd kernel-misc 
-  wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  if [[ ${KERNEL_VER} == 3* ]];
+  then 
+    wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  else
+    wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-${KERNEL_VER}.tar.xz
+  fi
+
   if [ $? -eq 0 ];
   then
     echo -e "Downloaded successfully linux-${KERNEL_VER}.tar.xz "
