@@ -86,7 +86,8 @@ do
              then
                echo -e "\n Kernel version set to ${KERNEL_VER} \n"
              else
-               echo -e "\n Please check the option's spelling \n"
+               echo -e "\n Please check the option's spelling "
+               echo -e " Also - only kernel versions >3.0 are supported !! \n"
                usage
                exit 1;
              fi
@@ -128,8 +129,12 @@ then
   if [[ ${KERNEL_VER} == 3* ]];
   then 
     wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  elif [[ ${KERNEL_VER} == 4* ]];
+  then
+     wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-${KERNEL_VER}.tar.xz
   else
-    wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-${KERNEL_VER}.tar.xz
+    echo "Unsupported kernel version! Only kernel >3.0 are supported"
+    exit 1;
   fi
 
   if [ $? -eq 0 ];
@@ -137,8 +142,10 @@ then
     echo -e "Downloaded successfully linux-${KERNEL_VER}.tar.xz "
   else
     echo -e "\n Please check your connection \n"
-    echo -e "CAN NOT download the requested kernel from - \n"
-    echo -e "https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz \n"
+    echo -e "CAN NOT download the requested kernel. Please make sure the kernel version is present here - \n"
+    echo -e "https://www.kernel.org/pub/linux/kernel/v3.x/ \n"
+    echo -e "or here respectively \n"
+    echo -e "https://www.kernel.org/pub/linux/kernel/v4.x/ \n"
     exit 1;
   fi
 
