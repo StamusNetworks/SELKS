@@ -108,9 +108,15 @@ systemctl enable kibana-dashboards-stamus.service
 
 ### END Get and set up templates/dashboards for Kibana ###
 
+### Start Set up elasticsearch-curator
+pip install elasticsearch-curator
+
+### End Set up elasticsearch-curator
+
 # Set up a cron jobs for Logstash,Suricata, rule updates
 echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
 echo "7 2 * * * root /bin/systemctl restart logstash.service" >> /etc/crontab
+echo "0 3 * * * root /usr/local/bin/curator delete indices --older-than 16 --time-unit days  --timestring '%Y.%m.%d'" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
