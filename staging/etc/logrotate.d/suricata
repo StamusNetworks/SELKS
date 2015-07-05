@@ -6,6 +6,13 @@
 	missingok
 	notifempty
 	dateext
-	copytruncate
+	postrotate
+	    /bin/kill -HUP $(cat /var/run/suricata.pid)
+	    /bin/kill -HUP $(cat /var/run/logstash.pid)
+	endscript
 }
 
+# to see status
+# cat /var/lib/logrotate/status
+# to manually test - 
+# logrotate --force /etc/logrotate.d/suricata

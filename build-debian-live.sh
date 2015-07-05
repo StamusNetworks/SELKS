@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please RUN ON Debian Wheezy only !!!
+# Please RUN ON Debian Jessie only !!!
 
 set -e
 
@@ -15,7 +15,7 @@ cat << EOF
 usage: $0 options
 
 ###################################
-#!!! RUN on Debian Wheezy ONLY !!!#
+#!!! RUN on Debian Jessie ONLY !!!#
 ###################################
 
 SELKS build your own ISO options
@@ -25,34 +25,35 @@ OPTIONS:
    -g      GUI option - can be "no-desktop"
    -p      Add package(s) to the build - can be one-package or "package1 package2 package3...." (should be confined to up to 10 packages)
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
-           aka "3.8" or "3.10" or "3.15.6" 
+           aka you can choose any kernel "3.x.x" you want.
+           Example: "3.10" or "3.19.6" or "3.18.11" 
            
            More info on kernel versions and support:
            https://www.kernel.org/
            https://www.kernel.org/category/releases.html
            
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
-   By default SELKS will be build with a standard Debian Wheezy 64 bit distro and kernel ver 3.2.
+   By default SELKS will be build with a standard Debian Jessie 64 bit distro and kernel ver 3.16.
    
    EXAMPLE (default): 
    ./build-debian-live.sh 
-   The example above (is the default) will build a SELKS standard Debian Wheezy 64 bit distro (with kernel ver 3.2)
+   The example above (is the default) will build a SELKS standard Debian Jessie 64 bit distro (with kernel ver 3.16)
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 3.15.6 
-   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.15.6
+   ./build-debian-live.sh -k 3.19.6 
+   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.19.6
    
-   ./build-debian-live.sh -k 3.10.44 -p one-package
-   The example above will build a SELKS Debian Wheezy 64 bit distro with kernel ver 3.10.44
+   ./build-debian-live.sh -k 3.18.11 -p one-package
+   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.9.0 -g no-desktop -p one-package
-   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.9.0
+   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p one-package
+   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.14.10 -g no-desktop -p "package1 package2 package3"
-   The example above will build a SELKS Debian Wheezy 64 bit distro, no desktop with kernel ver 3.14.10
+   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p "package1 package2 package3"
+   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra packages named  "package1", "package2", "package3" to the build.
    
    
@@ -85,7 +86,8 @@ do
              then
                echo -e "\n Kernel version set to ${KERNEL_VER} \n"
              else
-               echo -e "\n Please check the option's spelling \n"
+               echo -e "\n Please check the option's spelling "
+               echo -e " Also - only kernel versions >3.0 are supported !! \n"
                usage
                exit 1;
              fi
@@ -124,14 +126,26 @@ then
   ### START Kernel Version choice ###
   
   cd Stamus-Live-Build && mkdir -p kernel-misc && cd kernel-misc 
-  wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  if [[ ${KERNEL_VER} == 3* ]];
+  then 
+    wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz
+  elif [[ ${KERNEL_VER} == 4* ]];
+  then
+     wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-${KERNEL_VER}.tar.xz
+  else
+    echo "Unsupported kernel version! Only kernel >3.0 are supported"
+    exit 1;
+  fi
+
   if [ $? -eq 0 ];
   then
     echo -e "Downloaded successfully linux-${KERNEL_VER}.tar.xz "
   else
     echo -e "\n Please check your connection \n"
-    echo -e "CAN NOT download the requested kernel from - \n"
-    echo -e "https://www.kernel.org/pub/linux/kernel/v3.x/linux-${KERNEL_VER}.tar.xz \n"
+    echo -e "CAN NOT download the requested kernel. Please make sure the kernel version is present here - \n"
+    echo -e "https://www.kernel.org/pub/linux/kernel/v3.x/ \n"
+    echo -e "or here respectively \n"
+    echo -e "https://www.kernel.org/pub/linux/kernel/v4.x/ \n"
     exit 1;
   fi
 
@@ -161,11 +175,12 @@ then
   ### END Kernel Version choice ## 
   
   lb config \
-  -a amd64 -d wheezy  \
+  -a amd64 -d jessie  \
+  --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --bootloader syslinux \
   --debian-installer live \
-  --bootappend-live "boot=live swap config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
   --linux-flavour stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
@@ -176,10 +191,11 @@ then
 else
 
   cd Stamus-Live-Build && lb config \
-  -a amd64 -d wheezy \
+  -a amd64 -d jessie \
+  --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \
-  --bootappend-live "boot=live swap config username=selks-user live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
@@ -189,7 +205,6 @@ fi
 
 # Create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
-#mkdir -p config/includes.chroot/etc/skel/.local/share/applications/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
 mkdir -p config/includes.chroot/usr/share/applications
 mkdir -p config/includes.chroot/etc/logrotate.d/
@@ -206,6 +221,7 @@ mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
+mkdir -p config/includes.chroot/etc/alternatives/
 
 
 cd ../
@@ -215,13 +231,16 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 # some README adjustments - in order to add a http link
 # to point to the latest README version located on SELKS github
-echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS \n\n" > TMP.rst
-cat README.rst >> TMP.rst
-cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
-rm TMP.rst 
 # The same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
-cat README.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
+# some README adjustments - in order to add a http link
+# to point to the latest README version located on SELKS github
+echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS/tree/jessie \n\n" > TMP.rst
+cat README.rst >> TMP.rst
+cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
+# same as above but for root
+cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
+rm TMP.rst 
 # cp Dashboards and Scirius desktop shortcuts
 cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
@@ -239,7 +258,7 @@ cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc
 # Add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
 # Add the SELKS wallpaper
-cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/usr/share/images/desktop-base/
+cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/etc/alternatives/desktop-background
 # Copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
@@ -261,9 +280,9 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
-rsync mc python-daemon libnss3-tools curl 
+rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
 python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl virtualbox-guest-utils
+python-yaml ssh sudo tcpdump nginx openssl jq  
 python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
@@ -317,7 +336,7 @@ fi
 
 # Debian installer preseed.cfg
 echo "
-d-i netcfg/get_hostname string SELKS
+d-i netcfg/hostname string SELKS
 
 d-i passwd/user-fullname string selks-user User
 d-i passwd/username string selks-user
@@ -327,8 +346,9 @@ d-i passwd/user-default-groups string audio cdrom floppy video dip plugdev scann
 
 d-i passwd/root-password password StamusNetworks
 d-i passwd/root-password-again password StamusNetworks
-" > Stamus-Live-Build/config/debian-installer/preseed.cfg
+" > Stamus-Live-Build/config/includes.installer/preseed.cfg
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
-mv binary.hybrid.iso SELKS.iso
+#mv binary.hybrid.iso SELKS.iso
+mv live-image-amd64.hybrid.iso SELKS.iso

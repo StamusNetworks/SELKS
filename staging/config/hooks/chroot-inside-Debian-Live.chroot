@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please run on Debian Wheezy
+# Please run on Debian Jessie
 
 
 
@@ -22,18 +22,6 @@ pip install django==1.6.6 django-tables2 South GitPython pyinotify flup
 
 mkdir -p  /opt/selks/
 
-### START Libcap-ng for dropping privilegies with Suricata ###
-
-cd /opt/selks/ && \
-wget http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-0.7.4.tar.gz && \
-tar -zxf libcap-ng-0.7.4.tar.gz && \
-cd libcap-ng-0.7.4 && \
-./configure && make && make install
-cd ..
-rm -rf libcap-ng-0.7.4 libcap-ng-0.7.4.tar.gz
-
-### END Libcap-ng for dropping privilegies with Suricata ###
-
 ### START Suricata ###
 
 wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - && \
@@ -50,7 +38,6 @@ apt-get install -y openjdk-7-jdk
  
 ### START ELK ###
 
-cd .. && \
 wget -O - -q http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
 apt-get update && \
 apt-get install elasticsearch logstash
@@ -70,10 +57,9 @@ mkdir -p /var/www/static
 apt-get install -y scirius
 ### END Scirius ###
 
-
-update-rc.d elasticsearch defaults 95 10 && \
-update-rc.d logstash defaults
-update-rc.d suri_reloader defaults
+systemctl enable elasticsearch.service && \
+systemctl enable logstash.service && \
+systemctl enable suri_reloader.service
 
 # Set the right permissions for the logstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
@@ -87,16 +73,16 @@ mkdir -p /etc/nginx/ssl
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
 
 ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.conf
-sed -i -e '/^fastcgi_param\tSCRIPT_NAME/d'  /etc/nginx/fastcgi_params
+sed -i -e '/^fastcgi_param  SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 cd /opt/selks/scirius/
-su www-data -c 'python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.7/emerging.rules.tar.gz http sigs'
-su www-data -c 'python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig'
-su www-data -c 'python manage.py defaultruleset "Default SELKS ruleset"'
-su www-data -c 'python manage.py disablecategory "Default SELKS ruleset" stream-events'
-su www-data -c 'python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"'
-su www-data -c 'python manage.py updatesuricata'
+sudo -u www-data python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.7/emerging.rules.tar.gz http sigs
+sudo -u www-data python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
+sudo -u www-data python manage.py defaultruleset "Default SELKS ruleset"
+sudo -u www-data python manage.py disablecategory "Default SELKS ruleset" stream-events
+sudo -u www-data python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
+sudo -u www-data python manage.py updatesuricata
 
 ### END nginx, revrse proxy and ssl ###
 
@@ -105,13 +91,19 @@ su www-data -c 'python manage.py updatesuricata'
 touch /etc/kibana/dashboards-loaded
 apt-get install -y kibana-dashboards-stamus
 rm /etc/kibana/dashboards-loaded
-update-rc.d kibana-dashboards-stamus defaults 99
+systemctl enable kibana-dashboards-stamus.service
 
 ### END Get and set up templates/dashboards for Kibana ###
 
+### Start Set up elasticsearch-curator
+pip install elasticsearch-curator
+
+### End Set up elasticsearch-curator
+
 # Set up a cron jobs for Logstash,Suricata, rule updates
 echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
-echo "7 2 * * * root /etc/init.d/logstash restart" >> /etc/crontab
+echo "7 2 * * * root /bin/systemctl restart logstash.service" >> /etc/crontab
+echo "0 3 * * * root /usr/local/bin/curator delete indices --older-than 16 --time-unit days  --timestring '%Y.%m.%d'" >> /etc/crontab
 # alway leave a ampty line before cron files end
 echo "" >> /etc/crontab
 
@@ -128,6 +120,25 @@ echo "
 # memory usage. The example below will allocate 8GB RAM for ES
 #ES_HEAP_SIZE=8g
 #MAX_LOCKED_MEMORY=unlimited
+
+# enable dirs and future upgrades
+# Configure restart on package upgrade (true, every other setting will lead to not restarting)
+RESTART_ON_UPGRADE=true
+
+# Elasticsearch log directory
+LOG_DIR=/var/log/elasticsearch
+
+# Elasticsearch data directory
+DATA_DIR=/var/lib/elasticsearch
+
+# Elasticsearch work directory
+WORK_DIR=/tmp/elasticsearch
+
+# Elasticsearch configuration directory
+CONF_DIR=/etc/elasticsearch
+
+# Elasticsearch configuration file (elasticsearch.yml)
+CONF_FILE=/etc/elasticsearch/elasticsearch.yml
 
 " >> /etc/default/elasticsearch 
 
@@ -160,9 +171,9 @@ http.cors.enabled: true
 
 ### END elasticsearch configuration ###
 
-# Edit the Icon "Install Debian Wheezy" name on a Live Desktop 
+# Edit the Icon "Install Debian Jessie" name on a Live Desktop 
 # to "Install SELKS"
-sed -i -e 's|Name\=Install Debian wheezy|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
+sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
 # Install exception for local certificate
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
