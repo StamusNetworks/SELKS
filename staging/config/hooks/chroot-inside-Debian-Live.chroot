@@ -167,6 +167,11 @@ index.refresh_interval: 20s
 # Enable Kibana logging
 http.cors.enabled: true
 
+# as per
+# https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html
+# to help facilitate having everything on the same machine
+cluster.routing.allocation.same_shard.host: true
+
 " >> /etc/elasticsearch/elasticsearch.yml
 
 ### END elasticsearch configuration ###
