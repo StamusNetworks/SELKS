@@ -42,6 +42,9 @@ wget -O - -q http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key a
 apt-get update && \
 apt-get install elasticsearch logstash
 
+mkdir -p /var/cache/logstash/sincedbs/
+chown logstash:logstash /var/cache/logstash/sincedbs/
+
 ### END ELK ###
 
 ### START Install SELKS/StamusN scripts ###
