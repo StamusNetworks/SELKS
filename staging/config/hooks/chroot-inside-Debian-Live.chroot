@@ -13,6 +13,10 @@ set -e
 # Setting up the LIVE root (during install on disk it is preseeded)
 echo "root:StamusNetworks" | chpasswd
 
+# Enable color output and the "ll" command in shell 
+echo " export LS_OPTIONS='--color=auto'" >> /root/.bashrc
+echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
+
 ###  START Scirius ###
 # NOTE python-pip is already installed in the build script
 
