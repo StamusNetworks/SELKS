@@ -179,6 +179,9 @@ http.cors.enabled: true
 # to help facilitate having everything on the same machine
 cluster.routing.allocation.same_shard.host: true
 
+# SELKS is all-in-one distro so we disable replicas
+index.number_of_replicas: 0
+
 " >> /etc/elasticsearch/elasticsearch.yml
 
 ### END elasticsearch configuration ###
