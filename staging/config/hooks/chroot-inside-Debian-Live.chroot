@@ -182,6 +182,9 @@ cluster.routing.allocation.same_shard.host: true
 # SELKS is all-in-one distro so we disable replicas
 index.number_of_replicas: 0
 
+# avoid issues with IP changes
+network.bind_host: 127.0.0.1
+
 " >> /etc/elasticsearch/elasticsearch.yml
 
 ### END elasticsearch configuration ###
