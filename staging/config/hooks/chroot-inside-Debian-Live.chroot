@@ -20,7 +20,8 @@ echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 ###  START Scirius ###
 # NOTE python-pip is already installed in the build script
 
-pip install django==1.6.6 django-tables2 South GitPython pyinotify flup
+#pip install django==1.6.6 django-tables2 South GitPython pyinotify flup
+pip install django django-tables2 South GitPython pyinotify flup
 
 ###  END Scirius ###
 
