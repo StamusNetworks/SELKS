@@ -172,7 +172,7 @@ then
   cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
     
   
-  ### END Kernel Version choice ## 
+  ### END Kernel Version choice ### 
   
   lb config \
   -a amd64 -d jessie  \
@@ -196,10 +196,13 @@ else
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
+  --linux-packages linux-image-4.1.10-stamus \
+  --linux-packages linux-headers-4.1.10-stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
-  --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS
+  --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS 
+  
   
 fi
 
@@ -223,7 +226,18 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 
-
+# for 4.1 kernel image installation
+# as explained here - http://live.debian.net/manual/4.x/html/live-manual.en.html#435
+# lb config --linux-packages linux-image-4.1.0-2-amd64
+# echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
+# in order to get lb config (above) -> 
+#  --linux-packages linux-image-4.1.10-stamus 
+#  --linux-packages linux-headers-4.1.10-stamus 
+echo "deb http://packages.stamus-networks.com/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
+# we need to introduce the gpg key so that we do not fail at the install phase with:
+# "WARNING: The following packages cannot be authenticated!"
+# note - the naming convention is important
+wget -O config/archives/packages-stamus-networks-gpg.key.chroot  http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key
 cd ../
 
 # cp README and LICENSE files to the user's desktop
