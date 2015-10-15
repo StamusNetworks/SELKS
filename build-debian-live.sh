@@ -157,7 +157,7 @@ then
   
   make defconfig && \
   make clean && \
-  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-stamus KDEB_PKGVERSION=${KERNEL_VER}
+  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-stamus-amd64 KDEB_PKGVERSION=${KERNEL_VER}
   cd ../../
   
   # Directory where the kernel image and headers are copied to
@@ -204,6 +204,19 @@ else
   --iso-publisher Stamus Networks \
   --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS 
   
+  # for 4.1 kernel image installation
+  # as explained here - http://live.debian.net/manual/4.x/html/live-manual.en.html#435
+  # lb config --linux-packages linux-image-4.1.0-2-amd64
+  # echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
+  # in order to get lb config (above) -> 
+  #  --linux-packages linux-image-4.1.10-stamus 
+  #  --linux-packages linux-headers-4.1.10-stamus 
+  echo "deb http://packages.stamus-networks.com/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
+  # we need to introduce the gpg key so that we do not fail at the install phase with:
+  # "WARNING: The following packages cannot be authenticated!"
+  # note - the naming convention is important
+  wget -O config/archives/packages-stamus-networks-gpg.key.chroot  http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key
+  
   
 fi
 
@@ -227,18 +240,6 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 
-# for 4.1 kernel image installation
-# as explained here - http://live.debian.net/manual/4.x/html/live-manual.en.html#435
-# lb config --linux-packages linux-image-4.1.0-2-amd64
-# echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
-# in order to get lb config (above) -> 
-#  --linux-packages linux-image-4.1.10-stamus 
-#  --linux-packages linux-headers-4.1.10-stamus 
-echo "deb http://packages.stamus-networks.com/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
-# we need to introduce the gpg key so that we do not fail at the install phase with:
-# "WARNING: The following packages cannot be authenticated!"
-# note - the naming convention is important
-wget -O config/archives/packages-stamus-networks-gpg.key.chroot  http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key
 cd ../
 
 # cp README and LICENSE files to the user's desktop
