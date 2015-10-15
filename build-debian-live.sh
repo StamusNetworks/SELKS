@@ -182,6 +182,7 @@ then
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
+  --linux-packages linux-headers-${KERNEL_VER} \
   --linux-flavour stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
