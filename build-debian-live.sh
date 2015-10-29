@@ -197,8 +197,8 @@ else
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
-  --linux-packages linux-image-4.1.10-stamus \
-  --linux-packages linux-headers-4.1.10-stamus \
+  --linux-packages linux-image-4.1.11-stamus \
+  --linux-packages linux-headers-4.1.11-stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
@@ -209,8 +209,8 @@ else
   # lb config --linux-packages linux-image-4.1.0-2-amd64
   # echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
   # in order to get lb config (above) -> 
-  #  --linux-packages linux-image-4.1.10-stamus 
-  #  --linux-packages linux-headers-4.1.10-stamus 
+  #  --linux-packages linux-image-4.1.11-stamus 
+  #  --linux-packages linux-headers-4.1.11-stamus 
   echo "deb http://packages.stamus-networks.com/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
   # we need to introduce the gpg key so that we do not fail at the install phase with:
   # "WARNING: The following packages cannot be authenticated!"
