@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=EveBox
+Icon=applications-internet
+Comment=Launch-EveBox-Web-Access
+Exec=iceweasel http://selks:5636
+Type=Application
+Categories=Application;System;
+StartupNotify=true
+Terminal=false
+

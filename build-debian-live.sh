@@ -239,6 +239,7 @@ mkdir -p config/includes.chroot/etc/iceweasel/profile/
 mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
+mkdir -p config/includes.chroot/etc/systemd/system/
 
 cd ../
 
@@ -287,6 +288,12 @@ cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/in
 # Copy stamus debian repo list file - 
 # holding latest Suricata,libhtp,Scirius and kernel packages
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+# Copy evebox repo file
+cp staging/etc/apt/sources.list.d/evebox.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
+# Copy evebox systemd unit file
+cp staging/etc/systemd/system/evebox.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
+# Copy evebox desktop shortcut.
+cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 
 # Add core system packages to be installed
 echo "
@@ -319,7 +326,9 @@ if [[ -z "$GUI" ]]; then
   # this is for the lxde menu widgets - not the desktop shortcuts
   cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
   cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
+
+  # For Evebox to.
+  cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 fi
 
 # If -p (add packages) option is used - add those packages to the build

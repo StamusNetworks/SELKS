@@ -64,6 +64,12 @@ mkdir -p /var/www/static
 apt-get install -y scirius
 ### END Scirius ###
 
+### START Evebox ###
+wget -O - -q "https://bintray.com/user/downloadSubjectPublicKey?username=jasonish" | apt-key add -
+apt-get update && apt-get install -y evebox
+systemctl enable evebox.service
+### END Evebox ###
+
 systemctl enable elasticsearch.service && \
 systemctl enable logstash.service && \
 systemctl enable suri_reloader.service
