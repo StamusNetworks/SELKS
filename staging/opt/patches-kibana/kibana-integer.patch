@@ -1,0 +1,46 @@
+diff -u -r kibana-4.3.1-linux-x64/src/plugins/kibana/public/dashboard/services/_saved_dashboard.js kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/dashboard/services/_saved_dashboard.js
+--- kibana-4.3.1-linux-x64/src/plugins/kibana/public/dashboard/services/_saved_dashboard.js	2015-12-09 23:45:50.000000000 +0100
++++ kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/dashboard/services/_saved_dashboard.js	2016-01-26 11:09:49.077222990 +0100
+@@ -47,12 +47,12 @@
+     // if type:dashboard has no mapping, we push this mapping into ES
+     SavedDashboard.mapping = {
+       title: 'string',
+-      hits: 'integer',
++      hits: 'long',
+       description: 'string',
+       panelsJSON: 'string',
+       optionsJSON: 'string',
+       uiStateJSON: 'string',
+-      version: 'integer',
++      version: 'long',
+       timeRestore: 'boolean',
+       timeTo: 'string',
+       timeFrom: 'string',
+diff -u -r kibana-4.3.1-linux-x64/src/plugins/kibana/public/discover/saved_searches/_saved_search.js kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/discover/saved_searches/_saved_search.js
+--- kibana-4.3.1-linux-x64/src/plugins/kibana/public/discover/saved_searches/_saved_search.js	2015-12-09 23:45:50.000000000 +0100
++++ kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/discover/saved_searches/_saved_search.js	2016-01-26 11:09:49.073223098 +0100
+@@ -33,10 +33,10 @@
+     SavedSearch.mapping = {
+       title: 'string',
+       description: 'string',
+-      hits: 'integer',
++      hits: 'long',
+       columns: 'string',
+       sort: 'string',
+-      version: 'integer'
++      version: 'long'
+     };
+ 
+     SavedSearch.searchSource = true;
+diff -u -r kibana-4.3.1-linux-x64/src/plugins/kibana/public/visualize/saved_visualizations/_saved_vis.js kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/visualize/saved_visualizations/_saved_vis.js
+--- kibana-4.3.1-linux-x64/src/plugins/kibana/public/visualize/saved_visualizations/_saved_vis.js	2015-12-09 23:45:50.000000000 +0100
++++ kibana-4.3.1-linux-x64-1/src/plugins/kibana/public/visualize/saved_visualizations/_saved_vis.js	2016-01-26 11:09:49.077222990 +0100
+@@ -48,7 +48,7 @@
+       uiStateJSON: 'string',
+       description: 'string',
+       savedSearchId: 'string',
+-      version: 'integer'
++      version: 'long'
+     };
+ 
+     SavedVis.searchSource = true;

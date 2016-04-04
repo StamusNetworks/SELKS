@@ -1,0 +1,24 @@
+diff -u -r kibana-4.3.1-linux-x64-1/installedPlugins/timelion/public/services/_saved_sheet.js kibana-4.3.1-linux-x64-2/installedPlugins/timelion/public/services/_saved_sheet.js
+--- kibana-4.3.1-linux-x64-1/installedPlugins/timelion/public/services/_saved_sheet.js	2016-01-26 11:09:49.093222555 +0100
++++ kibana-4.3.1-linux-x64-2/installedPlugins/timelion/public/services/_saved_sheet.js	2016-01-25 17:37:55.007695074 +0100
+@@ -40,15 +40,15 @@
+     // if type:sheet has no mapping, we push this mapping into ES
+     SavedSheet.mapping = {
+       title: 'string',
+-      hits: 'integer',
++      hits: 'long',
+       description: 'string',
+       timelion_sheet: 'string',
+       timelion_interval: 'string',
+       timelion_other_interval: 'string',
+-      timelion_chart_height: 'integer',
+-      timelion_columns: 'integer',
+-      timelion_rows: 'integer',
+-      version: 'integer'
++      timelion_chart_height: 'long',
++      timelion_columns: 'long',
++      timelion_rows: 'long',
++      version: 'long'
+     };
+ 
+     return SavedSheet;
