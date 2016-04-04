@@ -7,7 +7,6 @@
 # Please run on Debian Jessie
 
 
-
 set -e
 
 # Setting up the LIVE root (during install on disk it is preseeded)
@@ -19,15 +18,14 @@ echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 
 ###  START Scirius ###
 # NOTE python-pip is already installed in the build script
-
-pip install django==1.8.7 django-tables2 South GitPython pyinotify flup
+pip install --upgrade django==1.8.7 django-tables2 South GitPython pyinotify flup
+pip install --upgrade six
 
 ###  END Scirius ###
 
 mkdir -p  /opt/selks/
 
 ### START Suricata ###
-
 wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - && \
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
@@ -39,46 +37,67 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 apt-get install -y openjdk-7-jdk
 
 ### END JAVA for ELK ###
- 
-### START ELK ###
 
-wget -O - -q http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && \
+### START ELK ###
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && \
 apt-get update && \
 apt-get install elasticsearch logstash
 
 mkdir -p /var/cache/logstash/sincedbs/
 chown logstash:logstash /var/cache/logstash/sincedbs/
 
+sudo /bin/systemctl enable elasticsearch.service && \
+sudo /bin/systemctl enable logstash.service && \
+sudo /bin/systemctl enable suri_reloader.service
+
 ### END ELK ###
 
 ### START Install SELKS/StamusN scripts ###
 apt-get install -y selks-scripts-stamus
+
 ### END Install SELKS/StamusN scripts ###
 
 ### START Install kibana ###
-apt-get install -y kibana-stamus
+sudo apt-get update && sudo apt-get install kibana
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable kibana.service
+
+# install timelion pluging
+sudo /opt/kibana/bin/kibana plugin -i kibana/timelion
+
+# apply patches
+patch -p1 -d /opt/kibana/  < /opt/patches-kibana/kibana-integer.patch
+patch -p1 -d /opt/kibana/  < /opt/patches-kibana/timelion-integer.patch
+rm /opt/kibana/optimize/* -r
+sudo /bin/systemctl restart  kibana.service
+
+apt-get install kibana-dashboards-stamus
 ### END Install kibana ###
 
 ### START Scirius ###
 mkdir -p /var/www/static
-apt-get install -y scirius
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" scirius
+
 ### END Scirius ###
 
 ### START Evebox ###
 wget -O - -q "https://bintray.com/user/downloadSubjectPublicKey?username=jasonish" | apt-key add -
 apt-get update && apt-get install -y evebox
-systemctl enable evebox.service
+sudo /bin/systemctl enable evebox.service
+
 ### END Evebox ###
 
-systemctl enable elasticsearch.service && \
-systemctl enable logstash.service && \
-systemctl enable suri_reloader.service
+# enable XDELETE for elasticsearch
+sudo /usr/share/elasticsearch/bin/plugin install delete-by-query
 
 # Set the right permissions for the logstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
 
 # www-data needs to write Suricata rules
 chown -R www-data.www-data /etc/suricata/rules/
+
+# adjust ownership for the kibana user 
+chown -R kibana.kibana /opt/kibana/optimize/
 
 ### START nginx, revrse proxy and ssl ###
 
@@ -90,7 +109,7 @@ sed -i -e '/^fastcgi_param  SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
 cd /opt/selks/scirius/
-sudo -u www-data python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-2.0.7/emerging.rules.tar.gz http sigs
+sudo -u www-data python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-3.0/emerging.rules.tar.gz http sigs
 sudo -u www-data python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
 sudo -u www-data python manage.py defaultruleset "Default SELKS ruleset"
 sudo -u www-data python manage.py disablecategory "Default SELKS ruleset" stream-events
@@ -98,15 +117,6 @@ sudo -u www-data python manage.py addsuricata SELKS "Suricata on SELKS" /etc/sur
 sudo -u www-data python manage.py updatesuricata
 
 ### END nginx, revrse proxy and ssl ###
-
-### START Get and set up templates/dashboards for Kibana ###
-
-touch /etc/kibana/dashboards-loaded
-apt-get install -y kibana-dashboards-stamus
-rm /etc/kibana/dashboards-loaded
-systemctl enable kibana-dashboards-stamus.service
-
-### END Get and set up templates/dashboards for Kibana ###
 
 ### Start Set up elasticsearch-curator
 pip install elasticsearch-curator
@@ -126,34 +136,15 @@ echo "SELKS" > /etc/hostname
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
 ### START elasticsearch configuration ###
-
 echo "
 # prevent swapping
 # uncomment the following for improved ES performance but more intensive 
 # memory usage. The example below will allocate 8GB RAM for ES
 #ES_HEAP_SIZE=8g
-#MAX_LOCKED_MEMORY=unlimited
-
-# enable dirs and future upgrades
-# Configure restart on package upgrade (true, every other setting will lead to not restarting)
-RESTART_ON_UPGRADE=true
-
-# Elasticsearch log directory
-LOG_DIR=/var/log/elasticsearch
-
-# Elasticsearch data directory
-DATA_DIR=/var/lib/elasticsearch
-
-# Elasticsearch work directory
-WORK_DIR=/tmp/elasticsearch
-
-# Elasticsearch configuration directory
-CONF_DIR=/etc/elasticsearch
-
-# Elasticsearch configuration file (elasticsearch.yml)
-CONF_FILE=/etc/elasticsearch/elasticsearch.yml
+MAX_LOCKED_MEMORY=unlimited
 
 " >> /etc/default/elasticsearch 
+
 
 echo "
 
@@ -176,6 +167,9 @@ indices.memory.index_buffer_size: 25%
 
 # Increase the refresh interval
 index.refresh_interval: 20s
+
+# Limit fielddata cache 
+indices.fielddata.cache.size: 35%
 
 # Enable Kibana logging
 http.cors.enabled: true

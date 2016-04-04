@@ -197,8 +197,8 @@ else
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
-  --linux-packages linux-image-4.1.11-stamus \
-  --linux-packages linux-headers-4.1.11-stamus \
+  --linux-packages linux-image-4.4.6-stamus \
+  --linux-packages linux-headers-4.4.6-stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
@@ -209,9 +209,13 @@ else
   # lb config --linux-packages linux-image-4.1.0-2-amd64
   # echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
   # in order to get lb config (above) -> 
-  #  --linux-packages linux-image-4.1.11-stamus 
-  #  --linux-packages linux-headers-4.1.11-stamus 
-  echo "deb http://packages.stamus-networks.com/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
+  #  --linux-packages linux-image-4.1.15-stamus 
+  #  --linux-packages linux-headers-4.1.15-stamus 
+    
+  #adding StamusN debian-test repo - for some test runs whenever needed.
+  #echo "deb http://packages.stamus-networks.com/selks3/debian-test/ jessie main" > config/archives/stamus-kernel.list.chroot
+  
+  echo "deb http://packages.stamus-networks.com/selks3/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
   # we need to introduce the gpg key so that we do not fail at the install phase with:
   # "WARNING: The following packages cannot be authenticated!"
   # note - the naming convention is important
@@ -240,6 +244,8 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
+mkdir -p config/includes.chroot/etc/scirius/
+mkdir -p config/includes.chroot/opt/patches-kibana/
 
 cd ../
 
@@ -294,6 +300,12 @@ cp staging/etc/apt/sources.list.d/evebox.list Stamus-Live-Build/config/includes.
 cp staging/etc/systemd/system/evebox.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
 # Copy evebox desktop shortcut.
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+# Same as above but for root
+cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+# Copy scirius - local_settings.py - ES20 compatible
+cp staging/etc/scirius/local_settings.py Stamus-Live-Build/config/includes.chroot/etc/scirius/
+# Copy Kibana 4 patches needed
+cp staging/opt/patches-kibana/* Stamus-Live-Build/config/includes.chroot/opt/patches-kibana/
 
 # Add core system packages to be installed
 echo "
@@ -305,7 +317,7 @@ libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
 rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
 python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl jq  
+python-yaml ssh sudo tcpdump nginx openssl jq patch  
 python-pip debian-installer-launcher live-build " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
