@@ -244,7 +244,6 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
-mkdir -p config/includes.chroot/etc/scirius/
 mkdir -p config/includes.chroot/opt/patches-kibana/
 
 cd ../
@@ -302,13 +301,12 @@ cp staging/etc/systemd/system/evebox.service Stamus-Live-Build/config/includes.c
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-# Copy scirius - local_settings.py - ES20 compatible
-cp staging/etc/scirius/local_settings.py Stamus-Live-Build/config/includes.chroot/etc/scirius/
 # Copy Kibana 4 patches needed
 cp staging/opt/patches-kibana/* Stamus-Live-Build/config/includes.chroot/opt/patches-kibana/
 
 # Add core system packages to be installed
 echo "
+
 libpcre3 libpcre3-dbg libpcre3-dev ntp
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
@@ -329,8 +327,7 @@ tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  echo "
-  lxde fonts-lyx wireshark terminator conky" \
+  echo "lxde fonts-lyx wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   # Copy conky conf file
   cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
