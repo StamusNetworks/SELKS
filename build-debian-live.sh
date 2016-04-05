@@ -263,11 +263,9 @@ cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html
 # same as above but for root
 cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 rm TMP.rst 
-# cp Dashboards and Scirius desktop shortcuts
-cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+# cp Scirius desktop shortcuts
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
-cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 # Logstash
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
@@ -333,7 +331,6 @@ if [[ -z "$GUI" ]]; then
   cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   # Copy the menu shortcuts for Kibana and Scirius
   # this is for the lxde menu widgets - not the desktop shortcuts
-  cp staging/usr/share/applications/Dashboards.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
   cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 
   # For Evebox to.
