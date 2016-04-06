@@ -117,6 +117,10 @@ sudo -u www-data python manage.py disablecategory "Default SELKS ruleset" stream
 sudo -u www-data python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
 sudo -u www-data python manage.py updatesuricata
 
+# fix permissions for user www-data/scirius
+usermod -a -G logstash www-data
+chmod g+w /var/run/suricata/ -R
+
 ### END nginx, revrse proxy and ssl ###
 
 ### Start Set up elasticsearch-curator
