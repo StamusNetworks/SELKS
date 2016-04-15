@@ -177,9 +177,6 @@ index.refresh_interval: 20s
 # Limit fielddata cache 
 indices.fielddata.cache.size: 35%
 
-# Enable Kibana logging
-http.cors.enabled: true
-
 # as per
 # https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html
 # to help facilitate having everything on the same machine
