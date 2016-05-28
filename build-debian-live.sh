@@ -245,6 +245,7 @@ mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/opt/patches-kibana/
+mkdir -p config/includes.chroot/var/backups/
 
 cd ../
 
