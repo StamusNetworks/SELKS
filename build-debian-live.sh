@@ -197,8 +197,8 @@ else
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
-  --linux-packages linux-image-4.4.6-stamus \
-  --linux-packages linux-headers-4.4.6-stamus \
+  --linux-packages linux-image-4.1.22-stamus \
+  --linux-packages linux-headers-4.1.22-stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
