@@ -66,10 +66,6 @@ sudo /bin/systemctl enable kibana.service
 # install timelion pluging
 sudo /opt/kibana/bin/kibana plugin -i kibana/timelion
 
-# apply patches
-patch -p1 -d /opt/kibana/  < /opt/patches-kibana/kibana-integer.patch
-patch -p1 -d /opt/kibana/  < /opt/patches-kibana/timelion-integer.patch
-rm /opt/kibana/optimize/* -r
 sudo /bin/systemctl restart  kibana.service
 
 apt-get install kibana-dashboards-stamus

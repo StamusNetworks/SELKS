@@ -244,7 +244,6 @@ mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
-mkdir -p config/includes.chroot/opt/patches-kibana/
 mkdir -p config/includes.chroot/var/backups/
 
 cd ../
@@ -300,8 +299,6 @@ cp staging/etc/systemd/system/evebox.service Stamus-Live-Build/config/includes.c
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-# Copy Kibana 4 patches needed
-cp staging/opt/patches-kibana/* Stamus-Live-Build/config/includes.chroot/opt/patches-kibana/
 
 # Add core system packages to be installed
 echo "
