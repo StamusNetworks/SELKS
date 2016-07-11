@@ -293,8 +293,8 @@ cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/in
 cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
 # Copy evebox repo file
 cp staging/etc/apt/sources.list.d/evebox.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Copy evebox systemd unit file
-cp staging/etc/systemd/system/evebox.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
+# Overwrite EveBox default script
+cp staging/etc/default/evebox Stamus-Live-Build/config/includes.chroot/etc/default/
 # Copy evebox desktop shortcut.
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root

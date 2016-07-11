@@ -79,7 +79,8 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### START Evebox ###
 wget -O - -q "https://bintray.com/user/downloadSubjectPublicKey?username=jasonish" | apt-key add -
-apt-get update && apt-get install -y evebox
+apt-get update
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" evebox
 sudo /bin/systemctl enable evebox.service
 
 ### END Evebox ###
