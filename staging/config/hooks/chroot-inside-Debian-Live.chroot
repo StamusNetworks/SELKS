@@ -122,7 +122,7 @@ chmod g+w /var/run/suricata/ -R
 ### END nginx, revrse proxy and ssl ###
 
 ### Start Set up elasticsearch-curator
-pip install elasticsearch-curator
+pip install 'elasticsearch-curator<4.0'
 
 ### End Set up elasticsearch-curator
 
