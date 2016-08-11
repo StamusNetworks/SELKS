@@ -79,8 +79,21 @@ You need to authenticate to access to the web interface(see the ``HTTPS access``
 You can change credentials and user settings by using the top left menu in Scirius.  
 More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
-SELKS has more than 12 default IDS dashboards (found under Iceweasel, Bookmarks and Load button in Kibana) -
-ALL,ALERTS,DNS,FILE-Transactions,FLOW,HTTP,HTTP-Extended-Custom,PRIVACY,SMTP,SSH,TLS,VLAN.
+SELKS has more than 11 default IDS dashboards -  
+
+* SN ALL
+* SN ALERTS
+* SN DNS
+* SN FILE-Transactions
+* SN FLOW
+* SN HTTP
+* SN SMTP
+* SN SSH
+* SN STATS
+* SN TLS
+* SN VLAN
+
+in addition to the ``Events viewer`` (EveBox)
 
 A link to the Kibana dashboards can also be found by clicking on the Stamus Icon on top left of
 Scirius, the rule management interface.
