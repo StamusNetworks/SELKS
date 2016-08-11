@@ -19,6 +19,9 @@ SELKS is comprised of the following major components:
 * K - Kibana - http://www.elasticsearch.org/overview/
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
+and since SELKS 3.0RC1
+* EveBox - https://codemonkey.net/evebox/
+
 Getting SELKS
 =============
 
@@ -84,10 +87,10 @@ Scirius, the rule management interface.
 
 Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
 
- service suricata restart
- service logstash stop
+ systemctl restart suricata
+ systemctl stop logstash 
 
-Suricata ruleset is updated and Suricata is restarted every days at 3:15AM.
+Suricata ruleset is updated and Suricata is restarted every days at 2:00AM.
 
 Building SELKS
 ==============
@@ -110,8 +113,7 @@ directly with just a click once logged in the SELKS desktop.
 If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
 
-* https://your.selks.IP.here/rules/ - Scirius ruleset management
-* https://your.selks.IP.here/log/ - Kibana and click the folder icon for a list of dashboards
+* https://your.selks.IP.here/ - Scirius ruleset management and a central point for all dashboards and EveBox
 
 You need to authenticate to access to the web interface. The default user/password is the
 same as for local access: ``selks-user/selks-user``. Don't forget to change credentials at first
@@ -140,9 +142,10 @@ SSH is enabled and the ``selks-user`` can ssh to the box by default.
 Desktop manager
 ===============
 
-SELKS uses LXDE as a desktop windows manager. If you wish to uninstall 
-the Desktop Manager (GUI) and run the server/machine just with command shell 
-you can remove the desktop installation as follows after the installation: ::
+SELKS uses LXDE as a desktop windows manager. If you have installed the 
+desktop version and wish to to uninstall the Desktop Manager (GUI) 
+and run the server/machine just with command shell - you can remove the 
+desktop installation as follows after the installation: ::
 
 
  apt-get remove lxde lxde-common lxde-core lxde-icon-theme lightdm \
@@ -150,8 +153,10 @@ you can remove the desktop installation as follows after the installation: ::
 
 
 This will not affect the services and/or scripts. SELKS would still continue 
-to operate and function as desired. If you wish you can also directly download 
-and use the SELKS no desktop edition from the download page.
+to operate and function as desired. 
+
+If you wish you can also directly download and use the SELKS no desktop 
+edition from the download page.
 
 
 Getting help
