@@ -1,2 +1,4 @@
-deb http://packages.elasticsearch.org/elasticsearch/1.7/debian stable main
-deb http://packages.elasticsearch.org/logstash/1.5/debian stable main
+deb http://packages.elastic.co/elasticsearch/2.x/debian stable main
+deb http://packages.elastic.co/logstash/2.3/debian stable main
+deb http://packages.elastic.co/kibana/4.5/debian stable main
+
