@@ -19,7 +19,8 @@ SELKS is comprised of the following major components:
 * K - Kibana - http://www.elasticsearch.org/overview/
 * S - Scirius - https://github.com/StamusNetworks/scirius
 
-and since SELKS 3.0RC1
+and since SELKS 3.0RC1:
+
 * EveBox - https://codemonkey.net/evebox/
 
 Getting SELKS
