@@ -266,9 +266,27 @@ source bin/activate
 python bin/manage.py kibana_reset 
 deactivate
 
+update_evebox() {
+    # Use new "stable" EveBox repo.
+    echo "deb http://files.evebox.org/evebox/debian stable main" > \
+	 /etc/apt/sources.list.d/evebox.list
+    wget -qO - https://evebox.org/files/GPG-KEY-evebox | sudo apt-key add -
+
+    # Make sure EveBox only binds to localhost.
+    echo "EVEBOX_OPTS=\"--host localhost\"" > /etc/default/evebox
+
+    # Update without overriding config files.
+    apt-get update
+    apt-get install -y -o Dpkg::Options::="--force-confdef" \
+	    -o Dpkg::Options::="--force-confold" evebox
+}
+
+update_evebox
+
 /bin/systemctl restart elasticsearch
 /bin/systemctl start kibana
 /bin/systemctl start logstash
+/bin/systemctl restart evebox
 
 echo "deb http://packages.elastic.co/curator/4/debian stable main" > /etc/apt/sources.list.d/curator4.list
 apt-get update && apt-get install --yes elasticsearch-curator
