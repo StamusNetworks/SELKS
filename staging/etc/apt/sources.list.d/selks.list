@@ -1,3 +1,0 @@
-deb http://packages.stamus-networks.com/selks3/debian/ jessie main
-deb http://packages.stamus-networks.com/selks3/debian-kernel/ jessie main
-#deb http://packages.stamus-networks.com/selks3/debian-test/ jessie main

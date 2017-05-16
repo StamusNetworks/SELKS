@@ -1,0 +1,49 @@
+{
+  "template" : "logstash-*",
+  "version" : 50001,
+  "settings" : {
+    "number_of_replicas": 0,
+    "index.refresh_interval" : "5s"
+  },
+  "mappings" : {
+    "_default_" : {
+      "_all" : {"enabled" : true, "norms" : false},
+      "dynamic_templates" : [ {
+        "message_field" : {
+          "path_match" : "message",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "text",
+            "norms" : false
+          }
+        }
+      }, {
+        "string_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "text", "norms" : false,
+            "fields" : {
+              "raw" : { "ignore_above" : 256, "index" : "not_analyzed", "type" : "string" }
+            }
+          }
+        }
+      } ],
+      "properties" : {
+        "@timestamp": { "type": "date", "include_in_all": false },
+        "@version": { "type": "keyword", "include_in_all": false },
+        "geoip"  : {
+          "dynamic": true,
+          "properties" : {
+            "ip": { "type": "ip" },
+            "location" : { "type" : "geo_point" },
+            "latitude" : { "type" : "half_float" },
+            "longitude" : { "type" : "half_float" }
+          }
+        },
+        "dest_ip": { "type": "ip" },
+        "src_ip": { "type": "ip" }
+      }
+    }
+  }
+}
