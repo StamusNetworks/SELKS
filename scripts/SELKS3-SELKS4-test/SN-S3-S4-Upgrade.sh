@@ -246,6 +246,7 @@ output {
     elasticsearch {
       hosts => "127.0.0.1"
       index => "logstash-%{+YYYY.MM.dd}"
+      template => "/etc/logstash/elasticsearch5-template.json"
     }
   }
 }
@@ -255,14 +256,11 @@ EOF
 # Avoids unassigned shards
 cat >> /etc/logstash/elasticsearch5-template.json << EOF
 {
-  "logstash" : {
-    "order" : 0,
     "template" : "logstash-*",
+    "version" : 1,
     "settings" : {
       "number_of_replicas": 0,
-      "index" : {
-        "refresh_interval" : "5s"
-      }
+      "index.refresh_interval" : "5s"
     },
     "mappings" : {
       "_default_" : {
@@ -338,7 +336,6 @@ cat >> /etc/logstash/elasticsearch5-template.json << EOF
       }
     },
     "aliases" : { }
-  }
 }
 EOF
 
