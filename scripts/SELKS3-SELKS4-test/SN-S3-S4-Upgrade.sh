@@ -240,13 +240,102 @@ output {
     elasticsearch {
       hosts => "127.0.0.1"
       index => "logstash-%{event_type}-%{+YYYY.MM.dd}"
+      template => "/etc/logstash/elasticsearch5-template.json"
     }
   } else {
     elasticsearch {
       hosts => "127.0.0.1"
       index => "logstash-%{+YYYY.MM.dd}"
+      template => "/etc/logstash/elasticsearch5-template.json"
     }
   }
+}
+EOF
+
+# Set up Elasticsearch 5 template
+# Avoids unassigned shards
+cat >> /etc/logstash/elasticsearch5-template.json << EOF
+{
+    "template" : "logstash-*",
+    "version" : 1,
+    "settings" : {
+      "number_of_replicas": 0,
+      "index.refresh_interval" : "5s"
+    },
+    "mappings" : {
+      "_default_" : {
+        "dynamic_templates" : [
+          {
+            "message_field" : {
+              "mapping" : {
+                "fielddata" : {
+                  "format" : "disabled"
+                },
+                "index" : "analyzed",
+                "omit_norms" : true,
+                "type" : "string"
+              },
+              "match_mapping_type" : "string",
+              "match" : "message"
+            }
+          },
+          {
+            "string_fields" : {
+              "mapping" : {
+                "fielddata" : {
+                  "format" : "disabled"
+                },
+                "index" : "analyzed",
+                "omit_norms" : true,
+                "type" : "string",
+                "fields" : {
+                  "raw" : {
+                    "ignore_above" : 256,
+                    "index" : "not_analyzed",
+                    "type" : "string"
+                  }
+                }
+              },
+              "match_mapping_type" : "string",
+              "match" : "*"
+            }
+          }
+        ],
+        "_all" : {
+          "omit_norms" : true,
+          "enabled" : true
+        },
+        "properties" : {
+          "@timestamp" : {
+            "type" : "date"
+          },
+          "geoip" : {
+            "dynamic" : true,
+            "properties" : {
+              "ip" : {
+                "type" : "ip"
+              },
+              "latitude" : {
+                "type" : "float"
+              },
+              "location" : {
+                "type" : "geo_point"
+              },
+              "longitude" : {
+                "type" : "float"
+              }
+            }
+          },
+          "dest_ip": { "type": "ip" },
+          "src_ip": { "type": "ip" },
+          "@version" : {
+            "index" : "not_analyzed",
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "aliases" : { }
 }
 EOF
 
