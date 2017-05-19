@@ -53,7 +53,7 @@ wget -qO - http://packages.stamus-networks.com/packages.selks4.stamus-networks.c
 
 # Upgrade kernel to level with SELKS 4
 apt-get update
-apt-get install --yes --force-yes linux-libc-dev linux-headers-4.9.20-stamus-amd64 linux-image-4.9.20-stamus-amd64
+apt-get install --yes linux-libc-dev linux-headers-4.9.28-stamus-amd64 linux-image-4.9.28-stamus-amd64
 
 
 apt-get update
