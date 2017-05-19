@@ -346,7 +346,7 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options:
 sleep 30
 
 # Clean up the old dashboards
-rm /opt/selks/kibana4-dashboards/* -r
+rm /opt/selks/kibana4-dashboards/* -rf
 git clone https://github.com/StamusNetworks/KTS5.git /opt/selks/kibana4-dashboards/
 
 # Re-upload the new ones
