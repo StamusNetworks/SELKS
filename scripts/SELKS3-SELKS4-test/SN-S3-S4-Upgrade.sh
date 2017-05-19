@@ -344,6 +344,10 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options:
 /bin/systemctl daemon-reload
 /bin/systemctl start elasticsearch
 sleep 30
+# also make sure Kibana is started
+# as it is needed for the dashboards import
+/bin/systemctl start kibana
+sleep 5
 
 # Clean up the old dashboards
 rm /opt/selks/kibana4-dashboards/* -rf
