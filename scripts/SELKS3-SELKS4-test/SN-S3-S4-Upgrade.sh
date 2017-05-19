@@ -380,7 +380,10 @@ update_evebox
 echo "deb http://packages.elastic.co/curator/4/debian stable main" > /etc/apt/sources.list.d/curator4.list
 apt-get update && apt-get install --yes elasticsearch-curator
 
-# Set up a curator old logs removal
+# Set up a curator old logs removal 
+# Remove old cronjob first
+sed -e '/\/usr\/local\/bin\/curator delete indices --older-than 16/ s/^#*/#/' -i /etc/crontab
+ 
 cat >> /opt/selks/delete-old-logs.sh <<EOF
 #!/bin/bash
 
