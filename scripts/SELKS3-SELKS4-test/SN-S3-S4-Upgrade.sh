@@ -342,22 +342,13 @@ EOF
 apt-get update && DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confnew" --force-yes dist-upgrade
 
 /bin/systemctl daemon-reload
+/bin/systemctl enable logstash
 /bin/systemctl start elasticsearch
 sleep 30
-# also make sure Kibana is started
-# as it is needed for the dashboards import
-/bin/systemctl start kibana
-sleep 5
 
-# Clean up the old dashboards
-rm /opt/selks/kibana4-dashboards/* -rf
-git clone https://github.com/StamusNetworks/KTS5.git /opt/selks/kibana4-dashboards/
-
-# Re-upload the new ones
-cd /usr/share/python/scirius/ && \
-source bin/activate
-python bin/manage.py kibana_reset 
-deactivate
+# reset the dashboards after the package upgrade
+rm -rf /etc/kibana/kibana-dashboards-loaded
+/etc/init.d/kibana-dashboards-stamus reset
 
 update_evebox() {
     # Use new "stable" EveBox repo.
