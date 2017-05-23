@@ -92,24 +92,10 @@ apt-get install -y selks-scripts-stamus
 
 ### START Install kibana dashboards ###
 
-# temporary till package fix
-touch /etc/kibana/kibana-dashboards-loaded
-#apt-get install -y kibana-dashboards-stamus
+apt-get install -y kibana-dashboards-stamus
 
-# In order to reload the latest dashboards after installed, up and runnnig.
-# remove/flush the old ones
-rm /opt/selks/kibana4-dashboards/* -rf
-git clone https://github.com/StamusNetworks/KTS5.git /opt/selks/kibana4-dashboards/
-#  
-# # re-upload the new ones
-# cd /usr/share/python/scirius/ && \
-# source bin/activate
-# python bin/manage.py kibana_reset 
-# deactivate
- 
-# /bin/systemctl restart elasticsearch
-# /bin/systemctl restart kibana
-# /bin/systemctl restart logstash
+# reset the dashboards after the package upgrade
+rm -rf /etc/kibana/kibana-dashboards-loaded
 
 ### END Install kibana dashboards ###
 
