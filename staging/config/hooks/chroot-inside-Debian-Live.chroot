@@ -254,7 +254,7 @@ ln -s /dev/null /etc/systemd/network/99-default.link
 
 # Install Stamus SELKS linux kernel
 apt-get update && \
-apt-get install -y linux-headers-4.9.20-stamus-amd64 linux-image-4.9.20-stamus-amd64
+apt-get install -y linux-headers-4.9.28-stamus-amd64 linux-image-4.9.28-stamus-amd64
 
 # Clean devel and some others packages
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
