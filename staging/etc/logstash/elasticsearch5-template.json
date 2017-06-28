@@ -24,7 +24,7 @@
           "mapping" : {
             "type" : "text", "norms" : false,
             "fields" : {
-              "raw" : { "ignore_above" : 256, "index" : "not_analyzed", "type" : "string" }
+              "raw" : { "ignore_above" : 256, "index" : "not_analyzed", "type" : "keyword" }
             }
           }
         }
