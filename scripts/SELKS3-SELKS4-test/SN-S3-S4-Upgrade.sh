@@ -292,7 +292,7 @@ cat >> /etc/logstash/elasticsearch5-template.json << EOF
                   "raw" : {
                     "ignore_above" : 256,
                     "index" : "not_analyzed",
-                    "type" : "string"
+                    "type" : "keyword"
                   }
                 }
               },
