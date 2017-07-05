@@ -17,7 +17,8 @@ set -e
 
 /bin/systemctl stop kibana
 
-apt-get update && DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confnew" --force-yes dist-upgrade
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confnew" --force-yes dist-upgrade
 /bin/systemctl stop elasticsearch
 /bin/systemctl stop kibana
 /bin/systemctl stop logstash
@@ -38,6 +39,7 @@ sudo cp -ar /opt/selks/scirius/db/ /var/lib/scirius/
 sudo cp -ar /opt/selks/scirius/git-sources/ /var/lib/scirius/
 
 # Set up new SELKS 4 repos
+rm -rf /etc/apt/sources.list.d/selks.list
 cat >> /etc/apt/sources.list.d/selks4.list <<EOF
 # SELKS4 Stamus Networks repos
 #
@@ -46,15 +48,10 @@ cat >> /etc/apt/sources.list.d/selks4.list <<EOF
 
 deb http://packages.stamus-networks.com/selks4/debian/ jessie main
 deb http://packages.stamus-networks.com/selks4/debian-kernel/ jessie main
-deb http://packages.stamus-networks.com/selks4/debian-test/ jessie main
+#deb http://packages.stamus-networks.com/selks4/debian-test/ jessie main
 EOF
 
 wget -qO - http://packages.stamus-networks.com/packages.selks4.stamus-networks.com.gpg.key | apt-key add - 
-
-# Upgrade kernel to level with SELKS 4
-apt-get update
-apt-get install --yes linux-libc-dev linux-headers-4.9.28-stamus-amd64 linux-image-4.9.28-stamus-amd64
-
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes -o Dpkg::Options::="--force-confnew" --force-yes scirius
@@ -130,18 +127,20 @@ chown -R www-data.www-data /etc/suricata/rules/
 /bin/systemctl stop kibana
 /bin/systemctl stop logstash
 
-echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+# Switch on to Debian Stretch - upgrade partial packages only
+sed -i 's/jessie/stretch/g' /etc/apt/sources.list
+sed -i 's/jessie/stretch/g'  /etc/apt/sources.list.d/selks4.list
+rm -rf /etc/apt/sources.list.d/elasticsearch.list
 
-apt-get update
-apt-get install --yes -t jessie-backports ca-certificates-java openjdk-8-jre-headless \
-openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless \
-libhyperscan4 
+apt-get update 
+apt-get install -y ca-certificates-java openjdk-8-jre-headless \
+openjdk-8-jdk openjdk-8-jre openjdk-8-jdk-headless libhyperscan4
 
 # Remove old java here in case it is the only one running before upgrade above
 apt-get remove --yes openjdk-7-jdk openjdk-7-jre openjdk-7-jre-headless
 
-echo -e "\nPLEASE SELECT JAVA8 AS DEFAULT:\n"
-update-alternatives --config java
+# echo -e "\nPLEASE SELECT JAVA8 AS DEFAULT:\n"
+# update-alternatives --config java
 
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 
@@ -256,95 +255,96 @@ EOF
 # Avoids unassigned shards
 cat >> /etc/logstash/elasticsearch5-template.json << EOF
 {
-    "template" : "logstash-*",
-    "version" : 1,
-    "settings" : {
-      "number_of_replicas": 0,
-      "index.refresh_interval" : "5s"
-    },
-    "mappings" : {
-      "_default_" : {
-        "dynamic_templates" : [
-          {
-            "message_field" : {
-              "mapping" : {
-                "fielddata" : {
-                  "format" : "disabled"
-                },
-                "index" : "analyzed",
-                "omit_norms" : true,
-                "type" : "string"
-              },
-              "match_mapping_type" : "string",
-              "match" : "message"
-            }
-          },
-          {
-            "string_fields" : {
-              "mapping" : {
-                "fielddata" : {
-                  "format" : "disabled"
-                },
-                "index" : "analyzed",
-                "omit_norms" : true,
-                "type" : "string",
-                "fields" : {
-                  "raw" : {
-                    "ignore_above" : 256,
-                    "index" : "not_analyzed",
-                    "type" : "keyword"
-                  }
-                }
-              },
-              "match_mapping_type" : "string",
-              "match" : "*"
-            }
-          }
-        ],
-        "_all" : {
-          "omit_norms" : true,
-          "enabled" : true
-        },
-        "properties" : {
-          "@timestamp" : {
-            "type" : "date"
-          },
-          "geoip" : {
-            "dynamic" : true,
-            "properties" : {
-              "ip" : {
-                "type" : "ip"
-              },
-              "latitude" : {
-                "type" : "float"
-              },
-              "location" : {
-                "type" : "geo_point"
-              },
-              "longitude" : {
-                "type" : "float"
-              }
-            }
-          },
-          "dest_ip": { "type": "ip" },
-          "src_ip": { "type": "ip" },
-          "@version" : {
-            "index" : "not_analyzed",
-            "type" : "string"
+  "template" : "logstash-*",
+  "version" : 50001,
+  "settings" : {
+    "number_of_replicas": 0,
+    "index.refresh_interval" : "5s"
+  },
+  "mappings" : {
+    "_default_" : {
+      "_all" : {"enabled" : true, "norms" : false},
+      "dynamic_templates" : [ {
+        "message_field" : {
+          "path_match" : "message",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "text",
+            "norms" : false
           }
         }
+      }, {
+        "string_fields" : {
+          "match" : "*",
+          "match_mapping_type" : "string",
+          "mapping" : {
+            "type" : "text", "norms" : false,
+            "fields" : {
+              "keyword" : { "type": "keyword", "index": "not_analyzed", "ignore_above": 256 },
+              "raw" : { "type": "keyword", "index": "not_analyzed", "ignore_above": 256 }
+            }
+          }
+        }
+      } ],
+      "properties" : {
+        "@timestamp": { "type": "date", "include_in_all": false },
+        "@version": { "type": "keyword", "include_in_all": false },
+        "geoip"  : {
+          "dynamic": true,
+          "properties" : {
+            "ip": { "type": "ip" },
+            "location" : { "type" : "geo_point" },
+            "latitude" : { "type" : "half_float" },
+            "longitude" : { "type" : "half_float" }
+          }
+        },
+        "dest_ip": { 
+            "type": "ip",
+            "fields": {
+                "raw": {"index": "not_analyzed", "type": "keyword"},
+                "keyword": {"index": "not_analyzed", "type": "keyword"}
+             }
+        },
+        "src_ip": { 
+            "type": "ip",
+            "fields": {
+                "raw": {"index": "not_analyzed", "type": "keyword"},
+                "keyword": {"index": "not_analyzed", "type": "keyword"}
+             }
+        }
       }
-    },
-    "aliases" : { }
+    }
+  }
 }
 EOF
 
-apt-get update && DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confnew" --force-yes dist-upgrade
+# make sure we keep some of the SELKS settings
+mkdir -p /opt/stretch-upgrade-temp/
+cp /etc/motd /opt/stretch-upgrade-temp/
+cp /etc/issue.net /opt/stretch-upgrade-temp/
+mv /etc/alternatives/desktop-background /opt/stretch-upgrade-temp/
+
+# Full switch to Debian Stretch - upgrade all
+apt-get update
+apt-get -y upgrade && \
+DEBIAN_FRONTEND=noninteractive apt-get --yes -o Dpkg::Options::="--force-confnew" --force-yes dist-upgrade
 
 /bin/systemctl daemon-reload
 /bin/systemctl enable logstash
 /bin/systemctl start elasticsearch
 sleep 30
+
+# upgrade to Stretch kernel
+apt-get install -y linux-image-amd64 linux-headers-amd64
+
+# install virtual guest deps (handy if it is a virtual guest deployment)
+apt-get install -y build-essential module-assistant
+
+# move back some of the original SELKS settings
+mv -f /opt/stretch-upgrade-temp/motd /etc/ 
+mv -f /opt/stretch-upgrade-temp/issue.net /etc/
+mv -f /opt/stretch-upgrade-temp/desktop-background /etc/alternatives/
+rm -rf /opt/stretch-upgrade-temp
 
 # reset the dashboards after the package upgrade
 rm -rf /etc/kibana/kibana-dashboards-loaded
@@ -373,7 +373,8 @@ update_evebox
 /bin/systemctl restart evebox
 
 echo "deb http://packages.elastic.co/curator/4/debian stable main" > /etc/apt/sources.list.d/curator4.list
-apt-get update && apt-get install --yes elasticsearch-curator
+apt-get update
+apt-get install --yes elasticsearch-curator
 
 # Set up a curator old logs removal 
 # Remove old cronjob first
@@ -409,11 +410,14 @@ echo "0 4 * * * root /opt/selks/delete-old-logs.sh" >> /etc/crontab
 # Alway leave a empty line before cron files end
 echo "" >> /etc/crontab
 
+# (re)setup IDS sniffing interface for Suricata
+/opt/selks/Scripts/Setup/setup-selks-ids-interface.sh
+
 # Clean up
 rm -rf /opt/selks/scirius/
 rm -rf /opt/kibana/
 
-apt-get clean
+apt-get -y clean && apt-get -y autoremove
 
 #reboot
 
