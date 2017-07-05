@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please run on Debian Jessie
+# Please run on Debian Stretch
 
 set -e
 
@@ -40,13 +40,9 @@ cat >> /etc/apt/sources.list.d/selks4.list <<EOF
 # Manual changes here can be overwritten during 
 # SELKS updates and upgrades !!
 
-deb http://packages.stamus-networks.com/selks4/debian/ jessie main
-deb http://packages.stamus-networks.com/selks4/debian-kernel/ jessie main
-deb http://packages.stamus-networks.com/selks4/debian-test/ jessie main
-EOF
-
-cat >> /etc/apt/sources.list.d/jessie-backports-selks.list <<EOF
-deb http://ftp.debian.org/debian jessie-backports main
+deb http://packages.stamus-networks.com/selks4/debian/ stretch main
+deb http://packages.stamus-networks.com/selks4/debian-kernel/ stretch main
+#deb http://packages.stamus-networks.com/selks4/debian-test/ stretch main
 EOF
 
 ###  END Set up repos ###
@@ -56,7 +52,6 @@ mkdir -p  /opt/selks/
 ### START Suricata ###
 
 apt-get update && \
-apt-get install -y -t jessie-backports libhyperscan4 && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
 ### END Suricata ###
@@ -64,7 +59,7 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 ### START JAVA for ELK ###
 
 apt-get update && \
-apt-get install -y -t jessie-backports ca-certificates-java openjdk-8-jre-headless \
+apt-get install -y ca-certificates-java openjdk-8-jre-headless \
 openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless
 
 ### END JAVA for ELK ###
@@ -241,7 +236,7 @@ echo "SELKS" > /etc/hostname
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
 
-# Edit the Icon "Install Debian Jessie" name on a Live Desktop 
+# Edit the Icon "Install Debian Stretch" name on a Live Desktop 
 # to "Install SELKS"
 sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
@@ -249,19 +244,15 @@ sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applicat
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/scirius.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
 
-# https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
-ln -s /dev/null /etc/systemd/network/99-default.link
-
-# Install Stamus SELKS linux kernel
 apt-get update && \
-apt-get install -y linux-headers-4.9.28-stamus-amd64 linux-image-4.9.28-stamus-amd64
+apt-get install -y linux-headers-amd64
 
 # Clean devel and some others packages
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
 	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
 	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
-	icedtea-7-jre-jamvm rpm alien sane-utils libsane rpm2cpio \
+	rpm alien sane-utils libsane rpm2cpio \
 	libx11-dev libx11-doc m4
 
 apt-get autoremove -y
