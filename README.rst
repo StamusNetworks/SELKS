@@ -120,8 +120,8 @@ You can find information about tuning and other considerations on
 HTTPS access
 ============
 
-Scirius and Kibana are bookmarked in Iceweasel and could be used 
-directly with just a click once logged in the SELKS desktop.
+Scirius and EveBox have desktop icons and could be used 
+directly with just a double click once logged in the SELKS desktop.
 
 If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
