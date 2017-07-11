@@ -14,14 +14,11 @@ ready to use out of the box solution.
 SELKS is comprised of the following major components:
 
 * S - Suricata IDPS - http://suricata-ids.org/
-* E - Elasticsearch - http://www.elasticsearch.org/overview/
-* L - Logstash - http://www.elasticsearch.org/overview/
-* K - Kibana - http://www.elasticsearch.org/overview/
+* E - Elasticsearch - https://www.elastic.co/products/elasticsearch
+* L - Logstash - https://www.elastic.co/products/kibana
+* K - Kibana - https://www.elastic.co/products/logstash
 * S - Scirius - https://github.com/StamusNetworks/scirius
-
-and since SELKS 3.0RC1:
-
-* EveBox - https://codemonkey.net/evebox/
+* EveBox - https://evebox.org/
 
 Getting SELKS
 =============
@@ -34,11 +31,11 @@ Howto run SELKS
 Prerequisites
 -------------
 
-The minimal configuration for SELKS without desktop is one single core and 2 Gb of memory. A virtual machine
-with 2 Gb of RAM should provide a basic test system. If you want to run the desktop version of SELKS,
+The minimal configuration for SELKS without desktop is one single core and 4 Gb of memory. A virtual machine
+with 5 Gb of RAM should provide a basic test system. If you want to run the desktop version of SELKS,
 we highly recommend to use at least two cores.
 
-The minimal configuration for production usage is 2 cores and 4 Gb of memory. As Suricata
+The minimal configuration for production usage is 2 cores and 5 Gb of memory. As Suricata
 and Elastisearch are multithreaded, the more cores you have the better it is.
 Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting.
 See `Running SELKS in production <https://github.com/StamusNetworks/SELKS/wiki/Running-SELKS-in-production>`_ page
@@ -80,7 +77,7 @@ You need to authenticate to access to the web interface(see the ``HTTPS access``
 You can change credentials and user settings by using the top left menu in Scirius.  
 More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
-SELKS has more than 11 default IDS dashboards -  
+SELKS has 13 default IDS dashboards -  
 
 * SN ALL
 * SN ALERTS
@@ -88,6 +85,8 @@ SELKS has more than 11 default IDS dashboards -
 * SN FILE-Transactions
 * SN FLOW
 * SN HTTP
+* SN IDS
+* SN OVERVIEW
 * SN SMTP
 * SN SSH
 * SN STATS
