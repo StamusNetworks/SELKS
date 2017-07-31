@@ -106,9 +106,9 @@ sudo /bin/systemctl enable evebox
 
 # NOTE python-pip is already installed in the build script
 
-pip install --upgrade 'django<1.9' django-tables2 GitPython pyinotify flup
-pip install --upgrade six
-pip install django-dbbackup django-bootstrap3 django-revproxy ipy 
+#pip install --upgrade 'django<1.9' django-tables2 GitPython pyinotify flup
+#pip install --upgrade six
+#pip install django-dbbackup django-bootstrap3 django-revproxy ipy 
 
 mkdir -p /var/lib/scirius/static/
 apt-get update && \
