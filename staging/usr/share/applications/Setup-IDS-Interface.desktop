@@ -1,12 +1,13 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
-Name=Scirius
+Name=Setup-IDS-Interface
 Icon=preferences-other
-Comment=Launch-Kibana-Web-Access
-Exec=firefox-esr https://selks/rules/
+Comment=SetupIDSInterface
+Exec=/opt/selks/Scripts/Setup/setup-selks-ids-interface.sh
 Type=Application
 Categories=Application;System;
 StartupNotify=true
-Terminal=false
+Terminal=true
+
 

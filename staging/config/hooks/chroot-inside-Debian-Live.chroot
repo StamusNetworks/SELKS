@@ -4,8 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please run on Debian Jessie
-
+# Please run on Debian Stretch
 
 set -e
 
@@ -16,19 +15,42 @@ echo "root:StamusNetworks" | chpasswd
 echo " export LS_OPTIONS='--color=auto'" >> /root/.bashrc
 echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 
-###  START Scirius ###
-# NOTE python-pip is already installed in the build script
+###  Set up repos ###
 
-pip install --upgrade 'django<1.9' django-tables2 GitPython pyinotify flup
-pip install --upgrade six
-pip install django-dbbackup django-bootstrap3 django-revproxy ipy 
+wget -qO - http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - 
+wget -qO - http://packages.stamus-networks.com/packages.selks4.stamus-networks.com.gpg.key | apt-key add - 
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+wget -qO - https://evebox.org/files/GPG-KEY-evebox | sudo apt-key add -
 
-###  END Scirius ###
+cat >> /etc/apt/sources.list.d/elastic-5.x.list <<EOF
+deb https://artifacts.elastic.co/packages/5.x/apt stable main
+EOF
+
+cat >> /etc/apt/sources.list.d/curator5.list <<EOF
+deb http://packages.elastic.co/curator/4/debian stable main
+EOF
+
+cat >> /etc/apt/sources.list.d/evebox.list <<EOF
+deb http://files.evebox.org/evebox/debian stable main
+EOF
+
+cat >> /etc/apt/sources.list.d/selks4.list <<EOF
+# SELKS4 Stamus Networks repos
+#
+# Manual changes here can be overwritten during 
+# SELKS updates and upgrades !!
+
+deb http://packages.stamus-networks.com/selks4/debian/ stretch main
+deb http://packages.stamus-networks.com/selks4/debian-kernel/ stretch main
+#deb http://packages.stamus-networks.com/selks4/debian-test/ stretch main
+EOF
+
+###  END Set up repos ###
 
 mkdir -p  /opt/selks/
 
 ### START Suricata ###
-wget -O - -q http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - && \
+
 apt-get update && \
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
 
@@ -36,58 +58,64 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 
 ### START JAVA for ELK ###
 
-apt-get install -y openjdk-7-jdk
+apt-get update && \
+apt-get install -y ca-certificates-java openjdk-8-jre-headless \
+openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless
 
 ### END JAVA for ELK ###
 
 ### START ELK ###
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && \
+
 apt-get update && \
-apt-get install elasticsearch logstash
+apt-get install -y elasticsearch logstash kibana elasticsearch-curator
 
 mkdir -p /var/cache/logstash/sincedbs/
 chown logstash:logstash /var/cache/logstash/sincedbs/
 
-sudo /bin/systemctl enable elasticsearch.service && \
-sudo /bin/systemctl enable logstash.service && \
-sudo /bin/systemctl enable suri_reloader.service
+sudo /bin/systemctl enable elasticsearch && \
+sudo /bin/systemctl enable logstash && \
+sudo /bin/systemctl enable kibana && \
+sudo /bin/systemctl daemon-reload
 
 ### END ELK ###
 
 ### START Install SELKS/StamusN scripts ###
+
 apt-get install -y selks-scripts-stamus
 
 ### END Install SELKS/StamusN scripts ###
 
-### START Install kibana ###
-sudo apt-get update && sudo apt-get install kibana
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable kibana.service
+### START Install kibana dashboards ###
 
-# install timelion pluging
-sudo /opt/kibana/bin/kibana plugin -i kibana/timelion
+apt-get install -y kibana-dashboards-stamus
 
-sudo /bin/systemctl restart  kibana.service
+# reset the dashboards after the package upgrade
+rm -rf /etc/kibana/kibana-dashboards-loaded
 
-apt-get install kibana-dashboards-stamus
-### END Install kibana ###
-
-### START Scirius ###
-mkdir -p /var/www/static
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" scirius
-
-### END Scirius ###
+### END Install kibana dashboards ###
 
 ### START Evebox ###
-wget -O - -q "https://bintray.com/user/downloadSubjectPublicKey?username=jasonish" | apt-key add -
-apt-get update
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" evebox
-sudo /bin/systemctl enable evebox.service
+
+apt-get update && \
+apt-get install -y evebox
+sudo /bin/systemctl enable evebox
 
 ### END Evebox ###
 
-# enable XDELETE for elasticsearch
-sudo /usr/share/elasticsearch/bin/plugin install delete-by-query
+### START Scirius, nginx, revrse proxy, supervisor and ssl ###
+
+# NOTE python-pip is already installed in the build script
+
+#pip install --upgrade 'django<1.9' django-tables2 GitPython pyinotify flup
+#pip install --upgrade six
+#pip install django-dbbackup django-bootstrap3 django-revproxy ipy 
+
+mkdir -p /var/lib/scirius/static/
+apt-get update && \
+apt-get install -y scirius
+
+# supervisor conf
+ln -s /usr/share/doc/scirius/examples/scirius-supervisor.conf /etc/supervisor/conf.d/scirius-supervisor.conf
 
 # Set the right permissions for the logstash user to run suricata
 chown -R logstash:logstash /var/log/suricata
@@ -95,117 +123,139 @@ chown -R logstash:logstash /var/log/suricata
 # www-data needs to write Suricata rules
 chown -R www-data.www-data /etc/suricata/rules/
 
-# adjust ownership for the kibana user 
-chown -R kibana.kibana /opt/kibana/optimize/
-
-### START nginx, revrse proxy and ssl ###
-
 mkdir -p /etc/nginx/ssl
-openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca 
+openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca 
 
-ln -s /etc/nginx/sites-available/stamus.conf /etc/nginx/sites-enabled/stamus.conf
-sed -i -e '/^fastcgi_param  SCRIPT_NAME/d'  /etc/nginx/fastcgi_params
 rm /etc/nginx/sites-enabled/default
 
-cd /opt/selks/scirius/
-sudo -u www-data python manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-3.0/emerging.rules.tar.gz http sigs
-sudo -u www-data python manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
-sudo -u www-data python manage.py defaultruleset "Default SELKS ruleset"
-sudo -u www-data python manage.py disablecategory "Default SELKS ruleset" stream-events
-sudo -u www-data python manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
-sudo -u www-data python manage.py updatesuricata
+cat >> /etc/nginx/sites-available/selks4.conf <<EOF
+server {
+    listen 127.0.0.1:80;
+    listen 127.0.1.1:80;
+    listen 443 default_server ssl;
+    ssl_certificate /etc/nginx/ssl/scirius.crt;
+    ssl_certificate_key /etc/nginx/ssl/scirius.key;
+    server_name SELKS;
+    access_log /var/log/nginx/scirius.access.log;
+    error_log /var/log/nginx/scirius.error.log;
+
+    # https://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-production
+    location /static/ { # STATIC_URL
+        alias /var/lib/scirius/static/; # STATIC_ROOT
+        expires 30d;
+    }
+
+    location /media/ { # MEDIA_URL
+        alias /var/lib/scirius/static/; # MEDIA_ROOT
+        expires 30d;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_read_timeout 600;
+        proxy_set_header Host \$http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_redirect off;
+    }
+
+}
+EOF
+
+# enable sites
+ln -s /etc/nginx/sites-available/selks4.conf /etc/nginx/sites-enabled/selks4.conf
+
+cd /usr/share/python/scirius/ && \
+source bin/activate
+python bin/manage.py loaddata /etc/scirius/scirius.json
+python bin/manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-git/emerging.rules.tar.gz http sigs
+python bin/manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
+python bin/manage.py defaultruleset "Default SELKS ruleset"
+python bin/manage.py disablecategory "Default SELKS ruleset" stream-events
+python bin/manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
+python bin/manage.py updatesuricata
+deactivate
+
+/usr/bin/supervisorctl reread && \
+/usr/bin/supervisorctl update && \
+/usr/bin/supervisorctl restart scirius && \
+/bin/systemctl restart nginx
+sudo /bin/systemctl enable supervisor
+
+# set permissions for Scirius 
+touch /var/log/scirius.log
+touch /var/log/scirius-error.log
+chown www-data /var/log/scirius*
+chown -R www-data /var/lib/scirius/git-sources/
+chown -R www-data /var/lib/scirius/db/
+chown -R www-data.www-data /etc/suricata/rules/
 
 # fix permissions for user www-data/scirius
 usermod -a -G logstash www-data
 mkdir -p /var/run/suricata/
 chmod g+w /var/run/suricata/ -R
 
-### END nginx, revrse proxy and ssl ###
+### END Scirius, nginx, revrse proxy, supervisor and ssl ###
 
-### Start Set up elasticsearch-curator
-pip install 'elasticsearch-curator<4.0'
+# Set up a curator old logs removal
+# flush everything that is older than 2 weeks
 
-### End Set up elasticsearch-curator
+cat >> /opt/selks/delete-old-logs.sh <<EOF
+#!/bin/bash
 
-# Set up a cron jobs for Logstash,Suricata, rule updates
-echo "0 2 * * * www-data /usr/bin/python /opt/selks/scirius/manage.py updatesuricata" >> /etc/crontab
-echo "7 2 * * * root /bin/systemctl restart logstash.service" >> /etc/crontab
-echo "0 3 * * * root /usr/local/bin/curator delete indices --older-than 16 --time-unit days  --timestring '\%Y.\%m.\%d'" >> /etc/crontab
-# alway leave a ampty line before cron files end
+/opt/elasticsearch-curator/curator_cli delete_indices --filter_list \
+'
+[
+  {
+    "filtertype": "age",
+    "source": "creation_date",
+    "direction": "older",
+    "unit": "days",
+    "unit_count": 14
+  },
+  {
+    "filtertype": "pattern",
+    "kind": "prefix",
+    "value": "logstash*"
+  }
+]
+'
+EOF
+
+chmod 755 /opt/selks/delete-old-logs.sh
+
+# Set up a cron jobs for Logstash, Scirius, rule updates
+echo "0 2 * * * www-data ( cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py updatesuricata && deactivate )" >> /etc/crontab
+echo "0 4 * * * root /opt/selks/delete-old-logs.sh" >> /etc/crontab
+# alway leave a empty line before cron files end
 echo "" >> /etc/crontab
 
+# Set up the host name
 echo "SELKS" > /etc/hostname
 
 # Enable the ssh banners
 sed -i -e 's|\#Banner \/etc\/issue\.net|Banner \/etc\/issue\.net|'  /etc/ssh/sshd_config
 
-### START elasticsearch configuration ###
-echo "
-# prevent swapping
-# uncomment the following for improved ES performance but more intensive 
-# memory usage. The example below will allocate 8GB RAM for ES
-#ES_HEAP_SIZE=8g
-MAX_LOCKED_MEMORY=unlimited
 
-" >> /etc/default/elasticsearch 
-
-
-echo "
-
-# Prevent swapping
-# as explained here - 
-# http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html 
-bootstrap.mlockall: true
-
-#Disable multicast discovery
-discovery.zen.ping.multicast.enabled: false
-
-# Incease Thread poools #
-threadpool:
-    search:
-        type: fixed
-        size: 10000
-
-# Increase memory for indexing
-indices.memory.index_buffer_size: 25%
-
-# Increase the refresh interval
-index.refresh_interval: 20s
-
-# Limit fielddata cache 
-indices.fielddata.cache.size: 35%
-
-# as per
-# https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html
-# to help facilitate having everything on the same machine
-cluster.routing.allocation.same_shard.host: true
-
-# SELKS is all-in-one distro so we disable replicas
-index.number_of_replicas: 0
-
-# avoid issues with IP changes
-network.bind_host: 127.0.0.1
-
-" >> /etc/elasticsearch/elasticsearch.yml
-
-### END elasticsearch configuration ###
-
-# Edit the Icon "Install Debian Jessie" name on a Live Desktop 
+# Edit the Icon "Install Debian Stretch" name on a Live Desktop 
 # to "Install SELKS"
 sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applications/debian-installer-launcher.desktop 
 
 # Install exception for local certificate
-certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/server.crt  -d /etc/iceweasel/profile/
+certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/scirius.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
+
+apt-get update && \
+apt-get install -y linux-headers-amd64
 
 # Clean devel and some others packages
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
 	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
 	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
-	icedtea-7-jre-jamvm rpm alien sane-utils libsane rpm2cpio \
+	rpm alien sane-utils libsane rpm2cpio \
 	libx11-dev libx11-doc m4
 
+apt-get autoremove -y
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c
 

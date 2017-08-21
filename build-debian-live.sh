@@ -33,27 +33,27 @@ OPTIONS:
            https://www.kernel.org/category/releases.html
            
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
-   By default SELKS will be build with a standard Debian Jessie 64 bit distro and kernel ver 3.16.
+   By default SELKS will be build with a standard Debian Stretch 64 bit distro and kernel ver 3.16.
    
    EXAMPLE (default): 
    ./build-debian-live.sh 
-   The example above (is the default) will build a SELKS standard Debian Jessie 64 bit distro (with kernel ver 3.16)
+   The example above (is the default) will build a SELKS standard Debian Stretch 64 bit distro (with kernel ver 3.16)
    
    EXAMPLE (customizations): 
    
    ./build-debian-live.sh -k 3.19.6 
-   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.19.6
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.19.6
    
    ./build-debian-live.sh -k 3.18.11 -p one-package
-   The example above will build a SELKS Debian Jessie 64 bit distro with kernel ver 3.18.11
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
    ./build-debian-live.sh -k 3.18.11 -g no-desktop -p one-package
-   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
+   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
    ./build-debian-live.sh -k 3.18.11 -g no-desktop -p "package1 package2 package3"
-   The example above will build a SELKS Debian Jessie 64 bit distro, no desktop with kernel ver 3.18.11
+   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra packages named  "package1", "package2", "package3" to the build.
    
    
@@ -175,7 +175,7 @@ then
   ### END Kernel Version choice ### 
   
   lb config \
-  -a amd64 -d jessie  \
+  -a amd64 -d stretch  \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --bootloader syslinux \
@@ -183,6 +183,7 @@ then
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
   --linux-packages linux-headers-${KERNEL_VER} \
+  --apt-options "--yes --force-yes" \
   --linux-flavour stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
@@ -192,36 +193,27 @@ then
 else
 
   cd Stamus-Live-Build && lb config \
-  -a amd64 -d jessie \
+  -a amd64 -d stretch \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
-  --linux-packages linux-image-4.4.16-stamus \
-  --linux-packages linux-headers-4.4.16-stamus \
   --iso-application SELKS - Suricata Elasticsearch Logstash Kibana Scirius \
   --iso-preparer Stamus Networks \
   --iso-publisher Stamus Networks \
   --iso-volume Stamus-SELKS $LB_CONFIG_OPTIONS 
-  
-  # for 4.1 kernel image installation
-  # as explained here - http://live.debian.net/manual/4.x/html/live-manual.en.html#435
-  # lb config --linux-packages linux-image-4.1.0-2-amd64
-  # echo "deb http://ftp.debian.org/debian/ testing main" > config/archives/experimental.list.chroot
-  # in order to get lb config (above) -> 
-  #  --linux-packages linux-image-4.1.15-stamus 
-  #  --linux-packages linux-headers-4.1.15-stamus 
-    
-  #adding StamusN debian-test repo - for some test runs whenever needed.
-  #echo "deb http://packages.stamus-networks.com/selks3/debian-test/ jessie main" > config/archives/stamus-kernel.list.chroot
-  
-  echo "deb http://packages.stamus-networks.com/selks3/debian-kernel/ jessie main" > config/archives/stamus-kernel.list.chroot
-  # we need to introduce the gpg key so that we do not fail at the install phase with:
-  # "WARNING: The following packages cannot be authenticated!"
-  # note - the naming convention is important
-  wget -O config/archives/packages-stamus-networks-gpg.key.chroot  http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key
-  
-  
+
+# If needed a "live" kernel can be specified like so.
+# In SELKS 4 as it uses kernel >4.9 we make sure we keep the "old/unpredictable" naming convention 
+# and we take care of that in chroot-inside-Debian-Live.sh
+# more info - 
+# https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
+#  --linux-packages linux-headers-4.9.20-stamus \
+#  --linux-packages linux-image-4.9.20-stamus \
+# echo "deb http://packages.stamus-networks.com/selks4/debian-kernel/ stretch main" > config/archives/stamus-kernel.list.chroot
+
+wget -O config/archives/packages-stamus-networks-gpg.key.chroot http://packages.stamus-networks.com/packages.selks4.stamus-networks.com.gpg.key
+
 fi
 
 # Create dirs if not existing for the custom config files
@@ -232,7 +224,6 @@ mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/etc/default/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
-mkdir -p config/includes.chroot/etc/nginx/sites-available/
 mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
@@ -240,11 +231,11 @@ mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
-mkdir -p config/includes.chroot/etc/apt/sources.list.d/
 mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/var/backups/
+mkdir -p config/includes.chroot/etc/apt/
 
 cd ../
 
@@ -263,42 +254,49 @@ cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html
 # same as above but for root
 cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
 rm TMP.rst 
+
 # cp Scirius desktop shortcuts
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-# Logstash
+
+# Logstash and Elasticsearch 5 template
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
+cp staging/etc/logstash/elasticsearch5-template.json Stamus-Live-Build/config/includes.chroot/etc/logstash/ 
+
 # Overwrite Suricata default script
 cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
+
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
+
 # Logrotate config for eve.json
 cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
+
 # Add the Stmaus Networs logo for the boot screen
 cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
+
 # Add the SELKS wallpaper
 cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/etc/alternatives/desktop-background
+
 # Copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
 cp staging/etc/issue.net Stamus-Live-Build/config/includes.chroot/etc/
+
 # Copy pythonpath.sh
 cp staging/etc/profile.d/pythonpath.sh Stamus-Live-Build/config/includes.chroot/etc/profile.d/
-# Copy init script for suri_reloader
-cp staging/scirius/suri_reloader Stamus-Live-Build/config/includes.chroot/etc/init.d/
-# Copy elasticsearch repo file
-cp staging/etc/apt/sources.list.d/elasticsearch.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Copy stamus debian repo list file - 
-# holding latest Suricata,libhtp,Scirius and kernel packages
-cp staging/etc/apt/sources.list.d/selks.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Copy evebox repo file
-cp staging/etc/apt/sources.list.d/evebox.list Stamus-Live-Build/config/includes.chroot/etc/apt/sources.list.d/
-# Overwrite EveBox default script
-cp staging/etc/default/evebox Stamus-Live-Build/config/includes.chroot/etc/default/
+
 # Copy evebox desktop shortcut.
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+
 # Same as above but for root
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+
+# Copy set up IDS interface desktop shortcut.
+cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+
+# Same as above but for root
+cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
 # Add core system packages to be installed
 echo "
@@ -309,10 +307,11 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
-rsync mc python-daemon libnss3-tools curl virtualbox-guest-utils 
+rsync mc python-daemon libnss3-tools curl net-tools
 python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
 python-yaml ssh sudo tcpdump nginx openssl jq patch  
-python-pip debian-installer-launcher live-build " \
+python-pip debian-installer-launcher live-build apt-transport-https 
+ " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
 # Add system tools packages to be installed
@@ -333,6 +332,9 @@ if [[ -z "$GUI" ]]; then
 
   # For Evebox to.
   cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
+  
+  # For setting up Suricata IDS interface.
+  cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 fi
 
 # If -p (add packages) option is used - add those packages to the build
@@ -349,8 +351,8 @@ cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/confi
 if [[ -n "$KERNEL_VER" ]]; 
 then
   
-   # IF kustom kernel option is chosen "-k ...":
-   # remove the live menu since different kernel versions and custom flavours  
+   # IF custom kernel option is chosen "-k ...":
+   # remove the live menu since different kernel versions and custom flavors  
    # can potentially fail to load in LIVE depending on the given environment.
    # So we create a file for execution at the binary stage to remove the 
    # live menu choice. That leaves the options to install.
