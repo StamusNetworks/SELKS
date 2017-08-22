@@ -25,6 +25,15 @@ Getting SELKS
 
 You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
 
+.. image:: doc/images/Distro.png
+    :alt: SELKS 4 
+    :align: center
+    
+.. image:: doc/images/Supplemental-info.png
+    :alt: Example view
+    :align: center
+    
+
 Howto run SELKS
 ===============
 
