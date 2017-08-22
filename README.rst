@@ -14,7 +14,7 @@ ready to use out of the box solution.
 .. image:: doc/images/Distro.png
     :alt: SELKS 4
     :align: center
-    :width: 300px
+    :scale: 50%
 
 SELKS is comprised of the following major components:
 
@@ -28,7 +28,7 @@ SELKS is comprised of the following major components:
 .. image:: doc/images/Supplemental-info.png
     :alt: Example view
     :align: center
-    :width: 300px
+    :scale: 50%
 
 Getting SELKS
 =============
