@@ -11,6 +11,10 @@ released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
 The SELKS ISO is both Live and Installable ISO in one. Once installed it is 
 ready to use out of the box solution.
 
+.. image:: doc/images/Distro.png
+    :alt: SELKS 4
+    :align: center
+
 SELKS is comprised of the following major components:
 
 * S - Suricata IDPS - http://suricata-ids.org/
@@ -20,20 +24,17 @@ SELKS is comprised of the following major components:
 * S - Scirius - https://github.com/StamusNetworks/scirius
 * EveBox - https://evebox.org/
 
+And it includes preconfigured dashboards like this one:
+
+.. image:: doc/images/Supplemental-info.png
+    :alt: Example view
+    :align: center
+
 Getting SELKS
 =============
 
 You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
-
-.. image:: doc/images/Distro.png
-    :alt: SELKS 4 
-    :align: center
     
-.. image:: doc/images/Supplemental-info.png
-    :alt: Example view
-    :align: center
-    
-
 Howto run SELKS
 ===============
 
