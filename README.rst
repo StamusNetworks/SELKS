@@ -24,6 +24,8 @@ SELKS is comprised of the following major components:
 * S - Scirius - https://github.com/StamusNetworks/scirius
 * EveBox - https://evebox.org/
 
+And it includes preconfigured dashboards like this one:
+
 .. image:: doc/images/Supplemental-info.png
     :alt: Example view
     :align: center
