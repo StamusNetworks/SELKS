@@ -110,14 +110,20 @@ Elasticsearch, Logstash and Suricata are build in and can be used as standard se
  systemctl restart suricata
  systemctl stop logstash 
 
+To restart Scirius: ::
+
+ /usr/bin/supervisorctl restart scirius
+
 Suricata ruleset is updated and Suricata is restarted every days at 2:00AM.
 
-Building SELKS
-==============
+Building or customizing SELKS
+=============================
 
 If you would like to build an installable SELKS ISO from scratch and add extra packages of your choice to it - 
-extended information on how to build SELKS ISO can be found on
-`Building SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_.
+extended information on how to build and customize SELKS ISO can be found on  
+
+* `Building SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_
+* `Customizing SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Customizing-SELKS>`_
 
 Tuning SELKS
 ==============
@@ -146,7 +152,7 @@ Note
 
 Remote access to the web interfaces is currently only httpS protected. It can be 
 further protected with firewall rules and/or authentication or simply by using 
-"service nginx start/stop"
+``/bin/systemctl start/stop nginx``
 
 Firewall rules
 --------------
