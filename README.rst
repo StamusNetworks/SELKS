@@ -19,8 +19,8 @@ SELKS is comprised of the following major components:
 
 * S - Suricata IDPS - http://suricata-ids.org/
 * E - Elasticsearch - https://www.elastic.co/products/elasticsearch
-* L - Logstash - https://www.elastic.co/products/kibana
-* K - Kibana - https://www.elastic.co/products/logstash
+* L - Logstash - https://www.elastic.co/products/logstash
+* K - Kibana - https://www.elastic.co/products/kibana
 * S - Scirius - https://github.com/StamusNetworks/scirius
 * EveBox - https://evebox.org/
 
