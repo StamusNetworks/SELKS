@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# changes of the wording (adding Stamus) in the 
+# menu names 
+
+echo "$PWD"
+echo "Present work dir"
+echo "HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+sed -i -e 's|menu label \^Live|menu label \^Stamus SELKS Live|'  isolinux/live.cfg
+sed -i -e 's|menu label \^Install|menu label \^Stamus SELKS Install|' isolinux/install.cfg
+sed -i -e 's|menu label \^Graphical install|menu label \^Stamus SELKS Graphical install|' isolinux/install.cfg
+

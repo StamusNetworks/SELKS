@@ -2,7 +2,8 @@
 [Desktop Entry]
 Version=1.0
 Name=Scirius
-Icon=preferences-other
+#Icon=preferences-other
+Icon=applications-internet
 Comment=Launch-Kibana-Web-Access
 Exec=firefox-esr https://selks/rules/
 Type=Application

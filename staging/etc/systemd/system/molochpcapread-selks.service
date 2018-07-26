@@ -1,0 +1,23 @@
+[Unit]
+Description=Moloch Pcap Read
+After=network.target
+#Requires=network.target
+
+#After=network.target elasticsearch.service
+#Requires=network.target elasticsearch.service
+
+[Service]
+Type=simple
+#Restart=on-failure
+StandardOutput=tty
+#ExecStartPre=-/data/moloch/bin/moloch_config_interfaces.sh
+ExecStart=/bin/sh -c '/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -m -s -R /data/nsm/  >> /data/moloch/logs/capture.log 2>&1'
+WorkingDirectory=/data/moloch
+LimitCORE=infinity
+Restart=always
+RestartSec=90
+StartLimitInterval=600
+StartLimitBurst=4
+
+[Install]
+WantedBy=multi-user.target

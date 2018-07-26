@@ -26,14 +26,14 @@ OPTIONS:
    -p      Add package(s) to the build - can be one-package or "package1 package2 package3...." (should be confined to up to 10 packages)
    -k      Kernel option - can be the stable standard version of the kernel you wish to deploy - 
            aka you can choose any kernel "3.x.x" you want.
-           Example: "3.10" or "3.19.6" or "3.18.11" 
+           Example: "4.16" or "3.19.6" or "3.18.11" 
            
            More info on kernel versions and support:
            https://www.kernel.org/
            https://www.kernel.org/category/releases.html
            
    By default no options are required. The options presented here are if you wish to enable/disable/add components.
-   By default SELKS will be build with a standard Debian Stretch 64 bit distro and kernel ver 3.16.
+   By default SELKS will be build with a standard Debian Stretch 64 bit distro and kernel ver 4.9+ (Stretch).
    
    EXAMPLE (default): 
    ./build-debian-live.sh 
@@ -41,8 +41,8 @@ OPTIONS:
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 3.19.6 
-   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.19.6
+   ./build-debian-live.sh -k 4.10 
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 4.10
    
    ./build-debian-live.sh -k 3.18.11 -p one-package
    The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.18.11
@@ -52,8 +52,8 @@ OPTIONS:
    The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p "package1 package2 package3"
-   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
+   ./build-debian-live.sh -k 4.16 -g no-desktop -p "package1 package2 package3"
+   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 4.16
    and add the extra packages named  "package1", "package2", "package3" to the build.
    
    
@@ -165,11 +165,14 @@ then
   # Directory that needs to be present for the Kernel Version choice to work
   mkdir -p cache/contents.chroot/
   # Hook directory for the initramfs script to be copied to
-  mkdir -p config/hooks/
+  #mkdir -p config/hooks/
+  mkdir -p config/hooks/live/
   
   # Copy the kernel image and headers
+  #mv kernel-misc/*.deb config/packages.chroot/
+  #cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
   mv kernel-misc/*.deb config/packages.chroot/
-  cp ../staging/config/hooks/all_chroot_update-initramfs.sh config/hooks/all_chroot_update-initramfs.chroot
+  cp ../staging/config/hooks/live/all_chroot_update-initramfs.sh config/hooks/live/all_chroot_update-initramfs.chroot
     
   
   ### END Kernel Version choice ### 
@@ -210,22 +213,23 @@ else
 # https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
 #  --linux-packages linux-headers-4.9.20-stamus \
 #  --linux-packages linux-image-4.9.20-stamus \
-# echo "deb http://packages.stamus-networks.com/selks4/debian-kernel/ stretch main" > config/archives/stamus-kernel.list.chroot
+# echo "deb http://packages.stamus-networks.com/selks5/debian-kernel/ stretch main" > config/archives/stamus-kernel.list.chroot
 
-wget -O config/archives/packages-stamus-networks-gpg.key.chroot http://packages.stamus-networks.com/packages.selks4.stamus-networks.com.gpg.key
+wget -O config/archives/packages-stamus-networks-gpg.key.chroot http://packages.stamus-networks.com/packages.selks5.stamus-networks.com.gpg.key
 
 fi
 
 # Create dirs if not existing for the custom config files
 mkdir -p config/includes.chroot/etc/logstash/conf.d/
 mkdir -p config/includes.chroot/etc/skel/Desktop/
-mkdir -p config/includes.chroot/usr/share/applications
+mkdir -p config/includes.chroot/usr/share/applications/
+mkdir -p config/includes.chroot/usr/share/xfce4/backdrops/
 mkdir -p config/includes.chroot/etc/logrotate.d/
-mkdir -p config/includes.chroot/etc/default/
+mkdir -p config/includes.chroot/etc/systemd/system/
+mkdir -p config/includes.chroot/data/moloch/etc/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
 mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
-mkdir -p config/includes.chroot/etc/logrotate.d/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
 mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/profile.d/
@@ -260,12 +264,14 @@ cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/inclu
 # Same as above but for root
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
-# Logstash and Elasticsearch 5 template
+# Logstash and Elasticsearch 6 template
 cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
-cp staging/etc/logstash/elasticsearch5-template.json Stamus-Live-Build/config/includes.chroot/etc/logstash/ 
+cp staging/etc/logstash/elasticsearch6-template.json Stamus-Live-Build/config/includes.chroot/etc/logstash/ 
 
-# Overwrite Suricata default script
-cp staging/etc/default/suricata Stamus-Live-Build/config/includes.chroot/etc/default/
+# Moloch for SELKS set up
+cp staging/etc/systemd/system/molochpcapread-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/ 
+cp staging/etc/systemd/system/molochviewer-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
+cp staging/data/moloch/etc/molochpcapread-selks-config.ini Stamus-Live-Build/config/includes.chroot/data/moloch/etc/
 
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
@@ -278,6 +284,7 @@ cp staging/splash.png Stamus-Live-Build/config/includes.binary/isolinux/
 
 # Add the SELKS wallpaper
 cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/etc/alternatives/desktop-background
+#cp staging/wallpaper/joy-wallpaper_1920x1080.svg Stamus-Live-Build/config/includes.chroot/usr/share/xfce4/backdrops/
 
 # Copy banners
 cp staging/etc/motd Stamus-Live-Build/config/includes.chroot/etc/
@@ -322,8 +329,12 @@ tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  echo "lxde fonts-lyx wireshark terminator conky" \
+  #echo "lxde fonts-lyx wireshark terminator conky" \
+  #>> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+  echo "wireshark terminator open-vm-tools open-vm-tools" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+  
+  echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
   # Copy conky conf file
   cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   # Copy the menu shortcuts for Kibana and Scirius
@@ -345,7 +356,7 @@ fi
 
 # Add specific tasks(script file) to be executed 
 # inside the chroot environment
-cp staging/config/hooks/chroot-inside-Debian-Live.chroot Stamus-Live-Build/config/hooks/
+cp staging/config/hooks/live/chroot-inside-Debian-Live.hook.chroot Stamus-Live-Build/config/hooks/live/
 
 # Edit menu names for Live and Install
 if [[ -n "$KERNEL_VER" ]]; 
@@ -356,12 +367,14 @@ then
    # can potentially fail to load in LIVE depending on the given environment.
    # So we create a file for execution at the binary stage to remove the 
    # live menu choice. That leaves the options to install.
-   cp staging/config/hooks/menues-changes-live-custom-kernel-choice.binary Stamus-Live-Build/config/hooks/
-   cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+   cp staging/config/hooks/live/menues-changes.hook.binary Stamus-Live-Build/config/hooks/live/
+   cp staging/config/hooks/live/menues-changes-live-custom-kernel-choice.hook.binary Stamus-Live-Build/config/hooks/live/
+   
    
 else
   
-  cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+  #cp staging/config/hooks/menues-changes.binary Stamus-Live-Build/config/hooks/
+  cp staging/config/hooks/live/menues-changes.hook.binary Stamus-Live-Build/config/hooks/live/
   
 fi
 
@@ -381,5 +394,6 @@ d-i passwd/root-password-again password StamusNetworks
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
+#cd Stamus-Live-Build && ( lb build &> build.log )
 #mv binary.hybrid.iso SELKS.iso
 mv live-image-amd64.hybrid.iso SELKS.iso

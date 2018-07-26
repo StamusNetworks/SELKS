@@ -2,7 +2,8 @@
 [Desktop Entry]
 Version=1.0
 Name=Setup-IDS-Interface
-Icon=preferences-other
+#Icon=preferences-other
+Icon=system
 Comment=SetupIDSInterface
 Exec=/opt/selks/Scripts/Setup/setup-selks-ids-interface.sh
 Type=Application

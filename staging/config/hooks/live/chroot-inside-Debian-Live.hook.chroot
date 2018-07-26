@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Copyright Stamus Networks
+# Copyright Stamus Networks, 2018
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
 # Please run on Debian Stretch
 
-set -e
+set -ex
 
 # Setting up the LIVE root (during install on disk it is preseeded)
 echo "root:StamusNetworks" | chpasswd
@@ -17,44 +17,36 @@ echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 
 ###  Set up repos ###
 
-wget -qO - http://packages.stamus-networks.com/packages.stamus-networks.com.gpg.key | apt-key add - 
-wget -qO - http://packages.stamus-networks.com/packages.selks4.stamus-networks.com.gpg.key | apt-key add - 
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+wget -qO - http://packages.stamus-networks.com/packages.selks5.stamus-networks.com.gpg.key | apt-key add - 
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 wget -qO - https://evebox.org/files/GPG-KEY-evebox | sudo apt-key add -
 
-cat >> /etc/apt/sources.list.d/elastic-5.x.list <<EOF
-deb https://artifacts.elastic.co/packages/5.x/apt stable main
+cat >> /etc/apt/sources.list.d/elastic-6.x.list <<EOF
+deb https://artifacts.elastic.co/packages/6.x/apt stable main
 EOF
 
 cat >> /etc/apt/sources.list.d/curator5.list <<EOF
-deb http://packages.elastic.co/curator/4/debian stable main
+deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main
 EOF
 
 cat >> /etc/apt/sources.list.d/evebox.list <<EOF
 deb http://files.evebox.org/evebox/debian stable main
 EOF
 
-cat >> /etc/apt/sources.list.d/selks4.list <<EOF
+cat >> /etc/apt/sources.list.d/selks5.list <<EOF
 # SELKS4 Stamus Networks repos
 #
 # Manual changes here can be overwritten during 
 # SELKS updates and upgrades !!
 
-deb http://packages.stamus-networks.com/selks4/debian/ stretch main
-deb http://packages.stamus-networks.com/selks4/debian-kernel/ stretch main
-#deb http://packages.stamus-networks.com/selks4/debian-test/ stretch main
+deb http://packages.stamus-networks.com/selks5/debian/ stretch main
+deb http://packages.stamus-networks.com/selks5/debian-kernel/ stretch main
+#deb http://packages.stamus-networks.com/selks5/debian-test/ stretch main
 EOF
 
 ###  END Set up repos ###
 
 mkdir -p  /opt/selks/
-
-### START Suricata ###
-
-apt-get update && \
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
-
-### END Suricata ###
 
 ### START JAVA for ELK ###
 
@@ -71,6 +63,7 @@ apt-get install -y elasticsearch logstash kibana elasticsearch-curator
 
 mkdir -p /var/cache/logstash/sincedbs/
 chown logstash:logstash /var/cache/logstash/sincedbs/
+/usr/share/logstash/bin/logstash-plugin install logstash-filter-geoip
 
 sudo /bin/systemctl enable elasticsearch && \
 sudo /bin/systemctl enable logstash && \
@@ -78,6 +71,18 @@ sudo /bin/systemctl enable kibana && \
 sudo /bin/systemctl daemon-reload
 
 ### END ELK ###
+
+### START Suricata ###
+
+apt-get update && \
+apt-get install -y -o Dpkg::Options::="--force-confdef" suricata 
+#make sure Suricata can write in /data/nsm
+chown logstash -R /data/nsm/
+
+#apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
+
+### END Suricata ###
+
 
 ### START Install SELKS/StamusN scripts ###
 
@@ -87,10 +92,10 @@ apt-get install -y selks-scripts-stamus
 
 ### START Install kibana dashboards ###
 
-apt-get install -y kibana-dashboards-stamus
+#apt-get install -y kibana-dashboards-stamus
 
 # reset the dashboards after the package upgrade
-rm -rf /etc/kibana/kibana-dashboards-loaded
+#rm -rf /etc/kibana/kibana-dashboards-loaded
 
 ### END Install kibana dashboards ###
 
@@ -104,15 +109,14 @@ sudo /bin/systemctl enable evebox
 
 ### START Scirius, nginx, revrse proxy, supervisor and ssl ###
 
-# NOTE python-pip is already installed in the build script
-
-#pip install --upgrade 'django<1.9' django-tables2 GitPython pyinotify flup
-#pip install --upgrade six
-#pip install django-dbbackup django-bootstrap3 django-revproxy ipy 
-
 mkdir -p /var/lib/scirius/static/
 apt-get update && \
 apt-get install -y scirius
+sed -i 's/ELASTICSEARCH_VERSION = 5/ELASTICSEARCH_VERSION = 6/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA_VERSION=4/KIBANA_VERSION = 6/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA_INDEX = "kibana-int"/KIBANA_INDEX = ".kibana"/g' /etc/scirius/local_settings.py
+echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
+
 
 # supervisor conf
 ln -s /usr/share/doc/scirius/examples/scirius-supervisor.conf /etc/supervisor/conf.d/scirius-supervisor.conf
@@ -128,7 +132,7 @@ openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -da
 
 rm /etc/nginx/sites-enabled/default
 
-cat >> /etc/nginx/sites-available/selks4.conf <<EOF
+cat >> /etc/nginx/sites-available/selks5.conf <<EOF
 server {
     listen 127.0.0.1:80;
     listen 127.0.1.1:80;
@@ -162,7 +166,7 @@ server {
 EOF
 
 # enable sites
-ln -s /etc/nginx/sites-available/selks4.conf /etc/nginx/sites-enabled/selks4.conf
+ln -s /etc/nginx/sites-available/selks5.conf /etc/nginx/sites-enabled/selks5.conf
 
 cd /usr/share/python/scirius/ && \
 source bin/activate
@@ -196,6 +200,45 @@ chmod g+w /var/run/suricata/ -R
 
 ### END Scirius, nginx, revrse proxy, supervisor and ssl ###
 
+### START Moloch set up 
+
+mkdir -p /opt/molochtmp
+cd /opt/molochtmp/ && \
+apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6
+wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb
+dpkg -i libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb
+
+wget https://files.molo.ch/builds/ubuntu-14.04/moloch_1.1.1-1_amd64.deb
+dpkg -i moloch_1.1.1-1_amd64.deb
+
+### TO BE DONE by set up script
+
+#/data/moloch/db/db.pl http://localhost:9200 init
+# get some default answers so we generate all needed configs for Moloch
+#printf '\n\n\nno\n' | /data/moloch/bin/Configure
+#/data/moloch/bin/moloch_add_user.sh admin "Admin User" selks-user --admin
+
+#cp -f /data/moloch/etc/config.ini /data/moloch/etc/config.ini.orig
+#cp -f /data/moloch/etc/molochpcapread-selks-config.ini /data/moloch/etc/config.ini
+
+#/bin/systemctl disable molochcapture.service
+#/bin/systemctl disable molochviewer.service
+
+### TO BE DONE by set up script
+
+/bin/systemctl enable molochpcapread-selks.service
+/bin/systemctl enable molochviewer-selks.service
+/bin/systemctl daemon-reload
+/bin/systemctl start molochpcapread-selks.service
+/bin/systemctl restart molochviewer-selks.service
+
+rm /opt/molochtmp -r
+
+# make sure we hold the moloch pkg version unless explicit upgrade is wanted/needed
+apt-mark hold moloch
+
+### END Moloch set up
+
 # Set up a curator old logs removal
 # flush everything that is older than 2 weeks
 
@@ -226,7 +269,7 @@ chmod 755 /opt/selks/delete-old-logs.sh
 # Set up a cron jobs for Logstash, Scirius, rule updates
 echo "0 2 * * * www-data ( cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py updatesuricata && deactivate )" >> /etc/crontab
 echo "0 4 * * * root /opt/selks/delete-old-logs.sh" >> /etc/crontab
-# alway leave a empty line before cron files end
+# always leave a empty line before cron files end
 echo "" >> /etc/crontab
 
 # Set up the host name
