@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=FirstTime-Setup.desktop
+#Icon=preferences-other
+Icon=system
+Comment=SetupIDSInterface
+Exec=/opt/selks/Scripts/Setup/selks-first-time-setup_stamus.sh
+Type=Application
+Categories=Application;System;
+StartupNotify=true
+Terminal=true
+
+

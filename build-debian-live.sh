@@ -269,9 +269,9 @@ cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.c
 cp staging/etc/logstash/elasticsearch6-template.json Stamus-Live-Build/config/includes.chroot/etc/logstash/ 
 
 # Moloch for SELKS set up
-cp staging/etc/systemd/system/molochpcapread-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/ 
-cp staging/etc/systemd/system/molochviewer-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
-cp staging/data/moloch/etc/molochpcapread-selks-config.ini Stamus-Live-Build/config/includes.chroot/data/moloch/etc/
+#cp staging/etc/systemd/system/molochpcapread-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/ 
+#cp staging/etc/systemd/system/molochviewer-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
+#cp staging/data/moloch/etc/molochpcapread-selks-config.ini Stamus-Live-Build/config/includes.chroot/data/moloch/etc/
 
 # Iceweasel bookmarks
 cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
@@ -305,6 +305,12 @@ cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/
 # Same as above but for root
 cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
+# Copy first time set up desktop shortcut.
+cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+
+# Copy first time set up desktop shortcut.
+cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+
 # Add core system packages to be installed
 echo "
 
@@ -329,12 +335,12 @@ tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  #echo "lxde fonts-lyx wireshark terminator conky" \
-  #>> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
+  echo "lxde fonts-lyx wireshark terminator conky" \
+  >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "wireshark terminator open-vm-tools open-vm-tools" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
-  echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
+  #echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
   # Copy conky conf file
   cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   # Copy the menu shortcuts for Kibana and Scirius
@@ -346,6 +352,9 @@ if [[ -z "$GUI" ]]; then
   
   # For setting up Suricata IDS interface.
   cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
+  
+  # First time setup/init.
+  cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 fi
 
 # If -p (add packages) option is used - add those packages to the build

@@ -6,8 +6,5 @@
  # so we create a file for execution at the binary stage to remove the 
  # live menu choice. That leaves the options to install.
 
-echo "LIVE HOOK live.cfg"
-echo "$PWD"
-echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 sed -i -e 's|include live\.cfg| |'  isolinux/menu.cfg
 

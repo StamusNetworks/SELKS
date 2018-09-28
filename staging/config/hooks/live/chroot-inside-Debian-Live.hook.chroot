@@ -79,23 +79,15 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" suricata
 #make sure Suricata can write in /data/nsm
 chown logstash -R /data/nsm/
 
-#apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" suricata 
-
 ### END Suricata ###
 
 
-### START Install SELKS/StamusN scripts ###
-
-apt-get install -y selks-scripts-stamus
-
-### END Install SELKS/StamusN scripts ###
-
 ### START Install kibana dashboards ###
 
-#apt-get install -y kibana-dashboards-stamus
+apt-get install -y kibana-dashboards-stamus
 
 # reset the dashboards after the package upgrade
-#rm -rf /etc/kibana/kibana-dashboards-loaded
+rm -rf /etc/kibana/kibana-dashboards-loaded
 
 ### END Install kibana dashboards ###
 
@@ -115,6 +107,7 @@ apt-get install -y scirius
 sed -i 's/ELASTICSEARCH_VERSION = 5/ELASTICSEARCH_VERSION = 6/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_VERSION=4/KIBANA_VERSION = 6/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_INDEX = "kibana-int"/KIBANA_INDEX = ".kibana"/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana5-dashboards\/"/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana6-dashboards\/"/g' /etc/scirius/local_settings.py
 echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
 
 
@@ -130,7 +123,7 @@ chown -R www-data.www-data /etc/suricata/rules/
 mkdir -p /etc/nginx/ssl
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca 
 
-rm /etc/nginx/sites-enabled/default
+rm -rf /etc/nginx/sites-enabled/default
 
 cat >> /etc/nginx/sites-available/selks5.conf <<EOF
 server {
@@ -154,6 +147,11 @@ server {
         expires 30d;
     }
 
+    location /app/moloch/ {
+        proxy_pass https://127.0.0.1:8005;
+        proxy_redirect off;
+    }
+
     location / {
         proxy_pass http://127.0.0.1:8000;
         proxy_read_timeout 600;
@@ -174,7 +172,6 @@ python bin/manage.py loaddata /etc/scirius/scirius.json
 python bin/manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-git/emerging.rules.tar.gz http sigs
 python bin/manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
 python bin/manage.py defaultruleset "Default SELKS ruleset"
-python bin/manage.py disablecategory "Default SELKS ruleset" stream-events
 python bin/manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
 python bin/manage.py updatesuricata
 deactivate
@@ -205,39 +202,23 @@ chmod g+w /var/run/suricata/ -R
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
 apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6
-wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb
-dpkg -i libssl1.0.0_1.0.1t-1+deb8u8_amd64.deb
+wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.5.3-1_amd64.deb
+dpkg -i moloch_1.5.3-1_amd64.deb
 
-wget https://files.molo.ch/builds/ubuntu-14.04/moloch_1.1.1-1_amd64.deb
-dpkg -i moloch_1.1.1-1_amd64.deb
-
-### TO BE DONE by set up script
-
-#/data/moloch/db/db.pl http://localhost:9200 init
-# get some default answers so we generate all needed configs for Moloch
-#printf '\n\n\nno\n' | /data/moloch/bin/Configure
-#/data/moloch/bin/moloch_add_user.sh admin "Admin User" selks-user --admin
-
-#cp -f /data/moloch/etc/config.ini /data/moloch/etc/config.ini.orig
-#cp -f /data/moloch/etc/molochpcapread-selks-config.ini /data/moloch/etc/config.ini
-
-#/bin/systemctl disable molochcapture.service
-#/bin/systemctl disable molochviewer.service
-
-### TO BE DONE by set up script
-
-/bin/systemctl enable molochpcapread-selks.service
-/bin/systemctl enable molochviewer-selks.service
-/bin/systemctl daemon-reload
-/bin/systemctl start molochpcapread-selks.service
-/bin/systemctl restart molochviewer-selks.service
-
+cd /opt/
 rm /opt/molochtmp -r
 
 # make sure we hold the moloch pkg version unless explicit upgrade is wanted/needed
 apt-mark hold moloch
 
 ### END Moloch set up
+
+### START Install SELKS/StamusN scripts ###
+
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" selks-scripts-stamus
+
+### END Install SELKS/StamusN scripts ###
+
 
 # Set up a curator old logs removal
 # flush everything that is older than 2 weeks
@@ -268,6 +249,7 @@ chmod 755 /opt/selks/delete-old-logs.sh
 
 # Set up a cron jobs for Logstash, Scirius, rule updates
 echo "0 2 * * * www-data ( cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py updatesuricata && deactivate )" >> /etc/crontab
+echo "0 3 * * * root ( /data/moloch/db/db.pl http://127.0.0.1:9200 expire daily 14 )" >> /etc/crontab
 echo "0 4 * * * root /opt/selks/delete-old-logs.sh" >> /etc/crontab
 # always leave a empty line before cron files end
 echo "" >> /etc/crontab
@@ -292,7 +274,7 @@ apt-get install -y linux-headers-amd64
 
 # Clean devel and some others packages
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
-	libnetfilter-queue-dev  libnss3-dev libnspr4-dev libyaml-dev \
+	libnetfilter-queue-dev  libnss3-dev libnspr4-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
 	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
 	rpm alien sane-utils libsane rpm2cpio \
