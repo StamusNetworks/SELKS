@@ -624,7 +624,8 @@ echo "0 3 * * * root ( /data/moloch/db/db.pl http://127.0.0.1:9200 expire daily 
 # systemctl status suricata elasticsearch logstash kibana evebox molochviewer-selks molochpcapread-selks
 
 # reset and reload the new KTS6 dashboards
-cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py kibana_reset && deactivate
+cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py kibana_reset && deactivate && cd /opt 
+
 
 
 
