@@ -86,9 +86,6 @@ chown logstash -R /data/nsm/
 
 apt-get install -y kibana-dashboards-stamus
 
-# reset the dashboards after the package upgrade
-rm -rf /etc/kibana/kibana-dashboards-loaded
-
 ### END Install kibana dashboards ###
 
 ### START Evebox ###
@@ -171,6 +168,7 @@ source bin/activate
 python bin/manage.py loaddata /etc/scirius/scirius.json
 python bin/manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-git/emerging.rules.tar.gz http sigs
 python bin/manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist.rules http sig
+python bin/manage.py addsource "Suricata Traffic ID ruleset" https://raw.githubusercontent.com/jasonish/suricata-trafficid/master/rules/traffic-id.rules http sig
 python bin/manage.py defaultruleset "Default SELKS ruleset"
 python bin/manage.py addsuricata SELKS "Suricata on SELKS" /etc/suricata/rules "Default SELKS ruleset"
 python bin/manage.py updatesuricata
@@ -201,7 +199,7 @@ chmod g+w /var/run/suricata/ -R
 
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
-apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6
+apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6 libwww-perl
 wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.5.3-1_amd64.deb
 dpkg -i moloch_1.5.3-1_amd64.deb
 
