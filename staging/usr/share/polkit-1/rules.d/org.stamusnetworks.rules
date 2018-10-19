@@ -1,0 +1,6 @@
+# Allow all users in the sudo group to run the SELKS setup scripts
+polkit.addRule(function(action, subject) {
+	    if ((action.id == "org.freedesktop.policykit.pkexec.run-selksfirsttimesetup" || action.id == "org.freedesktop.policykit.pkexec.run-selkssetupidsinterface" || action.id == "org.freedesktop.policykit.pkexec.run-selksupgrade") && subject.isInGroup("sudo")) {
+            return polkit.Result.YES;
+    }
+});

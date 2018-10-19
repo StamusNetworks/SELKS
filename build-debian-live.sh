@@ -330,14 +330,14 @@ python-pip debian-installer-launcher live-build apt-transport-https
 # Add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
-tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof" \
+tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof libpolkit-agent libpolkit-backend libpolkit-gobject policykit-1" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
   echo "lxde fonts-lyx wireshark terminator conky" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
-  echo "wireshark terminator open-vm-tools open-vm-tools" \
+  echo "wireshark terminator open-vm-tools open-vm-tools lxpolkit" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
   #echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
