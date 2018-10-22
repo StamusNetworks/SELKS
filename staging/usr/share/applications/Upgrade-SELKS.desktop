@@ -1,11 +1,12 @@
 #!/usr/bin/env xdg-open
+
 [Desktop Entry]
 Version=1.0
-Name=Setup-IDS-Interface
+Name=Upgrade-SELKS
 #Icon=preferences-other
 Icon=system
-Comment=SetupIDSInterface
-Exec=/usr/bin/pkexec "/opt/selks/Scripts/Setup/selks-setup-ids-interface.sh" "$@"
+Comment=Upgrade SELKS
+Exec=/usr/bin/pkexec "/opt/selks/Scripts/Setup/selks-upgrade_stamus.sh" "$@"
 Type=Application
 Categories=Application;System;
 StartupNotify=true

@@ -5,10 +5,9 @@ Name=FirstTime-Setup.desktop
 #Icon=preferences-other
 Icon=system
 Comment=SetupIDSInterface
-Exec=/opt/selks/Scripts/Setup/selks-first-time-setup_stamus.sh
+Exec=/usr/bin/pkexec "/opt/selks/Scripts/Setup/selks-first-time-setup_stamus.sh" "$@"
 Type=Application
 Categories=Application;System;
 StartupNotify=true
 Terminal=true
-
-
+X-KeepTerminal=true
