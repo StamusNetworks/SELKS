@@ -308,8 +308,15 @@ cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/
 # Copy first time set up desktop shortcut.
 cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 
-# Copy first time set up desktop shortcut.
+# Same as above but for root
 cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+
+# Copy upgrade SELKS desktop shortcut.
+cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+
+# Same as above but for root
+cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+
 
 # Add core system packages to be installed
 echo "
@@ -330,7 +337,7 @@ python-pip debian-installer-launcher live-build apt-transport-https
 # Add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
-tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof libpolkit-agent libpolkit-backend libpolkit-gobject policykit-1" \
+tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof libpolkit-agent-1-0 libpolkit-backend-1-0 libpolkit-gobject-1-0 policykit-1" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
