@@ -18,8 +18,8 @@ echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 ###  Set up repos ###
 
 wget -qO - http://packages.stamus-networks.com/packages.selks5.stamus-networks.com.gpg.key | apt-key add - 
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-wget -qO - https://evebox.org/files/GPG-KEY-evebox | sudo apt-key add -
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+wget -qO - https://evebox.org/files/GPG-KEY-evebox | apt-key add -
 
 cat >> /etc/apt/sources.list.d/elastic-6.x.list <<EOF
 deb https://artifacts.elastic.co/packages/6.x/apt stable main
@@ -65,10 +65,10 @@ mkdir -p /var/cache/logstash/sincedbs/
 chown logstash:logstash /var/cache/logstash/sincedbs/
 /usr/share/logstash/bin/logstash-plugin install logstash-filter-geoip
 
-sudo /bin/systemctl enable elasticsearch && \
-sudo /bin/systemctl enable logstash && \
-sudo /bin/systemctl enable kibana && \
-sudo /bin/systemctl daemon-reload
+/bin/systemctl enable elasticsearch && \
+/bin/systemctl enable logstash && \
+/bin/systemctl enable kibana && \
+/bin/systemctl daemon-reload
 
 ### END ELK ###
 
@@ -92,7 +92,7 @@ apt-get install -y kibana-dashboards-stamus
 
 apt-get update && \
 apt-get install -y evebox
-sudo /bin/systemctl enable evebox
+/bin/systemctl enable evebox
 
 ### END Evebox ###
 
@@ -178,7 +178,7 @@ deactivate
 /usr/bin/supervisorctl update && \
 /usr/bin/supervisorctl restart scirius && \
 /bin/systemctl restart nginx
-sudo /bin/systemctl enable supervisor
+/bin/systemctl enable supervisor
 
 # set permissions for Scirius 
 touch /var/log/scirius.log
