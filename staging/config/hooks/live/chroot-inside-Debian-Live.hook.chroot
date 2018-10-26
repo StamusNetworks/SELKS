@@ -34,7 +34,7 @@ deb http://files.evebox.org/evebox/debian stable main
 EOF
 
 cat >> /etc/apt/sources.list.d/selks5.list <<EOF
-# SELKS4 Stamus Networks repos
+# SELKS 5 Stamus Networks repos
 #
 # Manual changes here can be overwritten during 
 # SELKS updates and upgrades !!
