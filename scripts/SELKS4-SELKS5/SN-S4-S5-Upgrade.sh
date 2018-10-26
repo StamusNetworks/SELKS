@@ -12,6 +12,11 @@
 # exit on error
 set -ex
 
+if (( $EUID != 0 )); then
+     echo -e "Please run this script as root or with \"sudo\".\n"
+     exit 1
+fi
+
 # make place holder for all pre upgrade configs that have been overwritten 
 mkdir -p /opt/selks/preupgrade
 
