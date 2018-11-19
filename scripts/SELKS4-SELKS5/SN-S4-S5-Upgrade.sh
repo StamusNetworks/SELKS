@@ -52,7 +52,7 @@ if [ -f /etc/apt/sources.list.d/curator5.list ];
 then
     
     # if the filename exists - make sure we don't overwrite.
-    mv /etc/apt/sources.list.d/curator5.list /opt/selks/preupgrade/curator5list.orig
+    mv /etc/apt/sources.list.d/curator5.list /opt/selks/preupgrade/curator5.list.orig
     
 fi
 
