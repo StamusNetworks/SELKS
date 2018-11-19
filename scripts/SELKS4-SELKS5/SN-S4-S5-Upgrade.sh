@@ -48,6 +48,18 @@ cat >> /etc/apt/sources.list.d/elastic-6.x.list <<EOF
 deb https://artifacts.elastic.co/packages/6.x/apt stable main
 EOF
 
+if [ -f /etc/apt/sources.list.d/curator5.list ];
+then
+    
+    # if the filename exists - make sure we don't overwrite.
+    mv /etc/apt/sources.list.d/curator5.list /opt/selks/preupgrade/curator5.list.orig
+    
+fi
+
+cat >> /etc/apt/sources.list.d/curator5.list <<EOF
+dev [arch=amd64] https://packages.elastic.co/curator/5/debian9 stable main
+EOF
+
 if [ -f /etc/nginx/sites-available/default ];
 then
     
@@ -607,9 +619,13 @@ curl -X POST "localhost:9200/_aliases" -H 'Content-Type: application/json' -d'
 }
 '
 
+# Install elasticsearch-curator
+apt-get update && install -y elasticsearch-curator
+
+# Install Moloch
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
-apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6
+apt-get install -y libjson-perl libyaml-dev libcrypto++6
 wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.6.1-1_amd64.deb
 dpkg -i moloch_1.6.1-1_amd64.deb
 
