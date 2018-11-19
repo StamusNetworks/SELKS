@@ -610,8 +610,8 @@ curl -X POST "localhost:9200/_aliases" -H 'Content-Type: application/json' -d'
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
 apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6
-wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.5.3-1_amd64.deb
-dpkg -i moloch_1.5.3-1_amd64.deb
+wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.6.1-1_amd64.deb
+dpkg -i moloch_1.6.1-1_amd64.deb
 
 
 cd /opt/
