@@ -57,7 +57,7 @@ then
 fi
 
 cat >> /etc/apt/sources.list.d/curator5.list <<EOF
-dev [arch=amd64] https://packages.elastic.co/curator/5/debian9 stable main
+deb [arch=amd64] https://packages.elastic.co/curator/5/debian9 stable main
 EOF
 
 if [ -f /etc/nginx/sites-available/default ];
