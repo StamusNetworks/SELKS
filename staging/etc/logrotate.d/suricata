@@ -8,7 +8,6 @@
 	dateext
 	postrotate
 	    /bin/kill -HUP $(cat /var/run/suricata.pid)
-	    /bin/kill -HUP $(cat /var/run/logstash.pid)
 	endscript
 }
 
