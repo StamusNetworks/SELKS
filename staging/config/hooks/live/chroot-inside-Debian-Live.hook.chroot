@@ -144,11 +144,6 @@ server {
         expires 30d;
     }
 
-    location /app/moloch/ {
-        proxy_pass https://127.0.0.1:8005;
-        proxy_redirect off;
-    }
-
     location / {
         proxy_pass http://127.0.0.1:8000;
         proxy_read_timeout 600;
