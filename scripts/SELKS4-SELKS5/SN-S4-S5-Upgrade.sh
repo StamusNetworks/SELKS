@@ -640,7 +640,7 @@ apt-mark hold moloch
 # Set up a daily clean up cron job for Moloch
 echo "0 3 * * * root ( /data/moloch/db/db.pl http://127.0.0.1:9200 expire daily 14 )" >> /etc/crontab
 
-/opt/selks/Scripts/Setup/selks-molochdb-init-setup_stamus.sh
+/usr/bin/selks-molochdb-init-setup_stamus.sh
 # systemctl status suricata elasticsearch logstash kibana evebox molochviewer-selks molochpcapread-selks
 
 # reset and reload the new KTS6 dashboards
