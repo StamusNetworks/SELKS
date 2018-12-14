@@ -643,7 +643,9 @@ echo "0 3 * * * root ( /data/moloch/db/db.pl http://127.0.0.1:9200 expire daily 
 /usr/bin/selks-molochdb-init-setup_stamus.sh
 # systemctl status suricata elasticsearch logstash kibana evebox molochviewer-selks molochpcapread-selks
 
-# reset and reload the new KTS6 dashboards
+# reset and reload the new KTS6 dashboards and Kibana indexes
+curl -XDELETE 'http://localhost:9200/.kibana*'
+/bin/systemctl restart kibana && sleep 20
 cd /usr/share/python/scirius/ && . bin/activate && python bin/manage.py kibana_reset && deactivate && cd /opt 
 
 
