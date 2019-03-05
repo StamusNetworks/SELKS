@@ -149,13 +149,18 @@ server {
         proxy_redirect off;
     }
 
-   location /plugins/ {
+    location /plugins/ {
         proxy_pass http://127.0.0.1:5601/plugins/;
         proxy_redirect off;
     }
 
-   location /dlls/ {
+    location /dlls/ {
         proxy_pass http://127.0.0.1:5601/dlls/;
+        proxy_redirect off;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://127.0.0.1:5601/socket.io/;
         proxy_redirect off;
     }
 
