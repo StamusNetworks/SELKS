@@ -164,6 +164,21 @@ server {
         proxy_redirect off;
     }
 
+    location /dataset/ {
+        proxy_pass http://127.0.0.1:5601/dataset/;
+        proxy_redirect off;
+    }
+
+    location /translations/ {
+        proxy_pass http://127.0.0.1:5601/translations/;
+        proxy_redirect off;
+    }
+
+    location ^~ /built_assets/ {
+        proxy_pass http://127.0.0.1:5601/built_assets/;
+        proxy_redirect off;
+    }
+
     location /ui/ {
         proxy_pass http://127.0.0.1:5601/ui/;
         proxy_redirect off;
