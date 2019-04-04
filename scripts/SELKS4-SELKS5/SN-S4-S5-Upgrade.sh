@@ -687,7 +687,7 @@ apt-get update && apt-get -y install elasticsearch-curator
 # Install Moloch
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
-apt-get -y install libjson-perl libyaml-dev libcrypto++6
+apt-get -y install libwww-perl libjson-perl libyaml-dev libcrypto++6
 wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.7.1-1_amd64.deb
 dpkg -i moloch_1.7.1-1_amd64.deb
 
