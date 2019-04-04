@@ -19,6 +19,8 @@ fi
 
 # make place holder for all pre upgrade configs that have been overwritten 
 mkdir -p /opt/selks/preupgrade
+mkdir -p /opt/selks/preupgrade/elasticsearch/etc/elasticsearch
+mkdir -p /opt/selks/preupgrade/elasticsearch/etc/default/
 
 /bin/systemctl stop elasticsearch
 /bin/systemctl stop kibana
@@ -345,7 +347,32 @@ wget -qO - http://packages.stamus-networks.com/packages.selks5.stamus-networks.c
 
 /bin/systemctl stop kibana
 
-apt-get update && apt-get -y dist-upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew"
+if [ -f /usr/lib/systemd/system/elasticsearch.service ];
+then
+    
+  cp /usr/lib/systemd/system/elasticsearch.service /opt/selks/preupgrade/elasticsearch.service.orig
+ 
+fi 
+
+cp -r /etc/elasticsearch/* /opt/selks/preupgrade/elasticsearch/etc/
+cp /etc/default/elasticsearch /opt/selks/preupgrade/elasticsearch/etc/default/
+
+apt-get update && apt-get -o Dpkg::Options::="--force-confnew"  -y dist-upgrade
+chown root:elasticsearch /etc/default/elasticsearch
+
+if [ -f /usr/lib/systemd/system/elasticsearch.service.dpkg-new ];
+then
+    
+  mv /usr/lib/systemd/system/elasticsearch.service.dpkg-new /usr/lib/systemd/system/elasticsearch.service
+ 
+fi 
+
+if [ -f /etc/default/elasticsearch.dpkg-new ];
+then
+    
+  mv /etc/default/elasticsearch.dpkg-new /etc/default/elasticsearch
+ 
+fi 
 
 chown -R kibana /usr/share/kibana/optimize/
 
