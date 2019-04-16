@@ -11,8 +11,12 @@ released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
 The SELKS ISO is both Live and Installable ISO in one. Once installed it is 
 ready to use out of the box solution.
 
-.. image:: doc/images/Distro.png
-    :alt: SELKS 4
+.. image:: doc/images/Distro-1.png
+    :alt: SELKS 5
+    :align: center
+
+.. image:: doc/images/Distro-2.png
+    :alt: SELKS 5
     :align: center
 
 SELKS is comprised of the following major components:
@@ -33,15 +37,14 @@ And it includes preconfigured dashboards like this one:
 Getting SELKS
 =============
 
-You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.
+You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.         
+You can find here the `first time setup guide <https://www.stamus-networks.com/open-source/#selks>`_.
     
 Howto run SELKS
 ===============
 
 Prerequisites
 -------------
-
-Recommended initial test set up for SELKS is 2 CPUs 5 Gb RAM
 
 The minimal configuration for production usage is 2 cores and 6 Gb of memory. As Suricata
 and Elastisearch are multithreaded, the more cores you have the better it is.
@@ -85,21 +88,29 @@ You need to authenticate to access to the web interface(see the ``HTTPS access``
 You can change credentials and user settings by using the top left menu in Scirius.  
 More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
-SELKS has 13 default IDS dashboards -  
+SELKS has 21 default dashboards and hundreds of visualizations available -  
 
-* SN ALL
-* SN ALERTS
-* SN DNS
-* SN FILE-Transactions
-* SN FLOW
-* SN HTTP
-* SN IDS
-* SN OVERVIEW
-* SN SMTP
-* SN SSH
-* SN STATS
-* SN TLS
-* SN VLAN
+* SN-ALERTS
+* SN-ALL
+* SN-DHCP
+* SN-DNP3
+* SN-DNS
+* SN-FILE-Transactions
+* SN-FLOW
+* SN-HTTP
+* SN-IDS
+* SN-IKEv2
+* SN-KRB5
+* SN-NFS
+* SN-OVERVIEW
+* SN-SMB
+* SN-SMTP
+* SN-SSH
+* SN-STATS
+* SN-TFTP
+* SN-TLS
+* SN-TrafficID
+* SN-VLAN
 
 in addition to the ``Events viewer`` (EveBox)
 
