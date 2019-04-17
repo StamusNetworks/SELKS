@@ -82,7 +82,7 @@ do
              ;;
          k)
              KERNEL_VER=$OPTARG
-             if [[ "$KERNEL_VER" =~ ^[3-4]\.[0-9]+?\.?[0-9]+$ ]];
+             if [[ "$KERNEL_VER" =~ ^[3-5]\.[0-9]+?\.?[0-9]+$ ]];
              then
                echo -e "\n Kernel version set to ${KERNEL_VER} \n"
              else
@@ -132,6 +132,9 @@ then
   elif [[ ${KERNEL_VER} == 4* ]];
   then
      wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-${KERNEL_VER}.tar.xz
+  elif [[ ${KERNEL_VER} == 5* ]];
+  then
+     wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-${KERNEL_VER}.tar.xz
   else
     echo "Unsupported kernel version! Only kernel >3.0 are supported"
     exit 1;
