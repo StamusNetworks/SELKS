@@ -39,9 +39,9 @@ cat >> /etc/apt/sources.list.d/selks5.list <<EOF
 # Manual changes here can be overwritten during 
 # SELKS updates and upgrades !!
 
-deb http://packages.stamus-networks.com/selks5/debian/ stretch main
-deb http://packages.stamus-networks.com/selks5/debian-kernel/ stretch main
-#deb http://packages.stamus-networks.com/selks5/debian-test/ stretch main
+#deb http://packages.stamus-networks.com/selks5/debian/ stretch main
+#deb http://packages.stamus-networks.com/selks5/debian-kernel/ stretch main
+deb http://packages.stamus-networks.com/selks5/debian-test/ buster main
 EOF
 
 ###  END Set up repos ###
@@ -51,8 +51,8 @@ mkdir -p  /opt/selks/
 ### START JAVA for ELK ###
 
 apt-get update && \
-apt-get install -y ca-certificates-java openjdk-8-jre-headless \
-openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless
+apt-get install -y ca-certificates-java openjdk-11-jre-headless \
+openjdk-11-jdk openjdk-11-jre openjdk-11-jre-headless
 
 ### END JAVA for ELK ###
 
@@ -75,8 +75,9 @@ chown logstash:logstash /var/cache/logstash/sincedbs/
 ### START Suricata ###
 
 apt-get update && \
-apt-get install -y -o Dpkg::Options::="--force-confdef" suricata 
+apt-get install -y -o Dpkg::Options::="--force-confdef" suricata
 #make sure Suricata can write in /data/nsm
+mkdir -p /data/nsm/
 chown logstash -R /data/nsm/
 
 ### END Suricata ###
@@ -235,14 +236,14 @@ chmod g+w /var/run/suricata/ -R
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
 apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6 libwww-perl
-wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.7.1-1_amd64.deb
-dpkg -i moloch_1.7.1-1_amd64.deb
+wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.8.0-1_amd64.deb
+dpkg -i moloch_1.8.0-1_amd64.deb
 
 cd /opt/
 rm /opt/molochtmp -r
 
 # make sure we hold the moloch pkg version unless explicit upgrade is wanted/needed
-apt-mark hold moloch
+#apt-mark hold moloch
 
 ### END Moloch set up
 
@@ -301,6 +302,9 @@ sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applicat
 # Install exception for local certificate
 certutil -A -n SELKS -t "P,p,p"  -i /etc/nginx/ssl/scirius.crt  -d /etc/iceweasel/profile/
 chmod a+r /etc/iceweasel/profile/*db
+
+#clean up root desktop
+rm -f /root/Desktop/* 
 
 apt-get update && \
 apt-get install -y linux-headers-amd64
