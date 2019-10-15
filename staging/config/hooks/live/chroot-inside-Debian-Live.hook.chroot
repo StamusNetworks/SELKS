@@ -107,7 +107,8 @@ sed -i 's/KIBANA_VERSION=4/KIBANA_VERSION = 6/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_INDEX = "kibana-int"/KIBANA_INDEX = ".kibana"/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana5-dashboards\/"/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana6-dashboards\/"/g' /etc/scirius/local_settings.py
 echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
-
+echo "USE_MOLOCH = True" >> /etc/scirius/local_settings.py
+echo "MOLOCH_URL = \"https://localhost:8005\"" >> /etc/scirius/local_settings.py
 
 # supervisor conf
 ln -s /usr/share/doc/scirius/examples/scirius-supervisor.conf /etc/supervisor/conf.d/scirius-supervisor.conf
@@ -202,7 +203,7 @@ ln -s /etc/nginx/sites-available/selks5.conf /etc/nginx/sites-enabled/selks5.con
 cd /usr/share/python/scirius/ && \
 source bin/activate
 python bin/manage.py loaddata /etc/scirius/scirius.json
-python bin/manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-git/emerging.rules.tar.gz http sigs
+python bin/manage.py addsource "ETOpen Ruleset" https://rules.emergingthreats.net/open/suricata-5.0/emerging.rules.tar.gz http sigs
 python bin/manage.py addsource "SSLBL abuse.ch" https://sslbl.abuse.ch/blacklist/sslblacklist_tls_cert.rules http sig
 python bin/manage.py addsource "Suricata Traffic ID ruleset" https://raw.githubusercontent.com/jasonish/suricata-trafficid/master/rules/traffic-id.rules http sig
 python bin/manage.py defaultruleset "Default SELKS ruleset"
