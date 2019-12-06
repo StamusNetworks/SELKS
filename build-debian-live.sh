@@ -306,21 +306,24 @@ cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includ
 
 # Copy set up IDS interface desktop shortcut.
 cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/Setup-IDS-Interface.desktop
 
 # Same as above but for root
-cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+#cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
 # Copy first time set up desktop shortcut.
 cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/FirstTime-Setup.desktop
 
 # Same as above but for root
-cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+#cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
 # Copy upgrade SELKS desktop shortcut.
 cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
+chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/Upgrade-SELKS.desktop
 
 # Same as above but for root
-cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
+#cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
 # copy polkit policies for selks-user to be able to execute as root 
 # first time setup scripts
