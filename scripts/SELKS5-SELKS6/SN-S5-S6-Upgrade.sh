@@ -698,8 +698,8 @@ apt-get update && apt-get -y install elasticsearch-curator
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
 apt-get -y install libwww-perl libjson-perl libyaml-dev libcrypto++6
-wget https://files.molo.ch/builds/ubuntu-18.04/moloch_2.1.0-1_amd64.deb
-dpkg -i moloch_2.1.0-1_amd64.deb
+wget https://files.molo.ch/builds/ubuntu-18.04/moloch_2.1.1-1_amd64.deb
+dpkg -i moloch_2.1.1-1_amd64.deb
 
 cd /opt/
 # clean up the downloaded deb pkgs
