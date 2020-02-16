@@ -149,6 +149,16 @@ server {
         proxy_redirect off;
     }
 
+    location /spaces/ {
+        proxy_pass http://127.0.0.1:5601/spaces/;
+        proxy_redirect off;
+    }
+
+  location /node_modules/ {
+        proxy_pass http://127.0.0.1:5601/node_modules/;
+        proxy_redirect off;
+    }
+
     location / {
         proxy_pass http://127.0.0.1:8000;
         proxy_read_timeout 600;
