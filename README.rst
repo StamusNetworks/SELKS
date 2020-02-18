@@ -37,7 +37,7 @@ And it includes preconfigured dashboards like this one:
 Getting SELKS
 =============
 
-You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/open-source/#selks>`_.         
+You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/scirius-open-source>`_.         
 You can find here the `first time setup guide <https://github.com/StamusNetworks/SELKS/wiki/First-time-setup>`_.
     
 Howto run SELKS
