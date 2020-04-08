@@ -17,7 +17,7 @@ echo " alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc
 
 ###  Set up repos ###
 
-wget -qO - http://packages.stamus-networks.com/packages.selks5.stamus-networks.com.gpg.key | apt-key add - 
+wget -qO - http://packages.stamus-networks.com/packages.selks6.stamus-networks.com.gpg.key | apt-key add - 
 wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 wget -qO - https://evebox.org/files/GPG-KEY-evebox | apt-key add -
 
@@ -33,15 +33,15 @@ cat >> /etc/apt/sources.list.d/evebox.list <<EOF
 deb http://files.evebox.org/evebox/debian stable main
 EOF
 
-cat >> /etc/apt/sources.list.d/selks5.list <<EOF
+cat >> /etc/apt/sources.list.d/selks6.list <<EOF
 # SELKS 5 Stamus Networks repos
 #
 # Manual changes here can be overwritten during 
 # SELKS updates and upgrades !!
 
-deb http://packages.stamus-networks.com/selks5/debian/ buster main
-deb http://packages.stamus-networks.com/selks5/debian-kernel/ buster main
-deb http://packages.stamus-networks.com/selks5/debian-test/ buster main
+deb http://packages.stamus-networks.com/selks6/debian/ buster main
+deb http://packages.stamus-networks.com/selks6/debian-kernel/ buster main
+deb http://packages.stamus-networks.com/selks6/debian-test/ buster main
 EOF
 
 ###  END Set up repos ###
@@ -105,7 +105,7 @@ apt-get install -y scirius
 sed -i 's/ELASTICSEARCH_VERSION = 5/ELASTICSEARCH_VERSION = 7/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_VERSION=4/KIBANA_VERSION = 7/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_INDEX = "kibana-int"/KIBANA_INDEX = ".kibana"/g' /etc/scirius/local_settings.py
-sed -i 's/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana5-dashboards\/"/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana6-dashboards\/"/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana5-dashboards\/"/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana7-dashboards\/"/g' /etc/scirius/local_settings.py
 echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
 echo "USE_MOLOCH = True" >> /etc/scirius/local_settings.py
 echo "MOLOCH_URL = \"http://localhost:8005\"" >> /etc/scirius/local_settings.py
@@ -124,7 +124,7 @@ openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -da
 
 rm -rf /etc/nginx/sites-enabled/default
 
-cat >> /etc/nginx/sites-available/selks5.conf <<EOF
+cat >> /etc/nginx/sites-available/selks6.conf <<EOF
 server {
     listen 127.0.0.1:80;
     listen 127.0.1.1:80;
@@ -208,7 +208,7 @@ server {
 EOF
 
 # enable sites
-ln -s /etc/nginx/sites-available/selks5.conf /etc/nginx/sites-enabled/selks5.conf
+ln -s /etc/nginx/sites-available/selks6.conf /etc/nginx/sites-enabled/selks6.conf
 
 cd /usr/share/python/scirius/ && \
 source bin/activate
