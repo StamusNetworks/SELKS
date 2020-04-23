@@ -409,6 +409,32 @@ sleep 30
 # Install elasticsearch-curator
 apt-get update && apt-get -y install elasticsearch-curator
 
+# rm old curator start line
+mv /opt/selks/delete-old-logs.sh /opt/selks/preupgrade/delete-old-logs.sh 
+
+# create the new clean up
+cat >> /opt/selks/delete-old-logs.sh <<EOF
+#!/bin/bash
+
+/usr/bin/curator_cli delete_indices --filter_list \
+'
+[
+  {
+    "filtertype": "age",
+    "source": "creation_date",
+    "direction": "older",
+    "unit": "days",
+    "unit_count": 14
+  },
+  {
+    "filtertype": "pattern",
+    "kind": "prefix",
+    "value": "logstash*"
+  }
+]
+'
+EOF
+
 # Install Moloch
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
