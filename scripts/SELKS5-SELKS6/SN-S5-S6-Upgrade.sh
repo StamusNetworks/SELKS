@@ -454,9 +454,9 @@ echo "0 3 * * * root ( /data/moloch/db/db.pl http://127.0.0.1:9200 expire daily 
 
 # Scrius conf prep
 sed -i 's/ELASTICSEARCH_VERSION = 6/ELASTICSEARCH_VERSION = 7/g' /etc/scirius/local_settings.py
-sed -i 's/KIBANA_VERSION=6/KIBANA_VERSION = 7/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA_VERSION = 6/KIBANA_VERSION = 7/g' /etc/scirius/local_settings.py
 sed -i 's/KIBANA_INDEX = "kibana-int"/KIBANA_INDEX = ".kibana"/g' /etc/scirius/local_settings.py
-sed -i 's/KIBANA_DASHBOARDS_PATH = "\/opt\/selks\/kibana6-dashboards\/"/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana7-dashboards\/"/g' /etc/scirius/local_settings.py
+sed -i 's/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana6-dashboards\/"/KIBANA6_DASHBOARDS_PATH = "\/opt\/selks\/kibana7-dashboards\/"/g' /etc/scirius/local_settings.py
 #echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
 echo "ELASTICSEARCH_KEYWORD = \"keyword\"" >> /etc/scirius/local_settings.py
 echo "USE_MOLOCH = True" >> /etc/scirius/local_settings.py
