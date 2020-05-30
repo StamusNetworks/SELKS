@@ -1,0 +1,50 @@
+#!/usr/bin/python
+
+"""
+Helper script for the Scirius project to reload rules.
+"""
+
+import os
+import daemon
+import logging
+import daemon.pidfile as pidlockfile
+
+from suricata.sc import *
+
+LOG_PATH    = '/logs/suri_reloader.log'
+PID_PATH    = '/var/run/suri_reloader.pid'
+RELOAD_PATH = '/rules/scirius.reload'
+SOCKET_PATH = os.getenv('SURICATA_UNIX_SOCKET', '/var/run/suricata.socket')
+
+logging.basicConfig(
+        filename=LOG_PATH,
+        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        level=logging.DEBUG)
+
+def reloadRules():
+    logging.info('Monitoring ruleset updates')
+    while True:
+        if os.path.isfile(RELOAD_PATH):
+            logging.info('Ruleset reload triggered')
+            sc = SuricataSC(SOCKET_PATH)
+            try:
+                sc.connect()
+            except SuricataNetException as err:
+                logging.error('Unable to connect to socket %s: %s' % (SOCKET_PATH, err))
+            except SuricataReturnException as err:
+                logging.error('Unable to negotiate version with server: %s' % (err))
+            res = sc.send_command('reload-rules')
+            sc.close()
+            if res['return'] == 'OK':
+                os.unlink(RELOAD_PATH)
+                logging.info('Ruleset successfully reloaded')
+            else:
+                logging.error('Unable to reload ruleset')
+
+def main():
+    pidfile = pidlockfile.TimeoutPIDLockFile(PID_PATH)
+    with daemon.DaemonContext(pidfile=pidfile):
+        reloadRules()
+
+if __name__ == "__main__":
+    main()
