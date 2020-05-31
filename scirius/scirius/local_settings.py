@@ -87,7 +87,7 @@ KIBANA6_DASHBOARDS_PATH = os.getenv('KIBANA6_DASHBOARDS_PATH', '/opt/kibana6-das
 
 # EveBox
 USE_EVEBOX = bool(strtobool(os.getenv('USE_EVEBOX', '0')))
-EVEBOX_ADDRESS = os.getenv('EVEBOX_ADDRESS', 'evebox:5636')
+EVEBOX_URL = os.getenv('EVEBOX_URL', 'http://evebox:5636')
 USE_SURICATA_STATS = bool(strtobool(os.getenv('USE_SURICATA_STATS', '0')))
 USE_LOGSTASH_STATS = bool(strtobool(os.getenv('USE_LOGSTASH_STATS', '0')))
 
