@@ -1,4 +1,6 @@
-# Scirius
+# Scirius ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/sgabe/scirius) ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/sgabe/scirius) ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/sgabe/scirius) ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sgabe/scirius/latest)
+
+Scirius Community Edition is a web interface dedicated to [Suricata IDS](https://suricata-ids.org/) ruleset management and was originally [developed](https://github.com/StamusNetworks/scirius) and [dockerized](https://github.com/StamusNetworks/scirius-docker) by [Stamus Networks](https://www.stamus-networks.com/). This Docker image has been created for a [fork](https://github.com/sgabe/scirius) of the original project instead of using the official image provided by the authors.
 
 ## Usage
 
@@ -11,6 +13,8 @@
         sgabe/scirius
 
 ## Environment variables
+
+Most of the configuration options defined in the built-in `settings.py` shipped with the original project are exposed via environment variables in the `local_settings.py` file used in the container. This allows you to customize Scirius without creating or modifying configuration files. The below table summarizes the available environment variables and their default settings. For more information on how to configure Scirius, please refer to the original project documentation available [here](https://scirius.readthedocs.io/en/latest/).
 
 | Variable                             | Default                               | 
 | -------------------------------------|---------------------------------------| 
@@ -67,6 +71,8 @@
 
 ## Volumes
 
+The below table summarizes the volumes available to be shared with the host or other containers. Mainly the `/rules` folder should be available to Suricata while resources in the `/static` directory should be served through a reverse proxy.
+
 | Volume    | Function                                                         |
 | ----------|------------------------------------------------------------------|
 | `/data`   | Persistent data stored in `scirius.sqlite3`                      |
@@ -76,8 +82,6 @@
 
 ## Link with Suricata
 
-To interact with Suricata, you need to bind-mount Suricata's command socket
-into the Scirius container. By default, Scirius will expect the Unix socket file
-to be available at `/var/run/suricata.socket`, however, you can specify another path in the `SURICATA_UNIX_SOCKET` environment variable.
+To interact with Suricata, you need to bind-mount Suricata's command socket into the Scirius container. By default, Scirius will expect the Unix socket file to be available at `/var/run/suricata.socket`, however, you can specify another path in the `SURICATA_UNIX_SOCKET` environment variable.
 
     -v /path/to/suricata/suricata-command.socket:/var/run/suricata.socket
