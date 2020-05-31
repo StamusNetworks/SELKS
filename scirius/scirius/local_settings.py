@@ -100,7 +100,7 @@ INFLUXDB_PASSWORD = os.getenv('INFLUXDB_PASSWORD', 'grafana')
 INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE', 'scirius')
 
 # Moloch
-USE_MOLOCH = bool(strtobool(os.getenv('USE_MOLOCH', '1')))
+USE_MOLOCH = bool(strtobool(os.getenv('USE_MOLOCH', '0')))
 MOLOCH_URL = os.getenv('MOLOCH_URL', 'http://moloch:8005')
 
 # Proxy settings
