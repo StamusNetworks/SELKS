@@ -69,10 +69,7 @@ WORKDIR /opt/scirius
 HEALTHCHECK --start-period=1m \
   CMD curl --silent --fail http://127.0.0.1:8000 || exit 1
 
-VOLUME /rules
-VOLUME /data
-VOLUME /static
-VOLUME /logs
+VOLUME /rules /data /static /logs
 
 EXPOSE 8000
 
