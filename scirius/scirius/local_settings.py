@@ -81,7 +81,7 @@ ELASTICSEARCH_TIMESTAMP = os.getenv('ELASTICSEARCH_TIMESTAMP', '@timestamp')
 USE_KIBANA = bool(strtobool(os.getenv('USE_KIBANA', '0')))
 KIBANA_PROXY = bool(strtobool(os.getenv('KIBANA_PROXY', '0')))
 KIBANA_URL = os.getenv('KIBANA_URL', 'http://kibana:9292')
-KIBANA_INDEX = os.getenv('KIBANA_INDEX', 'kibana-int')
+KIBANA_INDEX = os.getenv('KIBANA_INDEX', '.kibana')
 KIBANA_DASHBOARDS_PATH = os.getenv('KIBANA_DASHBOARDS_PATH', '/opt/kibana-dashboards/')
 KIBANA6_DASHBOARDS_PATH = os.getenv('KIBANA6_DASHBOARDS_PATH', '/opt/kibana6-dashboards/')
 
