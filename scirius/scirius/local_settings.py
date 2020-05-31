@@ -14,6 +14,10 @@ DEBUG = bool(strtobool(os.getenv('DEBUG', '0')))
 # SECURITY WARNING: don't use '*' in production!
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split(' ')
 
+# 127.0.0.1 must be allowed for container health checking
+if '127.0.0.1' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('127.0.0.1')
+
 # Database
 DATABASES = {
     'default': {
