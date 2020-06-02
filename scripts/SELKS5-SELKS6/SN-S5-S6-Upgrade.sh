@@ -159,6 +159,11 @@ server {
         proxy_redirect off;
     }
 
+  location /internal/ {
+        proxy_pass http://127.0.0.1:5601/internal/;
+        proxy_redirect off;
+    }
+
     location / {
         proxy_pass http://127.0.0.1:8000;
         proxy_read_timeout 600;
