@@ -5,6 +5,7 @@ Scirius Community Edition is a web interface dedicated to [Suricata IDS](https:/
 ## Usage
 
     docker run -p 127.0.0.1:8000:8000 \
+        -e "SECRET_KEY=<YOUR SECRET KEY>" \
         -v /path/to/scirius/data:/data \
         -v /path/to/scirius/logs:/logs \
         -v /path/to/scirius/static:/static \
