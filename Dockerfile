@@ -66,7 +66,7 @@ RUN \
 
 WORKDIR /opt/scirius
 
-HEALTHCHECK --start-period=1m \
+HEALTHCHECK --start-period=3m \
   CMD curl --silent --fail http://127.0.0.1:8000 || exit 1
 
 VOLUME /rules /data /static /logs
