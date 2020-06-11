@@ -9,6 +9,7 @@ RUN \
     echo "**** install packages ****" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+        make \
         curl \
         wget \
         git \
