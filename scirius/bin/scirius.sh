@@ -30,6 +30,7 @@ start() {
     cd hunt
     npm run build
     cd ..
+    cp -rT doc/_build/html /static/doc
     python manage.py collectstatic --noinput
     echo "Starting suri-reloader daemon..."
     python /opt/scirius/suricata/scripts/suri_reloader &

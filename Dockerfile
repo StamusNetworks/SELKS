@@ -15,6 +15,7 @@ RUN \
         gcc \
         libc-dev \
         gunicorn \
+        python-sphinx \
         gnupg2 && \
     echo "**** add NodeSource repository ****" && \
     wget -O- https://deb.nodesource.com/setup_12.x | bash - && \
@@ -56,8 +57,11 @@ RUN \
     echo "**** install util scripts ****" && \
     cp -Rf /tmp/scirius/* /opt/scirius && \
     chmod ugo+x /opt/scirius/bin/* && \
+    echo "**** build docs ****" && \
+    cd /opt/scirius/doc && \
+    make html && \
     echo "**** cleanup ****" && \
-    apt-get purge -y --auto-remove gcc libc-dev make && \
+    apt-get purge -y --auto-remove gcc libc-dev make python-sphinx && \
     apt-get clean && \
     rm -rf \
         /tmp/* \

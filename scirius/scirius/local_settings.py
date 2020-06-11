@@ -56,7 +56,7 @@ LOGGING = {
 }
 
 # Scirius
-SCIRIUS_HAS_DOC = False
+SCIRIUS_HAS_DOC = True
 SCIRIUS_IN_SELKS = False
 
 # Internationalization
