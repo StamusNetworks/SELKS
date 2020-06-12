@@ -33,6 +33,7 @@ start() {
     cp -rT doc/_build/html /static/doc
     python manage.py collectstatic --noinput
     echo "Starting suri-reloader daemon..."
+    rm -f /var/run/suri_reloader.pid
     python /opt/scirius/suricata/scripts/suri_reloader &
     echo "Starting scirius server...."
     if [[ -n "$DEBUG" ]] ; then
