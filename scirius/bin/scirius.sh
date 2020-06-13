@@ -35,7 +35,7 @@ start() {
     echo "Starting suri-reloader daemon..."
     rm -f /var/run/suri_reloader.pid
     python /opt/scirius/suricata/scripts/suri_reloader &
-    echo "Starting scirius server...."
+    echo "Starting scirius server..."
     if [[ -n "$DEBUG" ]] ; then
         python manage.py runserver 0.0.0.0:8000
     else
