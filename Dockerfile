@@ -1,4 +1,4 @@
-FROM python:2.7-slim-stretch
+FROM python:3.8-slim-buster
 
 ARG VERSION
 ARG BUILD_DATE
