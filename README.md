@@ -1,4 +1,10 @@
-# Scirius ![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/sgabe/scirius) ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/sgabe/scirius) ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/sgabe/scirius) ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sgabe/scirius/latest)
+# Scirius
+
+[![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/sgabe/scirius)](https://gitlab.com/sgabe/scirius/-/pipelines)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/sgabe/scirius)](https://hub.docker.com/r/sgabe/scirius/builds)
+[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/sgabe/scirius)](https://hub.docker.com/r/sgabe/scirius/builds)
+[![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sgabe/scirius/latest)](https://hub.docker.com/r/sgabe/scirius)
+[![GitHub](https://img.shields.io/github/license/sgabe/scirius)](LICENSE)
 
 Scirius Community Edition is a web interface dedicated to [Suricata IDS](https://suricata-ids.org/) ruleset management and was originally [developed](https://github.com/StamusNetworks/scirius) and [dockerized](https://github.com/StamusNetworks/scirius-docker) by [Stamus Networks](https://www.stamus-networks.com/). This Docker image has been created for a [fork](https://github.com/sgabe/scirius) of the original project instead of using the official image provided by the authors.
 
