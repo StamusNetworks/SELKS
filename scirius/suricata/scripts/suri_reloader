@@ -20,7 +20,7 @@ SOCKET_PATH = os.getenv('SURICATA_UNIX_SOCKET', '/var/run/suricata.socket')
 logging.basicConfig(
         filename=LOG_PATH,
         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        level=logging.DEBUG)
+        level=logging.INFO)
 
 def reloadRules():
     logging.info('Monitoring ruleset updates')
