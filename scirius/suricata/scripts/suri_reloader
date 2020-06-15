@@ -21,7 +21,7 @@ def reloadRules():
     logging.basicConfig(
         filename=LOG_PATH,
         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        level=logging.DEBUG)
+        level=logging.INFO)
 
     logger = logging.getLogger('suri_reloader')
     logger.info('Monitoring ruleset updates')
