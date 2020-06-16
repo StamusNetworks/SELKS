@@ -33,17 +33,17 @@ mv /etc/alternatives/desktop-background  /opt/selks/preupgrade
 
 # ELK 6 upgrade prep
 
-# if [ -f /etc/apt/sources.list.d/elastic-6.x.list ];
-# then
-#     
-#     # if the filename exists - make sure we don't overwrite.
-#     mv /etc/apt/sources.list.d/elastic-6.x.list /opt/selks/preupgrade/elastic-6.x.list.orig
-#     
-# fi
-# 
-# cat >> /etc/apt/sources.list.d/elastic-7.x.list <<EOF
-# deb https://artifacts.elastic.co/packages/7.x/apt stable main
-# EOF
+if [ -f /etc/apt/sources.list.d/elastic-6.x.list ];
+then
+    
+    # if the filename exists - make sure we don't overwrite.
+    mv /etc/apt/sources.list.d/elastic-6.x.list /opt/selks/preupgrade/elastic-6.x.list.orig
+    
+fi
+
+cat >> /etc/apt/sources.list.d/elastic-7.x.list <<EOF
+deb https://artifacts.elastic.co/packages/7.x/apt stable main
+EOF
 
 if [ -f /etc/apt/sources.list.d/curator5.list ];
 then
