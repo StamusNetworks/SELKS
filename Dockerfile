@@ -54,7 +54,7 @@ RUN \
     echo "**** install Node.js dependencies for Scirius ****" && \
     npm install -g \
         npm \
-        webpack@3.11 && \
+        webpack@3.12 && \
     npm install \
         node-sass \
         node-gyp && \
