@@ -17,31 +17,32 @@ PID_PATH    = '/var/run/suri_reloader.pid'
 RELOAD_PATH = '/rules/scirius.reload'
 SOCKET_PATH = os.getenv('SURICATA_UNIX_SOCKET', '/var/run/suricata.socket')
 
-logging.basicConfig(
+def reloadRules():
+    logging.basicConfig(
         filename=LOG_PATH,
         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
         level=logging.INFO)
 
-def reloadRules():
-    logging.info('Monitoring ruleset updates')
+    logger = logging.getLogger('suri_reloader')
+    logger.info('Monitoring ruleset updates')
     while True:
         time.sleep(1)
         if os.path.isfile(RELOAD_PATH):
-            logging.info('Ruleset reload triggered')
+            logger.info('Ruleset reload triggered')
             sc = SuricataSC(SOCKET_PATH)
             try:
                 sc.connect()
             except SuricataNetException as err:
-                logging.error('Unable to connect to socket %s: %s' % (SOCKET_PATH, err))
+                logger.error('Unable to connect to socket %s: %s' % (SOCKET_PATH, err))
             except SuricataReturnException as err:
-                logging.error('Unable to negotiate version with server: %s' % (err))
+                logger.error('Unable to negotiate version with server: %s' % (err))
             res = sc.send_command('reload-rules')
             sc.close()
             if res['return'] == 'OK':
                 os.unlink(RELOAD_PATH)
-                logging.info('Ruleset successfully reloaded')
+                logger.info('Ruleset successfully reloaded')
             else:
-                logging.error('Unable to reload ruleset')
+                logger.error('Unable to reload ruleset')
 
 def main():
     pidfile = pidlockfile.TimeoutPIDLockFile(PID_PATH)
