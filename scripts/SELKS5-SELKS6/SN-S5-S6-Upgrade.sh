@@ -19,9 +19,7 @@ if (( $EUID != 0 )); then
 fi
 
 # make place holder for all pre upgrade configs that have been overwritten 
-mkdir -p /opt/selks/preupgrade
-mkdir -p /opt/selks/preupgrade/elasticsearch/etc/elasticsearch
-mkdir -p /opt/selks/preupgrade/elasticsearch/etc/default/
+mkdir -p /opt/selks/preupgrade/elasticsearch/etc/{default,elasticsearch}
 
 mv /etc/alternatives/desktop-background  /opt/selks/preupgrade
 
