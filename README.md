@@ -19,14 +19,6 @@ Scirius Community Edition is a web interface dedicated to [Suricata IDS](https:/
         -v /path/to/suricata/suricata.socket:/var/run/suricata.socket \
         sgabe/scirius
 
-## Tags
-
-| Tag       | Debian  | Python | Django    | Scirius  | Notes                  |
-| ----------|---------|--------|-----------|----------|------------------------|
-| `master`  | Stretch | `2.7`  | `1.11.29` | `3.4.0+` | Dependency updates     |
-| `develop` | Stretch | `2.7`  | `1.11.29` | `3.4.0+` | Code improvements      |
-| `upgrade` | Buster  | `3.8`  | `2.2.13`  | `3.4.0+` | System upgrade         |
-
 ## Environment variables
 
 Most of the configuration options defined in the built-in `settings.py` shipped with the original project are exposed via environment variables in the `local_settings.py` file used in the container. This allows you to customize Scirius without creating or modifying configuration files. The below table summarizes the available environment variables and their default settings. For more information on how to configure Scirius, please refer to the original project documentation available [here](https://scirius.readthedocs.io/en/latest/).
