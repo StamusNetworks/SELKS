@@ -4,7 +4,7 @@ ARG VERSION
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENV VERSION ${VERSION:-master}
+ENV VERSION ${VERSION:-main}
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/sgabe/docker-scirius.git" \
