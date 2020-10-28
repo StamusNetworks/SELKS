@@ -160,7 +160,7 @@ then
   
   make defconfig && \
   make clean && \
-  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-stamus-amd64 KDEB_PKGVERSION=${KERNEL_VER}
+  make -j `getconf _NPROCESSORS_ONLN` deb-pkg LOCALVERSION=-stamus-amd64 KDEB_PKGVERSION=${KERNEL_VER}-1
   cd ../../
   
   # Directory where the kernel image and headers are copied to
@@ -184,7 +184,7 @@ then
   -a amd64 -d buster  \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
-  --bootloader syslinux \
+  --bootloader grub-efi \
   --debian-installer live \
   --bootappend-live "boot=live swap config username=selks-user live-config.hostname=SELKS live-config.user-default-groups=audio,cdrom,floppy,video,dip,plugdev,scanner,bluetooth,netdev,sudo" \
   --linux-packages linux-image-${KERNEL_VER} \
