@@ -116,8 +116,8 @@ HTTPS_PROXY = os.getenv('HTTPS_PROXY', 'http://proxy:3128')
 PROXY_PARAMS = {'http': HTTP_PROXY, 'https': HTTPS_PROXY}
 
 # Content Security Policy settings
-CSP_DEFAULT_SRC = os.getenv('CSP_DEFAULT_SRC', "'self'").split(' ')
-CSP_SCRIPT_SRC = os.getenv('CSP_SCRIPT_SRC', "'self' 'unsafe-inline'").split(' ')
-CSP_STYLE_SRC = os.getenv('CSP_STYLE_SRC', "'self' 'unsafe-inline'").split(' ')
+CSP_DEFAULT_SRC = tuple(os.getenv('CSP_DEFAULT_SRC', "'self'").split(' '))
+CSP_SCRIPT_SRC = tuple(os.getenv('CSP_SCRIPT_SRC', "'self' 'unsafe-inline'").split(' '))
+CSP_STYLE_SRC = tuple(os.getenv('CSP_STYLE_SRC', "'self' 'unsafe-inline'").split(' '))
 CSP_INCLUDE_NONCE_IN = os.getenv('CSP_INCLUDE_NONCE_IN', 'script-src').split(' ')
-CSP_EXCLUDE_URL_PREFIXES = os.getenv('CSP_EXCLUDE_URL_PREFIXES', '/evebox').split(' ')
+CSP_EXCLUDE_URL_PREFIXES = tuple(os.getenv('CSP_EXCLUDE_URL_PREFIXES', '/evebox').split(' '))
