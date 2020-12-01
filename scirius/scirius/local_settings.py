@@ -66,6 +66,7 @@ TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
 # Static files
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.getenv('STATIC_ROOT', '/static')
+STATIC_AUTHENTICATED = bool(strtobool(os.getenv('STATIC_AUTHENTICATED', '0')))
 
 # Suricata
 SURICATA_UNIX_SOCKET = os.getenv('SURICATA_UNIX_SOCKET', '/var/run/suricata.socket')
@@ -88,6 +89,7 @@ KIBANA_URL = os.getenv('KIBANA_URL', 'http://kibana:9292')
 KIBANA_INDEX = os.getenv('KIBANA_INDEX', '.kibana')
 KIBANA_DASHBOARDS_PATH = os.getenv('KIBANA_DASHBOARDS_PATH', '/opt/kibana-dashboards/')
 KIBANA6_DASHBOARDS_PATH = os.getenv('KIBANA6_DASHBOARDS_PATH', '/opt/kibana6-dashboards/')
+KIBANA_ALLOW_GRAPHQL = bool(strtobool(os.getenv('KIBANA_ALLOW_GRAPHQL', '1')))
 
 # EveBox
 USE_EVEBOX = bool(strtobool(os.getenv('USE_EVEBOX', '0')))
@@ -112,3 +114,10 @@ USE_PROXY = bool(strtobool(os.getenv('USE_PROXY', '0')))
 HTTP_PROXY = os.getenv('HTTP_PROXY', 'http://proxy:3128')
 HTTPS_PROXY = os.getenv('HTTPS_PROXY', 'http://proxy:3128')
 PROXY_PARAMS = {'http': HTTP_PROXY, 'https': HTTPS_PROXY}
+
+# Content Security Policy settings
+CSP_DEFAULT_SRC = os.getenv('CSP_DEFAULT_SRC', "'self'").split(' ')
+CSP_SCRIPT_SRC = os.getenv('CSP_SCRIPT_SRC', "'self' 'unsafe-inline'").split(' ')
+CSP_STYLE_SRC = os.getenv('CSP_STYLE_SRC', "'self' 'unsafe-inline'").split(' ')
+CSP_INCLUDE_NONCE_IN = os.getenv('CSP_INCLUDE_NONCE_IN', 'script-src').split(' ')
+CSP_EXCLUDE_URL_PREFIXES = os.getenv('CSP_EXCLUDE_URL_PREFIXES', '/evebox').split(' ')

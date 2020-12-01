@@ -35,6 +35,7 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | Static files                                                                 |
 | `STATIC_URL`                         | `/static/`                            |
 | `STATIC_ROOT`                        | `/static`                             |
+| `STATIC_AUTHENTICATED`               | `False`                               |
 | **Suricata**                                                                 |
 | `SURICATA_UNIX_SOCKET`               | `/var/run/suricata.socket`            |
 | `SURICATA_NAME_IS_HOSTNAME`          | `False`                               |
@@ -54,13 +55,12 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | `KIBANA_INDEX`                       | `.kibana`                             |
 | `KIBANA_DASHBOARDS_PATH`             | `/opt/kibana-dashboards/`             |
 | `KIBANA6_DASHBOARDS_PATH`            | `/opt/kibana6-dashboards/`            |
+| `KIBANA_ALLOW_GRAPHQL`               | `True`                                |
 | **Evebox**                                                                   |
 | `USE_EVEBOX`                         | `False`                               |
 | `EVEBOX_URL`                         | `http://evebox:5636`                  |
 | `USE_SURICATA_STATS`                 | `False`                               |
 | `USE_LOGSTASH_STATS`                 | `False`                               |
-| `KIBANA_DASHBOARDS_PATH`             | `/opt/kibana-dashboards/`             |
-| `KIBANA6_DASHBOARDS_PATH`            | `/opt/kibana6-dashboards/`            |
 | **InfluxDB**                                                                 |
 | `USE_INFLUXDB`                       | `False`                               |
 | `INFLUXDB_HOST`                      | `influxdb`                            |
@@ -75,6 +75,12 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | `USE_PROXY`                          | `False`                               |
 | `HTTP_PROXY`                         | `http://proxy:3128`                   |
 | `HTTPS_PROXY`                        | `http://proxy:3128`                   |
+| **Content Security Policy settings**                                         |
+| `CSP_DEFAULT_SRC`                    | `'self'`                              |
+| `CSP_SCRIPT_SRC`                     | `'self' 'unsafe-inline'`              |
+| `CSP_STYLE_SRC`                      | `'self' 'unsafe-inline'`              |
+| `CSP_INCLUDE_NONCE_IN`               | `script-src`                          |
+| `CSP_EXCLUDE_URL_PREFIXES`           | `/evebox`                             |
 
 ## Volumes
 
