@@ -335,6 +335,8 @@ cp staging/usr/share/polkit-1/rules.d/org.stamusnetworks.rules Stamus-Live-Build
 # Add core system packages to be installed
 echo "
 
+shim-helpers-amd64-signed shim-signed:amd64 shim-signed-common shim-unsigned 
+grub-common grub-efi-amd64 grub-efi-amd64-bin grub-efi-amd64-bin grub2-common
 libpcre3 libpcre3-dbg libpcre3-dev ntp
 build-essential autoconf automake libtool libpcap-dev libnet1-dev 
 libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0 
