@@ -262,10 +262,8 @@ chmod g+w /var/run/suricata/ -R
 mkdir -p /opt/molochtmp
 cd /opt/molochtmp/ && \
 apt-get update && apt-get install -y libjson-perl libyaml-dev libcrypto++6 libwww-perl
-#wget https://files.molo.ch/builds/ubuntu-18.04/moloch_1.8.0-1_amd64.deb
-#dpkg -i moloch_1.8.0-1_amd64.deb
-wget https://files.molo.ch/builds/ubuntu-18.04/moloch_2.2.3-1_amd64.deb
-dpkg -i moloch_2.2.3-1_amd64.deb
+wget https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-18.04/moloch_2.7.1-1_amd64.deb
+dpkg -i moloch_2.7.1-1_amd64.deb
 
 
 cd /opt/
