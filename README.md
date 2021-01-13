@@ -61,6 +61,9 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | `EVEBOX_URL`                         | `http://evebox:5636`                  |
 | `USE_SURICATA_STATS`                 | `False`                               |
 | `USE_LOGSTASH_STATS`                 | `False`                               |
+| **CyberChef**                                                                |
+| `USE_CYBERCHEF`                      | `False`                               |
+| `CYBERCHEF_URL`                      | `/static/cyberchef/`                  |
 | **InfluxDB**                                                                 |
 | `USE_INFLUXDB`                       | `False`                               |
 | `INFLUXDB_HOST`                      | `influxdb`                            |

@@ -97,6 +97,10 @@ EVEBOX_URL = os.getenv('EVEBOX_URL', 'http://evebox:5636')
 USE_SURICATA_STATS = bool(strtobool(os.getenv('USE_SURICATA_STATS', '0')))
 USE_LOGSTASH_STATS = bool(strtobool(os.getenv('USE_LOGSTASH_STATS', '0')))
 
+# CyberChef
+USE_CYBERCHEF = bool(strtobool(os.getenv('USE_CYBERCHEF', '0')))
+CYBERCHEF_URL = os.getenv('CYBERCHEF_URL', '/static/cyberchef/')
+
 # InfluxDB
 USE_INFLUXDB = bool(strtobool(os.getenv('USE_INFLUXDB', '0')))
 INFLUXDB_HOST = os.getenv('INFLUXDB_HOST', 'influxdb')
