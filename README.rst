@@ -5,7 +5,7 @@ SELKS
 Intro
 =====
 
-SELKS is a free and open source Debian (with LXDE X-window manager) based IDS/IPS platform 
+SELKS is a free and open source Debian based IDS/IPS/Network Security Monitoring platform 
 released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/).
 
 The SELKS ISO is both Live and Installable ISO in one. Once installed it is 
@@ -46,7 +46,7 @@ Howto run SELKS
 Prerequisites
 -------------
 
-The minimal configuration for production usage is 2 cores and 6 Gb of memory. As Suricata
+The minimal configuration for production usage is 2 cores and 8 Gb of memory. As Suricata
 and Elastisearch are multithreaded, the more cores you have the better it is.
 Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting.
 See `Running SELKS in production <https://github.com/StamusNetworks/SELKS/wiki/Running-SELKS-in-production>`_ page
