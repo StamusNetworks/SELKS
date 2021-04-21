@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please RUN ON Debian Jessie only !!!
+# Please RUN ON Debian Buster only !!!
 
 set -e
 
@@ -15,7 +15,7 @@ cat << EOF
 usage: $0 options
 
 ###################################
-#!!! RUN on Debian Jessie ONLY !!!#
+#!!! RUN on Debian Buster ONLY !!!#
 ###################################
 
 SELKS build your own ISO options
