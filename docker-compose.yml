@@ -129,4 +129,4 @@ services:
 networks:
   selks:
 volumes:
-  logstash-sincedbs
+  logstash-sincedbs:
