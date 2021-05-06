@@ -1,0 +1,130 @@
+version: '3.3'
+services:
+  elasticsearch:
+    container_name: SELKS-elasticsearch
+    image: elasticsearch:7.12.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
+      - ./containers-data/elasticsearch/log:/var/log/elasticsearch
+    networks:
+      selks:
+        aliases:
+          - elasticsearch
+      
+  kibana:
+    container_name: SELKS-kibana
+    image: kibana:7.12.0
+    restart: unless-stopped
+    volumes:
+      - ./containers-data/kibana/lib:/var/lib/kibana
+      - ./containers-data/kibana/log:/var/log/kibana
+    networks:
+      selks:
+        aliases:
+          - kibana
+    ports:
+      - 5601:5601
+    
+  logstash:
+    container_name: SELKS-logstash
+    image: logstash:7.12.0
+    restart: unless-stopped
+    volumes:
+      - ./containers-data/suricata/log:/var/log/suricata:ro
+      - ./containers-data/logstash/lib:/var/lib/logstash
+      - ./containers-data/logstash/log:/var/log/logstash
+      - ./containers-data/logstash/sincedbs/:/usr/share/logstash/sincedbs/
+      - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
+    networks:
+      selks:
+        aliases:
+          - logstash
+          
+  scirius:
+    container_name: SELKS-scirius
+    build:
+      context: https://github.com/yodapotatofly/docker-scirius.git
+      args:
+        VERSION: master
+    image: scirius:master
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=p8o5%vq))8h2li08c%k3id(wwo*u(^dbdmx2tv#t(tb2pr9@n-
+      - DEBUG=True
+      - SCIRIUS_IN_SELKS=True
+      - USE_ELASTICSEARCH=True
+      - ELASTICSEARCH_ADDRESS=elasticsearch:9200
+      - USE_KIBANA=True
+      - KIBANA_URL=http://kibana:5601
+      - KIBANA_PROXY=True
+      - ALLOWED_HOSTS=*
+      
+      
+    volumes:
+      - ./containers-data/scirius/static/:/static/
+      - ./containers-data/suricata/rules/:/rules
+      - ./containers-data/suricata/suricata-command.socket:/var/run/suricata.socket
+      
+    networks:
+      selks:
+        aliases:
+          - scirius
+          
+  evebox:
+    container_name: SELKS-evebox
+    image: jasonish/evebox:master
+    command: ["-e", "http://elasticsearch:9200"]
+    restart: unless-stopped
+    ports:
+      - 5636:5636
+    networks:
+      selks:
+        aliases:
+          - evebox
+          
+  suricata:
+    container_name: SELKS-suricata
+    image: jasonish/suricata:6.0.2
+    restart: unless-stopped
+    environment:
+      - SURICATA_OPTIONS=-i tppdummy0 -vvv
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    network_mode: host
+    volumes:
+       - ./containers-data/suricata/log:/var/log/suricata
+       - ./containers-data/suricata/rules/:/etc/suricata/rules
+       - ./containers-data/suricata/run/:/var/run/suricata/
+       
+  nginx:
+    container_name: some-nginx
+    image: nginx
+    command: [nginx-debug, '-g', 'daemon off;']
+    restart: unless-stopped
+    volumes:
+      - ./containers-data/scirius/static/:/static/:ro
+      - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
+      #- ./containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./containers-data/nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      selks:
+        aliases:
+          - nginx
+       
+networks:
+  selks:
