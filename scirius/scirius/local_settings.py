@@ -57,7 +57,7 @@ LOGGING = {
 
 # Scirius
 SCIRIUS_HAS_DOC = True
-SCIRIUS_IN_SELKS = False
+SCIRIUS_IN_SELKS = bool(strtobool(os.getenv('SCIRIUS_IN_SELKS', '0')))
 
 # Internationalization
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en-us')
@@ -74,7 +74,7 @@ SURICATA_NAME_IS_HOSTNAME = bool(strtobool(os.getenv('SURICATA_NAME_IS_HOSTNAME'
 
 # Elasticsearch
 USE_ELASTICSEARCH = bool(strtobool(os.getenv('USE_ELASTICSEARCH', '0')))
-ELASTICSEARCH_URL = os.getenv('ELASTICSEARCH_URL', 'http://elasticsearch:9200')
+ELASTICSEARCH_ADDRESS = os.getenv('ELASTICSEARCH_ADDRESS', 'elasticsearch:9200')
 ELASTICSEARCH_LOGSTASH_INDEX = os.getenv('ELASTICSEARCH_LOGSTASH_INDEX', 'logstash-*')
 ELASTICSEARCH_LOGSTASH_ALERT_INDEX = os.getenv('ELASTICSEARCH_LOGSTASH_ALERT_INDEX', 'logstash-alert-*')
 ELASTICSEARCH_LOGSTASH_TIMESTAMPING = os.getenv('ELASTICSEARCH_LOGSTASH_TIMESTAMPING', 'daily')
@@ -85,10 +85,11 @@ ELASTICSEARCH_TIMESTAMP = os.getenv('ELASTICSEARCH_TIMESTAMP', '@timestamp')
 # Kibana
 USE_KIBANA = bool(strtobool(os.getenv('USE_KIBANA', '0')))
 KIBANA_PROXY = bool(strtobool(os.getenv('KIBANA_PROXY', '0')))
-KIBANA_URL = os.getenv('KIBANA_URL', 'http://kibana:9292')
+KIBANA_URL = os.getenv('KIBANA_URL', 'http://kibana:5601')
 KIBANA_INDEX = os.getenv('KIBANA_INDEX', '.kibana')
 KIBANA_DASHBOARDS_PATH = os.getenv('KIBANA_DASHBOARDS_PATH', '/opt/kibana-dashboards/')
 KIBANA6_DASHBOARDS_PATH = os.getenv('KIBANA6_DASHBOARDS_PATH', '/opt/kibana6-dashboards/')
+KIBANA7_DASHBOARDS_PATH = os.getenv('KIBANA6_DASHBOARDS_PATH', '/opt/kibana7-dashboards/')
 KIBANA_ALLOW_GRAPHQL = bool(strtobool(os.getenv('KIBANA_ALLOW_GRAPHQL', '1')))
 
 # EveBox

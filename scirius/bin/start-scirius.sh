@@ -3,15 +3,18 @@
 cd /opt/scirius/
 
 migrate_db() {
-    python manage.py migrate
+    python manage.py migrate --noinput
     python manage.py collectstatic  --noinput
 }
 
 create_db() {
     python manage.py migrate --noinput
 
+    echo "from django.contrib.auth.models import User; User.objects.create_superuser(***)"
     if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_EMAIL" ] ; then
-        python manage.py createsuperuser --no-input --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL
+        echo "from django.contrib.auth.models import User; User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD')" | python manage.py shell
+    else
+        echo "from django.contrib.auth.models import User; User.objects.create_superuser('selks-user', 'selks-user@selks.com', 'selks-user')" | python manage.py shell
     fi
 
     python manage.py createcachetable my_cache_table
@@ -27,16 +30,17 @@ create_db() {
 
 start() {
     webpack
-    cd hunt
-    npm run build
-    cd ..
-    cp -rT doc/_build/html /static/doc
+    # cd hunt
+    # npm run build
+    # cd ..
+    # cp -rT doc/_build/html /static/doc
     python manage.py collectstatic --noinput
     echo "Starting suri-reloader daemon..."
     rm -f /var/run/suri_reloader.pid
     python /opt/scirius/suricata/scripts/suri_reloader &
     echo "Starting scirius server..."
     if [[ -n "$DEBUG" ]] ; then
+        echo DEBUG
         python manage.py runserver 0.0.0.0:8000
     else
         gunicorn -w $(($(nproc --all)*2+1)) -t 120 -b 0.0.0.0:8000 scirius.wsgi
