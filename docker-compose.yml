@@ -28,9 +28,9 @@ services:
     container_name: SELKS-kibana
     image: kibana:7.12.0
     restart: unless-stopped
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5601 || exit 1"]
       interval: 30s
@@ -50,9 +50,9 @@ services:
     container_name: SELKS-logstash
     image: logstash:7.12.0
     restart: unless-stopped
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
     volumes:
       - ./containers-data/suricata/log:/var/log/suricata:ro
       - ./containers-data/logstash/lib:/var/lib/logstash
@@ -73,9 +73,9 @@ services:
         VERSION: master
     image: scirius:master
     restart: unless-stopped  
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
     ports:
       - 8000:8000
     environment:
