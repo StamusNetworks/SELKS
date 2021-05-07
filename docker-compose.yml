@@ -80,7 +80,7 @@ services:
       - 8000:8000
     environment:
       - SECRET_KEY=p8o5%vq))8h2li08c%k3id(wwo*u(^dbdmx2tv#t(tb2pr9@n-
-      - DEBUG=True
+      - DEBUG=${SCIRIUS_DEBUG:-False}
       - SCIRIUS_IN_SELKS=True
       - USE_ELASTICSEARCH=True
       - ELASTICSEARCH_ADDRESS=elasticsearch:9200
@@ -117,7 +117,7 @@ services:
     image: jasonish/suricata:6.0.2
     restart: unless-stopped
     environment:
-      - SURICATA_OPTIONS=-i tppdummy0 -vvv
+      - SURICATA_OPTIONS=${INTERFACES} -vvv
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -130,7 +130,7 @@ services:
   nginx:
     container_name: some-nginx
     image: nginx
-    command: [nginx-debug, '-g', 'daemon off;']
+    command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
     restart: unless-stopped
     volumes:
       - ./containers-data/scirius/static/:/static/:ro
