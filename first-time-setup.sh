@@ -23,16 +23,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-if (( $EUID != 0 )); then
-     echo -e "Please run this script as root or with \"sudo\".\n"
-     exit 1
-fi
+# if (( $EUID != 0 )); then
+#      echo -e "Please run this script as root or with \"sudo\".\n"
+#      exit 1
+# fi
 
 function getInterfaces {
   intfnum=0
   for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
   
   echo -e "Please type in interface or space delimited interfaces below and hit \"Enter\"."
+  echo -e "Choose the interface(s) that is (are) one the network(s) you want to monitor"
   echo -e "Example: eth1"
   echo -e "OR"
   echo -e "Example: eth1 eth2 eth3"
@@ -76,7 +77,7 @@ done
 echo INTERFACES=$INTERFACES_LIST > .env
 
 while true; do
-    read -p "Do you want to use debug mode?" yn
+    read -p "Do you want to use debug mode?[Y/N] " yn
     case $yn in
         [Yy]* ) echo SCIRIUS_DEBUG=True >> .env; echo NGINX_EXEC=nginx-debug >> .env; break;;
         [Nn]* ) exit;;
