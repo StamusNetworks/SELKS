@@ -41,7 +41,7 @@ services:
       - ./containers-data/suricata/log:/var/log/suricata:ro
       - ./containers-data/logstash/lib:/var/lib/logstash
       - ./containers-data/logstash/log:/var/log/logstash
-      - logstash-sincedbs:/usr/share/logstash/sincedbs/
+      #- ./containers-data/logstash/sincedbs/:/usr/share/logstash/sincedbs/
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
@@ -128,5 +128,3 @@ services:
        
 networks:
   selks:
-volumes:
-  logstash-sincedbs:
