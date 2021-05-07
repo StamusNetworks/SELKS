@@ -360,7 +360,7 @@ if [[ -z "$GUI" ]]; then
   #>> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "task-xfce-desktop xfce4-goodies fonts-lyx wireshark terminator" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
-  echo "wireshark terminator open-vm-tools open-vm-tools lxpolkit" \
+  echo "wireshark terminator open-vm-tools open-vm-tools-desktop lxpolkit" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
   #echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
