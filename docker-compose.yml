@@ -137,7 +137,7 @@ services:
     volumes:
       - ./containers-data/scirius/static/:/static/:ro
       - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
-      #- ./containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./containers-data/nginx/ssl:/etc/nginx/ssl:ro
     ports:
       - 80:80
