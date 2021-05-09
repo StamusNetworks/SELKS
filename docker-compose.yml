@@ -19,6 +19,7 @@ services:
     volumes:
       - ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
       - ./containers-data/elasticsearch/log:/var/log/elasticsearch
+      - kibana-dashboards:/opt/kibana7-dashboards
     networks:
       selks:
         aliases:
@@ -94,6 +95,7 @@ services:
       - ./containers-data/scirius/static/:/static/
       - ./containers-data/suricata/rules/:/rules
       - ./containers-data/suricata/suricata-command.socket:/var/run/suricata.socket
+      - kibana-dashboards:/opt/kibana7-dashboards/
       
     networks:
       selks:
@@ -147,3 +149,6 @@ services:
        
 networks:
   selks:
+
+volumes:
+  kibana-dashboards:
