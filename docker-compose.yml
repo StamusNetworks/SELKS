@@ -27,7 +27,7 @@ services:
     volumes:
       - ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
       - ./containers-data/elasticsearch/log:/var/log/elasticsearch
-      - kibana-dashboards:/opt/selks/kibana7-dashboards/
+      - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
         aliases:
@@ -99,13 +99,14 @@ services:
       - KIBANA_PROXY=True
       - ALLOWED_HOSTS=*
       - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards
+      - SURICATA_UNIX_SOCKET=/var/run/suricata.socket
       
       
     volumes:
       - ./containers-data/scirius/static/:/static/
       - ./containers-data/suricata/rules/:/rules
-      - ./containers-data/suricata/suricata-command.socket:/var/run/suricata.socket
-      - kibana-dashboards:/opt/selks/kibana7-dashboards/
+      - ./containers-data/suricata/run:/var/run/suricata
+      - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
       
     networks:
       selks:
