@@ -48,6 +48,7 @@ start() {
 }
 
 if [ ! -e "/data/scirius.sqlite3" ]; then
+    /opt/scirius/bin/reset_dashboards.sh &
     create_db
 else
     migrate_db
