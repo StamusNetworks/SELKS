@@ -99,7 +99,7 @@ done
 # SURICATA LOGS PATH #
 ######################
 BASEDIR=$(dirname "$0")
-echo -e "With SELKS running, packets captures can take up a lot of disk space"
+echo -e "\n\nWith SELKS running, packets captures can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Current partition free space :$(df --output=avail -h . | tail -n 1 )"
 echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
@@ -110,7 +110,7 @@ read suricata_logs_path
 if ! [ -z "${suricata_logs_path}" ]; then
 
   if ! [ -w suricata_logs_path ]; then 
-    echo -e "\n\nYou don't seem to own write access to this directory\n"
+    echo -e "\nYou don't seem to own write access to this directory\n"
     echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
     echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
     read suricata_logs_path
