@@ -29,7 +29,7 @@ create_db() {
 }
 
 start() {
-    webpack
+    #webpack
     # cd hunt
     # npm run build
     # cd ..
