@@ -135,7 +135,7 @@ services:
       - SYS_NICE
     network_mode: host
     volumes:
-       - ./containers-data/suricata/log:/var/log/suricata
+       - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
        - ./containers-data/suricata/rules/:/etc/suricata/rules
        - ./containers-data/suricata/run/:/var/run/suricata/
        
