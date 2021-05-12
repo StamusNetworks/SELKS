@@ -13,9 +13,10 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
-      interval: 30s
-      timeout: 30s
+      interval: 10s
+      timeout: 5s
       retries: 3
+      start_period: 30s
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -42,8 +43,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5601 || exit 1"]
       interval: 30s
-      timeout: 30s
+      timeout: 5s
       retries: 3
+      start_period: 30s
     volumes:
       - ./containers-data/kibana/lib:/var/lib/kibana
       - ./containers-data/kibana/log:/var/log/kibana
@@ -81,9 +83,9 @@ services:
         VERSION: master
     image: scirius:master
     restart: unless-stopped  
-    # depends_on:
-    #   elasticsearch:
-    #     condition: service_healthy
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     ports:
       - 8000:8000
     environment:
