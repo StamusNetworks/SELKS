@@ -1,4 +1,11 @@
 version: '3.3'
+
+networks:
+  selks:
+
+volumes:
+  kibana-dashboards:
+
 services:
   elasticsearch:
     container_name: SELKS-elasticsearch
@@ -147,9 +154,3 @@ services:
       selks:
         aliases:
           - nginx
-       
-networks:
-  selks:
-
-volumes:
-  kibana-dashboards:
