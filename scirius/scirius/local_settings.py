@@ -94,7 +94,7 @@ KIBANA_ALLOW_GRAPHQL = bool(strtobool(os.getenv('KIBANA_ALLOW_GRAPHQL', '1')))
 
 # EveBox
 USE_EVEBOX = bool(strtobool(os.getenv('USE_EVEBOX', '0')))
-EVEBOX_URL = os.getenv('EVEBOX_URL', 'http://evebox:5636')
+EVEBOX_ADDRESS = os.getenv('EVEBOX_ADDRESS', 'http://evebox:5636')
 USE_SURICATA_STATS = bool(strtobool(os.getenv('USE_SURICATA_STATS', '0')))
 USE_LOGSTASH_STATS = bool(strtobool(os.getenv('USE_LOGSTASH_STATS', '0')))
 

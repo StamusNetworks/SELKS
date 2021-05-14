@@ -44,7 +44,7 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | `SURICATA_NAME_IS_HOSTNAME`           | `False`                               |
 | **Elasticsearch**                                                             |
 | `USE_ELASTICSEARCH`                   | `False`                               |
-| `ELASTICSEARCH_URL`                   | `http://elasticsearch:9200`           |
+| `ELASTICSEARCH_ADDRESS`                   | `http://elasticsearch:9200`           |
 | `ELASTICSEARCH_LOGSTASH_INDEX`        | `logstash-*`                          |
 | `ELASTICSEARCH_LOGSTASH_ALERT_INDEX`  | `logstash-alert-*`                    |
 | `ELASTICSEARCH_LOGSTASH_TIMESTAMPING` | `daily`                               |
@@ -61,7 +61,7 @@ Most of the configuration options defined in the built-in `settings.py` shipped 
 | `KIBANA_ALLOW_GRAPHQL`                | `True`                                |
 | **Evebox**                                                                    |
 | `USE_EVEBOX`                          | `False`                               |
-| `EVEBOX_URL`                          | `http://evebox:5636`                  |
+| `EVEBOX_ADDRESS`                          | `http://evebox:5636`                  |
 | `USE_SURICATA_STATS`                  | `False`                               |
 | `USE_LOGSTASH_STATS`                  | `False`                               |
 | **CyberChef**                                                                 |
