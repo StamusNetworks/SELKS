@@ -93,7 +93,7 @@ services:
   scirius:
     container_name: SELKS-scirius
     build:
-      context: https://github.com/yodapotatofly/docker-scirius.git:${BRANCH:-master}
+      context: https://github.com/yodapotatofly/docker-scirius.git#${BRANCH:-master}
       args:
         VERSION: master
     image: scirius:master
