@@ -75,6 +75,21 @@ services:
         aliases:
           - logstash
           
+  suricata:
+    container_name: SELKS-suricata
+    image: jasonish/suricata:6.0.2
+    restart: unless-stopped
+    environment:
+      - SURICATA_OPTIONS=${INTERFACES} -vvv
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    network_mode: host
+    volumes:
+       - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
+       - ./containers-data/suricata/rules/:/etc/suricata/rules
+       - ./containers-data/suricata/run/:/var/run/suricata/
+    
   scirius:
     container_name: SELKS-scirius
     build:
@@ -93,13 +108,15 @@ services:
       - DEBUG=${SCIRIUS_DEBUG:-False}
       - SCIRIUS_IN_SELKS=True
       - USE_ELASTICSEARCH=True
-      - ELASTICSEARCH_ADDRESS=elasticsearch:9200
+      - ELASTICSEARCH_ADDRESS=elasticsearch:9200 #Default
       - USE_KIBANA=True
-      - KIBANA_URL=http://kibana:5601
+      - KIBANA_URL=http://kibana:5601 #Default
       - KIBANA_PROXY=True
       - ALLOWED_HOSTS=*
       - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards
-      - SURICATA_UNIX_SOCKET=/var/run/suricata.socket
+      - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket
+      - USE_EVEBOX=True
+      - EVEBOX_ADDRESS=http://evebox:5636 #Default
       
       
     volumes:
@@ -124,22 +141,7 @@ services:
       selks:
         aliases:
           - evebox
-          
-  suricata:
-    container_name: SELKS-suricata
-    image: jasonish/suricata:6.0.2
-    restart: unless-stopped
-    environment:
-      - SURICATA_OPTIONS=${INTERFACES} -vvv
-    cap_add:
-      - NET_ADMIN
-      - SYS_NICE
-    network_mode: host
-    volumes:
-       - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
-       - ./containers-data/suricata/rules/:/etc/suricata/rules
-       - ./containers-data/suricata/run/:/var/run/suricata/
-       
+     
   nginx:
     container_name: some-nginx
     image: nginx
