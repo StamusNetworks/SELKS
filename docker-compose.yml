@@ -7,6 +7,7 @@ volumes:
   kibana-dashboards:
 
 services:
+  
   elasticsearch:
     container_name: SELKS-elasticsearch
     image: elasticsearch:7.12.0
@@ -25,8 +26,8 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
-      - ./containers-data/elasticsearch/log:/var/log/elasticsearch
+      #- ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
+      # - ./containers-data/elasticsearch/log:/var/log/elasticsearch
       - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
@@ -46,9 +47,9 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    volumes:
-      - ./containers-data/kibana/lib:/var/lib/kibana
-      - ./containers-data/kibana/log:/var/log/kibana
+    # volumes:
+      # - ./containers-data/kibana/lib:/var/lib/kibana
+      # - ./containers-data/kibana/log:/var/log/kibana
     networks:
       selks:
         aliases:
@@ -65,8 +66,8 @@ services:
     #     condition: service_healthy
     volumes:
       - ./containers-data/suricata/log:/var/log/suricata:ro
-      - ./containers-data/logstash/lib:/var/lib/logstash
-      - ./containers-data/logstash/log:/var/log/logstash
+      # - ./containers-data/logstash/lib:/var/lib/logstash
+      # - ./containers-data/logstash/log:/var/log/logstash
       #- ./containers-data/logstash/sincedbs/:/usr/share/logstash/sincedbs/
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json

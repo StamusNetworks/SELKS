@@ -1,0 +1,5 @@
+logrotate
+volumes instead of bind-mounts
+#choice for eve.json paths
+elastic curator
+add evebox to the menu
