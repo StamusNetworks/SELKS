@@ -116,7 +116,7 @@ services:
       - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards
       - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket
       - USE_EVEBOX=True
-      - EVEBOX_ADDRESS=http://evebox:5636 #Default
+      - EVEBOX_ADDRESS=evebox:5636 #Default
       
       
     volumes:
