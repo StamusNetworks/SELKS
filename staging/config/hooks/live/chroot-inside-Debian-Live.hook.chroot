@@ -287,7 +287,7 @@ apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--fo
 cat >> /opt/selks/delete-old-logs.sh <<EOF
 #!/bin/bash
 
-/usr/bin/curator_cli delete_indices --filter_list \
+/usr/bin/curator_cli delete-indices --filter_list \
 '
 [
   {
