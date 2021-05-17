@@ -118,3 +118,7 @@ if ! [ -z "${suricata_logs_path}" ]; then
   fi
 echo "SURICATA_LOGS_PATH=${suricata_logs_path}" >> .env
 fi
+
+now=$(date +%Y%m%d%H%M%S)
+
+echo "DATE=$now" >>.env

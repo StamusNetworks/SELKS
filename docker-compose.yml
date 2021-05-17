@@ -96,8 +96,8 @@ services:
     build:
       context: https://github.com/yodapotatofly/docker-scirius.git#${BRANCH:-master}
       args:
-        VERSION: master
-    image: scirius:master
+        VERSION: ${SCIRIUS_VERSION:-master}
+    image: scirius:${SCIRIUS_VERSION:-master}-${DATE}
     restart: unless-stopped  
     depends_on:
       elasticsearch:
