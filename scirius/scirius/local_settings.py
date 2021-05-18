@@ -45,6 +45,18 @@ LOGGING = {
             'filename': '/logs/elasticsearch.log',
             'formatter': 'raw',
         },
+        'error_log': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/logs/django-error.log',
+            'formatter': 'fileformat',
+        },
+        'auth_log': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/logs/django-auth.log',
+            'formatter': 'fileformat',
+        },
     },
     'loggers': {
         'elasticsearch': {
@@ -52,6 +64,17 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'django.request': {
+            'handlers': ['error_log'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'authentication': {
+            'handlers': ['auth_log'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+
     }
 }
 
