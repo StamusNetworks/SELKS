@@ -13,7 +13,7 @@ set_elastic_ilm() {
     until [[ $response == *"\"acknowledged\" : true"* ]]; do
       sleep 5
       ELASTICSEARCH_ADDRESS=$(python manage.py diffsettings --all |grep 'ELASTICSEARCH_ADDRESS' | cut -d"'" -f 2)
-      echo "found elastic adress : $ELASTICSEARCH_ADDRESS"
+      echo "found elastic address : $ELASTICSEARCH_ADDRESS"
       response=$(curl -X PUT "$ELASTICSEARCH_ADDRESS/_ilm/policy/logstash-autodelete?pretty" -H 'Content-Type: application/json' -d'
 {
   "policy": {
@@ -37,6 +37,8 @@ set_elastic_ilm() {
 }
 ')
     done
+    
+    echo "ILM properly set"
 }
 
 create_db() {
