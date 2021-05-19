@@ -144,7 +144,7 @@ services:
           - evebox
      
   nginx:
-    container_name: some-nginx
+    container_name: SELKS-nginx
     image: nginx
     command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
     restart: unless-stopped
