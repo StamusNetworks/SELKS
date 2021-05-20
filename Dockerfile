@@ -30,7 +30,8 @@ RUN \
         libldap2-dev \
         libssl-dev \
         python-pip \
-        python-dev
+        python-dev \
+        suricata
         
 RUN \
     echo "**** add NodeSource repository ****" && \
