@@ -85,7 +85,7 @@ start() {
 if [ ! -e "/data/scirius.sqlite3" ]; then
     /opt/scirius/bin/reset_dashboards.sh &
     create_db &
-    set_elastic_ilm
+    /opt/scirius/bin/create_ILM_policy.sh
 else
     migrate_db
 fi
