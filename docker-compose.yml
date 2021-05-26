@@ -25,10 +25,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    # volumes:
-    #   #- ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
-    #   # - ./containers-data/elasticsearch/log:/var/log/elasticsearch
-    #   - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
         aliases:
@@ -89,10 +85,7 @@ services:
       args:
         VERSION: ${SCIRIUS_VERSION:-master}
     image: scirius:${SCIRIUS_VERSION:-master}-${DATE}
-    restart: unless-stopped  
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:8000 || exit 1"]
       interval: 10s
@@ -121,7 +114,6 @@ services:
       - ./containers-data/scirius/static/:/static/
       - ./containers-data/suricata/rules/:/rules
       - ./containers-data/suricata/run:/var/run/suricata
-      #- ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
         aliases:
