@@ -7,6 +7,7 @@ migrate_db() {
     python manage.py collectstatic  --noinput
 }
 
+
 create_db() {
     python manage.py makemigrations --noinput
     python manage.py migrate --noinput
@@ -50,8 +51,9 @@ start() {
 }
 
 if [ ! -e "/data/scirius.sqlite3" ]; then
-    /opt/scirius/bin/reset_dashboards.sh &
     create_db
+    /opt/scirius/bin/reset_dashboards.sh
+    /opt/scirius/bin/create_ILM_policy.sh
 else
     migrate_db
 fi
