@@ -22,7 +22,7 @@ set_elastic_ilm() {
         "actions": {
           "rollover": {
             "max_size": "50GB",     
-            "max_age": "14d"
+            "max_age": "1d"
           }
         }
       },
