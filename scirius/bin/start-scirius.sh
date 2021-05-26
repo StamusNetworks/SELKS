@@ -7,39 +7,6 @@ migrate_db() {
     python manage.py collectstatic  --noinput
 }
 
-set_elastic_ilm() {
-    
-    
-    until [[ $response == *"\"acknowledged\" : true"* ]]; do
-      sleep 5
-      ELASTICSEARCH_ADDRESS=$(python manage.py diffsettings --all |grep 'ELASTICSEARCH_ADDRESS' | cut -d"'" -f 2)
-      echo "found elastic address : $ELASTICSEARCH_ADDRESS"
-      response=$(curl -X PUT "$ELASTICSEARCH_ADDRESS/_ilm/policy/logstash-autodelete?pretty" -H 'Content-Type: application/json' -d'
-{
-  "policy": {
-    "phases": {
-      "hot": {                      
-        "actions": {
-          "rollover": {
-            "max_size": "50GB",     
-            "max_age": "1d"
-          }
-        }
-      },
-      "delete": {
-        "min_age": "14d",           
-        "actions": {
-          "delete": {}              
-        }
-      }
-    }
-  }
-}
-')
-    done
-    
-    echo "ILM properly set"
-}
 
 create_db() {
     python manage.py migrate --noinput
@@ -83,8 +50,8 @@ start() {
 }
 
 if [ ! -e "/data/scirius.sqlite3" ]; then
-    /opt/scirius/bin/reset_dashboards.sh &
-    create_db &
+    create_db
+    /opt/scirius/bin/reset_dashboards.sh
     /opt/scirius/bin/create_ILM_policy.sh
 else
     migrate_db
