@@ -25,10 +25,10 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      #- ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
-      # - ./containers-data/elasticsearch/log:/var/log/elasticsearch
-      - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
+    # volumes:
+    #   #- ./containers-data/elasticsearch/lib:/var/lib/elasticsearch
+    #   # - ./containers-data/elasticsearch/log:/var/log/elasticsearch
+    #   - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
         aliases:
@@ -38,18 +38,12 @@ services:
     container_name: SELKS-kibana
     image: kibana:7.12.0
     restart: unless-stopped
-    # depends_on:
-    #   elasticsearch:
-    #     condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5601 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 30s
-    # volumes:
-      # - ./containers-data/kibana/lib:/var/lib/kibana
-      # - ./containers-data/kibana/log:/var/log/kibana
     networks:
       selks:
         aliases:
@@ -66,9 +60,6 @@ services:
         condition: service_healthy #because we need to wait for scirius to populate ILM policy
     volumes:
       - ./containers-data/suricata/log:/var/log/suricata:ro
-      # - ./containers-data/logstash/lib:/var/lib/logstash
-      # - ./containers-data/logstash/log:/var/log/logstash
-      #- ./containers-data/logstash/sincedbs/:/usr/share/logstash/sincedbs/
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
@@ -130,7 +121,7 @@ services:
       - ./containers-data/scirius/static/:/static/
       - ./containers-data/suricata/rules/:/rules
       - ./containers-data/suricata/run:/var/run/suricata
-      - ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
+      #- ./containers-data/kibana/dashboards:/opt/selks/kibana7-dashboards/
     networks:
       selks:
         aliases:
