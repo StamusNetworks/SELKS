@@ -113,8 +113,11 @@ services:
       
     volumes:
       - ./containers-data/scirius/static/:/static/
+      - ./containers-data/scirius/data/:/data/
+      - ./containers-data/scirius/logs/:/logs/
       - ./containers-data/suricata/rules/:/rules
       - ./containers-data/suricata/run:/var/run/suricata
+      
     networks:
       selks:
         aliases:
