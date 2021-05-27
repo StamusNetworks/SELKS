@@ -68,7 +68,7 @@ services:
     image: jasonish/suricata:6.0.2
     restart: unless-stopped
     environment:
-      - SURICATA_OPTIONS=${INTERFACES} -vvv
+      - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -108,6 +108,7 @@ services:
       - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket
       - USE_EVEBOX=True
       - EVEBOX_ADDRESS=evebox:5636 #Default
+      - USE_SURICATA_STATS=True
       
       
     volumes:
