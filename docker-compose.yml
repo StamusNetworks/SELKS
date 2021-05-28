@@ -4,10 +4,11 @@ networks:
   selks:
 
 volumes:
-  elastic-data:
-  suricata-rules:
-  scirius-data:
-  scirius-static:
+  elastic-data:  #for ES data persistency
+  suricata-rules: #for suricata rules transfer between scirius and suricata and for persistency
+  scirius-data: #for scirius data persistency
+  scirius-static: #statics files to be served by nginx
+  suricata-run: #path where the suricata socket resides
 
 services:
   
@@ -49,8 +50,6 @@ services:
       selks:
         aliases:
           - kibana
-    # ports:
-    #   - 5601:5601
     
   logstash:
     container_name: SELKS-logstash
@@ -87,7 +86,7 @@ services:
     volumes:
        - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
        - suricata-rules:/etc/suricata/rules
-       - ./containers-data/suricata/run/:/var/run/suricata/
+       - suricata-run:/var/run/suricata/
     
   scirius:
     container_name: SELKS-scirius
@@ -103,8 +102,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 180s
-    # ports:
-    #   - 8000:8000
     environment:
       - SECRET_KEY=p8o5%vq))8h2li08c%k3id(wwo*u(^dbdmx2tv#t(tb2pr9@n-
       - DEBUG=${SCIRIUS_DEBUG:-False}
@@ -113,40 +110,29 @@ services:
       - ELASTICSEARCH_ADDRESS=elasticsearch:9200 #Default
       - USE_KIBANA=True
       - KIBANA_URL=http://kibana:5601 #Default
-      - KIBANA_PROXY=True
-      - ALLOWED_HOSTS=*
-      - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards
-      - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket
-      - USE_EVEBOX=True
+      - KIBANA_PROXY=True #Get kibana proxied by Scirius
+      - ALLOWED_HOSTS=* #allow connexions from anywhere
+      - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards #where to find kibana dashboards
+      - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket #socket to control suricata
+      - USE_EVEBOX=True #gives access to evebox in the top menu
       - EVEBOX_ADDRESS=evebox:5636 #Default
-      - USE_SURICATA_STATS=True
-      
+      - USE_SURICATA_STATS=True #display more informations on the suricata page
       
     volumes:
       - scirius-static:/static/
       - scirius-data:/data/
       - ./containers-data/scirius/logs/:/logs/
       - suricata-rules:/rules
-      - ./containers-data/suricata/run:/var/run/suricata
+      - suricata-run:/var/run/suricata
       
     networks:
       selks:
-        aliases:
-          - scirius
           
   evebox:
     container_name: SELKS-evebox
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
     restart: unless-stopped
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl --silent --fail localhost:5636 || exit 1"]
-    #   interval: 30s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 30s
-    # ports:
-    #   - 5636:5636
     networks:
       selks:
         aliases:
