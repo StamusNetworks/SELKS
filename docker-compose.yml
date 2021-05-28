@@ -33,8 +33,6 @@ services:
         hard: -1
     networks:
       selks:
-        aliases:
-          - elasticsearch
       
   kibana:
     container_name: SELKS-kibana
@@ -48,8 +46,6 @@ services:
       start_period: 30s
     networks:
       selks:
-        aliases:
-          - kibana
     
   logstash:
     container_name: SELKS-logstash
@@ -70,8 +66,6 @@ services:
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
       selks:
-        aliases:
-          - logstash
           
   suricata:
     container_name: SELKS-suricata
@@ -135,9 +129,7 @@ services:
     restart: unless-stopped
     networks:
       selks:
-        aliases:
-          - evebox
-     
+        
   nginx:
     container_name: SELKS-nginx
     image: nginx
@@ -153,5 +145,3 @@ services:
       - 443:443
     networks:
       selks:
-        aliases:
-          - nginx
