@@ -4,7 +4,7 @@ networks:
   selks:
 
 volumes:
-  kibana-dashboards:
+  elastic-data:
 
 services:
   
@@ -22,7 +22,7 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - ./containers-data/elasticsearch/data:/usr/share/elasticsearch/data
+      - elastic-data:/usr/share/elasticsearch/data
     ulimits:
       memlock:
         soft: -1
