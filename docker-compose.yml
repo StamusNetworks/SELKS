@@ -5,6 +5,9 @@ networks:
 
 volumes:
   elastic-data:
+  suricata-rules:
+  scirius-data:
+  scirius-static:
 
 services:
   
@@ -83,7 +86,7 @@ services:
     network_mode: host
     volumes:
        - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
-       - ./containers-data/suricata/rules/:/etc/suricata/rules
+       - suricata-rules:/etc/suricata/rules
        - ./containers-data/suricata/run/:/var/run/suricata/
     
   scirius:
@@ -120,10 +123,10 @@ services:
       
       
     volumes:
-      - ./containers-data/scirius/static/:/static/
-      - ./containers-data/scirius/data/:/data/
+      - scirius-static:/static/
+      - scirius-data:/data/
       - ./containers-data/scirius/logs/:/logs/
-      - ./containers-data/suricata/rules/:/rules
+      - suricata-rules:/rules
       - ./containers-data/suricata/run:/var/run/suricata
       
     networks:
@@ -155,7 +158,7 @@ services:
     command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
     restart: unless-stopped
     volumes:
-      - ./containers-data/scirius/static/:/static/:ro
+      - scirius-static:/static/:ro
       - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
       - ./containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./containers-data/nginx/ssl:/etc/nginx/ssl:ro
