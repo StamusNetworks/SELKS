@@ -98,8 +98,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 180s
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     environment:
       - SECRET_KEY=p8o5%vq))8h2li08c%k3id(wwo*u(^dbdmx2tv#t(tb2pr9@n-
       - DEBUG=${SCIRIUS_DEBUG:-False}
@@ -140,8 +140,8 @@ services:
     #   timeout: 5s
     #   retries: 3
     #   start_period: 30s
-    ports:
-      - 5636:5636
+    # ports:
+    #   - 5636:5636
     networks:
       selks:
         aliases:
