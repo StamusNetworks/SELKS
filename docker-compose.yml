@@ -134,12 +134,12 @@ services:
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:5636 || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl --silent --fail localhost:5636 || exit 1"]
+    #   interval: 30s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 30s
     ports:
       - 5636:5636
     networks:
