@@ -122,3 +122,5 @@ fi
 now=$(date +%Y%m%d%H%M%S)
 
 echo "DATE=$now" >>.env
+
+echo "COMPOSE_PROJECT_NAME=SELKS" >>.env
