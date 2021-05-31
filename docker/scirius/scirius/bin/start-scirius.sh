@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Adapted by Raphaël Brogat <rbrogat@stamus-networks.com> from Sgabe work
+# Copyright(C) 2021, Stamus Networks and Gabor Seljan
+# Written by Raphaël Brogat <rbrogat@stamus-networks.com> based on Gabor Seljan work
 # Designed for Debian
 #
 # This script comes with ABSOLUTELY NO WARRANTY!

@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Copyright(C) 2019, Stamus Networks
-# All rights reserved
-# Part of Debian SELKS scripts
-# "Written" by Raphaël Brogat <rbrogat@stamus-networks.com>
-# ( mostly copy/pasted from the work of Peter Manev <pmanev@stamus-networks.com> )
+# Copyright(C) 2021, Stamus Networks
+# Written by Raphaël Brogat <rbrogat@stamus-networks.com> based on the work of Peter Manev <pmanev@stamus-networks.com>
 #
 # Please run on Debian
 #
@@ -22,11 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# if (( $EUID != 0 )); then
-#      echo -e "Please run this script as root or with \"sudo\".\n"
-#      exit 1
-# fi
 
 #############
 # INTERFACE #
