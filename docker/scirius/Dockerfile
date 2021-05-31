@@ -7,7 +7,7 @@ ARG VCS_REF
 ENV VERSION ${VERSION:-master}
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vcs-url="https://github.com/yodapotatofly/docker-scirius.git" \
+      org.label-schema.vcs-url="https://github.com/StamusNetworks/SELKS.git" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.schema-version="1.0.0-rc1"
 
@@ -44,7 +44,7 @@ RUN \
 
 RUN \
     echo "**** download Scirius ****" && \
-    wget -O /tmp/scirius-${VERSION}.tar.gz https://codeload.github.com/yodapotatofly/scirius/tar.gz/${VERSION} && \
+    wget -O /tmp/scirius-${VERSION}.tar.gz https://codeload.github.com/StamusNetworks/scirius/tar.gz/${VERSION} && \
     tar zxf /tmp/scirius-${VERSION}.tar.gz -C /tmp && \
     mv /tmp/scirius-${VERSION} /opt/scirius
     
