@@ -59,7 +59,7 @@ start() {
     rm -f /var/run/suri_reloader.pid
     python /opt/scirius/suricata/scripts/suri_reloader &
     echo "Starting scirius server..."
-    if [[ -n "$DEBUG" ]] ; then
+    if [ "$DEBUG" == "True" ]; then
         echo DEBUG
         python manage.py runserver 0.0.0.0:8000
     else
