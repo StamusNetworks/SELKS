@@ -111,8 +111,4 @@ if ! [ -z "${suricata_logs_path}" ]; then
 echo "SURICATA_LOGS_PATH=${suricata_logs_path}" >> .env
 fi
 
-now=$(date +%Y%m%d%H%M%S)
-
-echo "DATE=$now" >>.env
-
 echo "COMPOSE_PROJECT_NAME=SELKS" >>.env
