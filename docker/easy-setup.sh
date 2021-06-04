@@ -21,14 +21,14 @@
 
 
 
-function V() # $1-a $2-op $3-$b
-# Compare a and b as version strings. Rules:
-# R1: a and b : dot-separated sequence of items. Items are numeric. The last item can optionally end with letters, i.e., 2.5 or 2.5a.
-# R2: Zeros are automatically inserted to compare the same number of items, i.e., 1.0 < 1.0.1 means 1.0.0 < 1.0.1 => yes.
-# R3: op can be '=' '==' '!=' '<' '<=' '>' '>=' (lexicographic).
-# R4: Unrestricted number of digits of any item, i.e., 3.0003 > 3.0000004.
-# R5: Unrestricted number of items.
-{
+function Version(){
+  # $1-a $2-op $3-$b
+  # Compare a and b as version strings. Rules:
+  # R1: a and b : dot-separated sequence of items. Items are numeric. The last item can optionally end with letters, i.e., 2.5 or 2.5a.
+  # R2: Zeros are automatically inserted to compare the same number of items, i.e., 1.0 < 1.0.1 means 1.0.0 < 1.0.1 => yes.
+  # R3: op can be '=' '==' '!=' '<' '<=' '>' '>=' (lexicographic).
+  # R4: Unrestricted number of digits of any item, i.e., 3.0003 > 3.0000004.
+  # R5: Unrestricted number of items.
   local a=$1 op=$2 b=$3 al=${1##*.} bl=${3##*.}
   while [[ $al =~ ^[[:digit:]] ]]; do al=${al:1}; done
   while [[ $bl =~ ^[[:digit:]] ]]; do bl=${bl:1}; done
@@ -49,59 +49,145 @@ function V() # $1-a $2-op $3-$b
   esac
 }
 
+function test_docker_root(){
+  hello=$(sudo docker run --rm hello-world) || \
+  echo "${red}-${reset} Docker test failed"
+  
+  if [[ $hello == *"Hello from Docker"* ]]; then
+    echo -e "${green}+${reset} Docker seems to be installed properly"
+  else
+    echo -e "${red}-${reset} Error running docker."
+    exit
+  fi
+}
+function test_docker_user(){
+  hello=$(docker run --rm hello-world) || \
+  echo "${red}-${reset} Docker test failed"
+  
+  if [[ $hello == *"Hello from Docker"* ]]; then
+    echo -e "${green}+${reset} Docker seems to be installed properly"
+  else
+    echo -e "${red}-${reset} Error running docker."
+    exit
+  fi
+}
+function install_docker(){
+  curl -fsSL https://get.docker.com -o get-docker.sh && \
+  sh get-docker.sh && \
+  echo "${green}+${reset} Docker installation succeeded" || \
+  echo "${red}-${reset} Docker installation failed"
+}
+function adduser_to_docker(){
+  sudo groupadd docker
+  sudo usermod -aG docker $USER && \
+  echo -e "${green}+${reset} Added user to docker group successfully \n  Please logout and login again for the group permissions to be applied, and re-run the script" || \
+  echo "${red}-${reset} Error while adding user to docker group"
+}
+function install_docker_compose(){
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  sudo chmod +x /usr/local/bin/docker-compose && \
+  echo "${green}+${reset} docker-compose installation succeeded" || \
+  echo "${red}-${reset} docker-compose installation failed"
+}
+function install_portainer(){
+  docker volume create portainer_data && \
+  docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
+  echo -e "${red}-${reset} Portainer installation failed\n"
+}
+
 red=`tput setaf 1``tput bold`
 green=`tput setaf 2``tput bold`
 reset=`tput sgr0`
-
-
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-echo -e "  This version of SELKS relies on docker containers. We will now check if docker is already installed\n"
 
+echo -e "DISCLAIMER : This conveniance script comes with absolutely no warranty. It provides a quick and easy way to install SELKS on your system\n
+Altough this script should run properly on major linux distribution, it has only been tested on Debian 10 (buster)\n\n
+Press any key to continue or ^c to exit"
+read
+
+#############################
+#          CURL           #
+#############################
+curl=$(curl -V)
+if [[ -z "$curl" ]]; then
+  echo -e "\n\n  Please install curl and re-run the script\n"
+  exit
+fi
+
+echo -e "  This version of SELKS relies on docker containers. We will now check if docker is already installed"
+
+echo -e "\n"
+echo "##################"
+echo "#  INSTALLATION  #"
+echo "##################"
+echo -e "\n"
+
+#############################
+#          DOCKER           #
+#############################
 dockerV=$(docker -v)
-
-
 if [[ $dockerV == *"Docker version"* ]]; then
   echo -e "${green}+${reset} Docker installation found: $dockerV"
+  test_docker_root
 else
-  echo -e "${red}-${reset} No docker installation found, see https://docs.docker.com/engine/install to learn how to install docker on your system"
-  exit
+  echo -e "${red}-${reset} No docker installation found\n\n  We can try to install docker for you"
+  read -p "  Do you want to install docker automatically? [y/N] " yn
+  case $yn in
+      [Yy]* ) install_docker; test_docker_root;;
+      * ) echo -e "  See https://docs.docker.com/engine/install to learn how to install docker on your system"; exit;;
+  esac
 fi
 
 dockerV=$(docker version --format '{{.Server.Version}}')
 
-if [[ -z $dockerV ]]; then
-  echo -e "${red}-${reset} Docker engine is not available to the current user. Either add current user to 'docker' group (recommended) or run this script as privileged user.\n\
-  See https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user"
-  exit
-else
+if [[ ! -z "$dockerV" ]]; then
   echo -e "${green}+${reset} Docker is available to the current user"
+  test_docker_user
+else
+  echo -e "${red}-${reset} Docker engine is not available to the current user. Either allow current user to execute docker commands or run this script as privileged user.\n"
+  read -p "  Do you want to allow '${USER}' to run docker commands? [y/N] " yn
+  case $yn in
+      [Yy]* ) adduser_to_docker; exit;;
+      * ) echo -e "  See https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user to learn how to allow current standard user to run docker commands."; exit;;
+  esac
 fi
 
+dockerV=$(docker version --format '{{.Server.Version}}')
 
-if V $dockerV '<' 17.06.0; then
+if Version $dockerV '<' 17.06.0; then
   echo -e "${red}-${reset} Docker version is too old, please upgrade it"
   exit
 fi
 
+#############################
+#      DOCKER-COMPOSE       #
+#############################
 dockerV=$(docker-compose version)
 
 if [[ $dockerV == *"docker-compose version"* ]]; then
   echo -e "${green}+${reset} docker-compose installation found"
 else
   echo -e "${red}-${reset} No docker-compose installation found, see https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"
-  exit
+  read -p "  Do you want to install docker-compose automatically? [y/N] " yn
+  case $yn in
+      [Yy]* ) install_docker_compose;;
+      * ) echo -e "  See https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"; exit;;
+  esac
 fi
 
-
+#############################
+#         PORTAINER         #
+#############################
 if $(docker ps | grep -q 'portainer'); then
   echo -e "  Found existing portainer installation, skipping...\n"
 else
   echo -e "\n  Portainer is a web interface for managing docker containers. It is recommended if you are not experienced with docker."
   while true; do
-      read -p "  Do you want to install Portainer ? [Y/N] " yn
+      read -p "  Do you want to install Portainer ? [y/n] " yn
       case $yn in
-          [Yy]* ) docker volume create portainer_data && docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000\n" || echo -e "${red}-${reset} Portainer installation failed\n";;
+          [Yy]* ) install_portainer; break;;
           [Nn]* ) break;;
           * ) echo -e "  Please answer Y or N";;
       esac
@@ -136,17 +222,15 @@ function check_key_cert(){
 
   fi
 }
-
 function generate_certificate(){
   docker run --rm -it -v $1:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
   check_key_cert $1
   return $?
 }
-
 function copy_existing_certificate(){
-  ####################
-  # WORK IN PROGRESS #
-  ####################
+  ################################
+  # WORK IN PROGRESS, DO NOT USE #
+  ################################
   
   while true; do
     read -p "  Enter the path to your certificate: " fp
@@ -174,9 +258,6 @@ function copy_existing_certificate(){
 }
 
 
-
-
-
 if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ]; then
   echo "  An existing certificate has been found: ${SSLDIR}/scirius.crt"
   echo "  Skipping SSL generation..."
@@ -194,16 +275,18 @@ fi
 
 
 
-
-
-
+echo -e "\n"
+echo "##################"
+echo "#    SETTINGS    #"
+echo "##################"
+echo -e "\n"
 
 #############
 # INTERFACE #
 #############
 
 function getInterfaces {
-  echo -e "\n\n Network interfaces detected:"
+  echo -e " Network interfaces detected:"
   intfnum=0
   for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
   
@@ -271,7 +354,7 @@ done
 # SURICATA LOGS PATH #
 ######################
 
-echo -e "\n\nWith SELKS running, packets captures can take up a lot of disk space"
+echo -e "With SELKS running, packets captures can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Current partition free space :$(df --output=avail -h . | tail -n 1 )"
 echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
@@ -300,6 +383,14 @@ echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
 output=$(docker run --rm -it python:3.8.6-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
 echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
+
+
+
+echo -e "\n"
+echo "#######################"
+echo "# BUILDING CONTAINERS #"
+echo "#######################"
+echo -e "\n"
 ######################
 # BUILDING           #
 ######################
@@ -314,3 +405,4 @@ docker-compose build >> ${BASEDIR}/build.log
 # Starting           #
 ######################
 echo -e "\n\nTo start SELKS, run 'docker-compose up -d'"
+echo -e "If you have chose to install Portainer, visit http://localhost:9000 to set your portainer password, and select the docker option"
