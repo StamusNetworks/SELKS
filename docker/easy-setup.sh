@@ -264,7 +264,7 @@ if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ]; then
 else
   while true; do
     echo "  Stamus dashboards requires an SSL certificate for https access. You can use you own or we can generate one for you."
-      read -p "  Do you want us to generate a certificate for you ? [Y/N] " yn
+      read -p "  Do you want us to generate a certificate for you ? (recommended) [Y/N] " yn
       case $yn in
           [Yy]* ) generate_certificate ${SSLDIR} ; break;;
           [Nn]* ) echo -e "\n  Please copy your ssl certificate and private key in ${SSLDIR} as 'scirius.crt' and 'scririus.key' and come back"; exit;; # copy_existing_certificate ${SSLDIR}; break;;
