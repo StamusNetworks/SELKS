@@ -86,7 +86,7 @@ services:
           
   suricata:
     container_name: SELKS-suricata
-    image: jasonish/suricata:6.0.2
+    image: jasonish/suricata:master-amd64
     restart: unless-stopped
     environment:
       - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
