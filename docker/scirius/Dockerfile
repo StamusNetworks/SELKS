@@ -110,7 +110,9 @@ RUN \
 RUN \
     echo "**** build docs ****" && \
     cd /opt/scirius/doc && \
-    make html
+    make html && \
+    mkdir /static && \
+    cp -rT /opt/scirius/doc/_build/html /static/doc
     
 RUN \
     echo "**** cleanup ****" && \
