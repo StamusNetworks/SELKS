@@ -15,12 +15,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-FROM python:3.8.6-slim-buster
-
+#Download STEP
+FROM python:3.8.6-slim-buster as download
 ARG VERSION
-ARG BUILD_DATE
-ARG VCS_REF
+ENV VERSION ${VERSION:-master}
+
+RUN \
+    echo "**** install packages ****" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+        apt-utils \
+        wget
+
+RUN \
+    echo "**** download Scirius ****" && \
+    wget --no-check-certificate --content-disposition -O /tmp/scirius.tar.gz https://github.com/StamusNetworks/scirius/tarball/${VERSION} && \
+    mkdir /tmp/scirius && \
+    tar zxf /tmp/scirius.tar.gz -C /tmp/scirius --strip-components 1 && \
+    mv /tmp/scirius /opt/scirius
+RUN \
+  echo "**** download Kibana dashboards ****" && \
+  wget --no-check-certificate --content-disposition -O /tmp/kibana7-dashboards.tar.gz https://github.com/StamusNetworks/KTS7/tarball/master && \
+  mkdir /tmp/kibana7-dashboards && \
+  tar zxf /tmp/kibana7-dashboards.tar.gz -C /tmp/kibana7-dashboards --strip-components 1 && \
+  mv /tmp/kibana7-dashboards /opt/kibana7-dashboards
+    
+
+# BUILD JS stuff
+FROM python:3.8.6-slim-buster as static
+ARG VERSION
 
 ENV VERSION ${VERSION:-master}
 
@@ -36,20 +59,9 @@ RUN \
         apt-utils && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
         make \
-        curl \
         wget \
-        git \
         gcc \
-        libc-dev \
-        gunicorn \
-        python-sphinx \
-        gnupg2 \
-        libsasl2-dev \
-        libldap2-dev \
-        libssl-dev \
-        python-pip \
-        python-dev \
-        suricata
+        libc-dev
         
 RUN \
     echo "**** add NodeSource repository ****" && \
@@ -60,38 +72,9 @@ RUN \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
         nodejs
 
-RUN \
-    echo "**** download Scirius ****" && \
-    wget -O /tmp/scirius-${VERSION}.tar.gz https://codeload.github.com/StamusNetworks/scirius/tar.gz/${VERSION} && \
-    tar zxf /tmp/scirius-${VERSION}.tar.gz -C /tmp && \
-    mv /tmp/scirius-${VERSION} /opt/scirius
-    
+COPY --from=download /opt/scirius /opt/scirius
 WORKDIR /opt/scirius
-    
-RUN \
-    echo "**** download Kibana dashboards ****" && \
-    git clone https://github.com/StamusNetworks/KTS6.git /opt/kibana6-dashboards/ &&\
-    git clone https://github.com/StamusNetworks/KTS7.git /opt/kibana7-dashboards/
-    
 
-RUN \
-    echo "**** install Python dependencies for Scirius ****" && \
-    cd /opt/scirius && \
-    python -m pip install --upgrade \
-        pip \
-        wheel \
-        setuptools && \
-    python -m pip install --upgrade \
-        six \
-        python-daemon \
-        suricatactl && \
-    python -m pip install \
-        django-bootstrap3==11.1.0 \
-        elasticsearch-curator==5.6 \
-        django-webpack-loader==0.7 \
-        pyinotify && \
-    python -m pip install -r requirements.txt  
-    
 RUN echo "**** install Node.js dependencies for Scirius ****" && \
     npm install && \
     npm install -g webpack@3.11 && \
@@ -99,30 +82,101 @@ RUN echo "**** install Node.js dependencies for Scirius ****" && \
     cd hunt && \
     npm install && \
     npm run build
-
-COPY scirius/ /tmp/scirius
+    
+    
+#BUILD doc 
+FROM python:3.8.6-slim-buster as docs
 
 RUN \
-    echo "**** install util scripts ****" && \
-    cp -Rf /tmp/scirius/* /opt/scirius && \
-    chmod ugo+x /opt/scirius/bin/*
+    echo "**** install packages ****" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+        apt-utils && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+        make \
+        gcc \
+        libc-dev \
+        python-sphinx
+        
 
+COPY --from=download /opt/scirius /opt/scirius
 RUN \
     echo "**** build docs ****" && \
     cd /opt/scirius/doc && \
-    make html && \
-    mkdir /static && \
-    cp -rT /opt/scirius/doc/_build/html /static/doc
-    
-RUN \
-    echo "**** cleanup ****" && \
-    apt-get purge -y --auto-remove gcc libc-dev make python-sphinx && \
-    apt-get clean && \
-    rm -rf \
-        /tmp/* \
-        /var/lib/apt/lists/* \
-        /var/tmp/*
+    make html
 
+
+#
+
+# PACKAGING STEP
+FROM python:3.8.6-slim-buster
+
+ARG VERSION
+ARG BUILD_DATE
+ARG VCS_REF
+
+ENV VERSION ${VERSION:-master}
+
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-url="https://github.com/StamusNetworks/SELKS.git" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.schema-version="1.0.0-rc1"
+
+RUN \
+  echo "**** install packages ****" && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+    apt-utils && \
+  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+    curl \
+    gunicorn \
+    git \
+    gnupg2 \
+    gcc \
+    libc-dev \
+    libsasl2-dev \
+    libldap2-dev \
+    libssl-dev \
+    python-pip \
+    python-dev \
+    suricata && \
+  rm -rf /var/lib/apt/lists/*
+    
+COPY --from=download /opt/scirius /opt/scirius
+WORKDIR /opt/scirius
+RUN \
+  echo "**** install Python dependencies for Scirius ****" && \
+  cd /opt/scirius && \
+  python -m pip install --upgrade \
+    pip \
+    wheel \
+    setuptools && \
+  python -m pip install --upgrade \
+    six \
+    python-daemon \
+    suricatactl && \
+  python -m pip install \
+    django-bootstrap3==11.1.0 \
+    elasticsearch-curator==5.6 \
+    django-webpack-loader==0.7 \
+    pyinotify && \
+  python -m pip install -r requirements.txt  
+
+
+
+COPY --from=static /opt/scirius/rules/static /opt/scirius/rules/static
+COPY --from=docs /opt/scirius/doc/_build/html /static/doc
+COPY --from=download /opt/kibana7-dashboards /opt/kibana7-dashboards
+
+COPY scirius/ /tmp/scirius
+RUN \
+    echo "**** install util scripts ****" && \
+    cp -Rf /tmp/scirius/* /opt/scirius && \
+    chmod ugo+x /opt/scirius/bin/* && \
+    rm -rf /tmp/*
+    
+    
+    
 HEALTHCHECK --start-period=3m \
   CMD curl --silent --fail http://127.0.0.1:8000 || exit 1
 
