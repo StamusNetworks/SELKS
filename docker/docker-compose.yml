@@ -87,6 +87,7 @@ services:
   suricata:
     container_name: SELKS-suricata
     image: jasonish/suricata:master-amd64
+    entrypoint: /etc/suricata/new_entrypoint.sh
     restart: unless-stopped
     environment:
       - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
@@ -98,6 +99,7 @@ services:
        - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
        - suricata-rules:/etc/suricata/rules
        - suricata-run:/var/run/suricata/
+       - ./containers-data/suricata/etc:/etc/suricata
     
   scirius:
     container_name: SELKS-scirius
@@ -107,12 +109,6 @@ services:
         VERSION: ${SCIRIUS_VERSION:-master}
     image: scirius:${SCIRIUS_VERSION:-master}
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:8000 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 180s
     environment:
       - SECRET_KEY=${SCIRIUS_SECRET_KEY}
       - DEBUG=${SCIRIUS_DEBUG:-False}
