@@ -89,6 +89,9 @@ services:
     image: jasonish/suricata:master-amd64
     entrypoint: /etc/suricata/new_entrypoint.sh
     restart: unless-stopped
+    depends_on:
+      scirius:
+        condition: service_healthy
     environment:
       - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
     cap_add:
