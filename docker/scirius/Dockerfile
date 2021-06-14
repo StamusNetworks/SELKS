@@ -145,8 +145,6 @@ RUN \
     python-daemon \
     suricatactl && \
   python -m pip install \
-    django-bootstrap3==11.1.0 \
-    elasticsearch-curator==5.6 \
     django-webpack-loader==0.7 \
     pyinotify && \
   python -m pip install -r requirements.txt  
