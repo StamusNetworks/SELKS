@@ -26,31 +26,23 @@ RUN \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
         apt-utils \
         wget
-
-RUN \
-    echo "**** download Scirius ****" && \
-    wget --no-check-certificate --content-disposition -O /tmp/scirius.tar.gz https://github.com/StamusNetworks/scirius/tarball/${VERSION} && \
-    mkdir /tmp/scirius && \
-    tar zxf /tmp/scirius.tar.gz -C /tmp/scirius --strip-components 1 && \
-    mv /tmp/scirius /opt/scirius
 RUN \
   echo "**** download Kibana dashboards ****" && \
   wget --no-check-certificate --content-disposition -O /tmp/kibana7-dashboards.tar.gz https://github.com/StamusNetworks/KTS7/tarball/master && \
   mkdir /tmp/kibana7-dashboards && \
   tar zxf /tmp/kibana7-dashboards.tar.gz -C /tmp/kibana7-dashboards --strip-components 1 && \
   mv /tmp/kibana7-dashboards /opt/kibana7-dashboards
+RUN \
+    echo "**** download Scirius ****" && \
+    wget --no-check-certificate --content-disposition -O /tmp/scirius.tar.gz https://github.com/StamusNetworks/scirius/tarball/${VERSION} && \
+    mkdir /tmp/scirius && \
+    tar zxf /tmp/scirius.tar.gz -C /tmp/scirius --strip-components 1 && \
+    mv /tmp/scirius /opt/scirius
+
     
 
 # BUILD JS stuff
 FROM python:3.8.6-slim-buster as static
-ARG VERSION
-
-ENV VERSION ${VERSION:-master}
-
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vcs-url="https://github.com/StamusNetworks/SELKS.git" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.schema-version="1.0.0-rc1"
 
 RUN \
     echo "**** install packages ****" && \
@@ -111,11 +103,8 @@ RUN \
 # PACKAGING STEP
 FROM python:3.8.6-slim-buster
 
-ARG VERSION
 ARG BUILD_DATE
 ARG VCS_REF
-
-ENV VERSION ${VERSION:-master}
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url="https://github.com/StamusNetworks/SELKS.git" \
@@ -143,7 +132,7 @@ RUN \
   rm -rf /var/lib/apt/lists/*
     
 COPY --from=download /opt/scirius /opt/scirius
-WORKDIR /opt/scirius
+
 RUN \
   echo "**** install Python dependencies for Scirius ****" && \
   cd /opt/scirius && \
@@ -156,13 +145,9 @@ RUN \
     python-daemon \
     suricatactl && \
   python -m pip install \
-    django-bootstrap3==11.1.0 \
-    elasticsearch-curator==5.6 \
     django-webpack-loader==0.7 \
     pyinotify && \
   python -m pip install -r requirements.txt  
-
-
 
 COPY --from=static /opt/scirius/rules/static /opt/scirius/rules/static
 COPY --from=docs /opt/scirius/doc/_build/html /static/doc
