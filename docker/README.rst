@@ -1,6 +1,6 @@
-=====
+===============
 SELKS on Docker
-=====
+===============
 
 BETA
 =====
@@ -22,7 +22,7 @@ Requirements
 - 10 GB of free disk space
 - Debian Buster (other distributions/versiosn are probably OK but are not officially supported)
 - docker > 17.06.0 (will be automatically installed if not found on the system)
-- docker-compose (will be automatically installed if not found on the system)
+- docker-compose > 1.27.0 (will be automatically installed if not found on the system)
 - git
 
 Install
