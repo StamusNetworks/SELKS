@@ -96,6 +96,24 @@ function install_portainer(){
   echo -e "${red}-${reset} Portainer installation failed\n"
 }
 
+
+############################################################
+# Process the input options. Add options as needed.        #
+############################################################
+# Get the options
+while getopts ":hv:" option; do
+   case $option in
+      h) # display Help
+         Help
+         exit;;
+      v) # Enter a name
+         SCIRIUS_VERSION=$OPTARG;;
+     \?) # Invalid option
+         echo "Error: Invalid option"
+         exit;;
+   esac
+done
+
 red=`tput setaf 1``tput bold`
 green=`tput setaf 2``tput bold`
 reset=`tput sgr0`
@@ -385,13 +403,21 @@ fi
 echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
 
 ######################
-# Generate KEY FOR DJANGO           #
+# Generate KEY FOR DJANGO #
 ######################
 
 output=$(docker run --rm -it python:3.8.6-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
 echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 
+
+
+######################
+# Setting Scirius branch to use #
+######################
+if [ ! -z "${SCIRIUS_VERSION}" ] ; then
+  echo "SCIRIUS_VERSION=$SCIRIUS_VERSION" >> ${BASEDIR}/.env
+fi
 
 
 echo -e "\n"
