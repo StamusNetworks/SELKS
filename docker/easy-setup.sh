@@ -96,6 +96,24 @@ function install_portainer(){
   echo -e "${red}-${reset} Portainer installation failed\n"
 }
 
+
+############################################################
+# Process the input options. Add options as needed.        #
+############################################################
+# Get the options
+while getopts ":hv:" option; do
+   case $option in
+      h) # display Help
+         Help
+         exit;;
+      v) # Enter a name
+         SCIRIUS_VERSION=$OPTARG;;
+     \?) # Invalid option
+         echo "Error: Invalid option"
+         exit;;
+   esac
+done
+
 red=`tput setaf 1``tput bold`
 green=`tput setaf 2``tput bold`
 reset=`tput sgr0`
@@ -235,50 +253,13 @@ function generate_certificate(){
   check_key_cert $1
   return $?
 }
-function copy_existing_certificate(){
-  ################################
-  # WORK IN PROGRESS, DO NOT USE #
-  ################################
-  
-  while true; do
-    read -p "  Enter the path to your certificate: " fp
-    echo "${fp}"
-    if [ -f "${fp}" ]; then
-      cp $fp $1/scirius.crt || echo -e "${red}-${reset} Error while copying certificate"
-      chmod 644 $1/scirius.crt || return 1
-    else
-      echo -e "File does not exist"
-      continue
-    fi
-    
-    read -p "  Enter the path to the private key associated with the certificate: " fp
-    if [ -f "${fp}" ]; then
-      cp $fp $1/scirius.key || echo -e "${red}-${reset} Error while copying private key"
-      chmod 600 $1/scirius.key || return 1
-    else
-      echo -e "File does not exist"
-      continue
-    fi
-  done
-
-  check_key_cert $1
-  return $?
-}
 
 
-if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ]; then
-  echo "  An existing certificate has been found: ${SSLDIR}/scirius.crt"
-  echo "  Skipping SSL generation..."
+if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ] && check_key_cert ${SSLDIR}; then
+  echo -e "  A valid SSL certificate has been found:\n\t${SSLDIR}/scirius.crt"
+  echo -e "  Skipping SSL generation..."
 else
-  while true; do
-    echo "  Stamus dashboards requires an SSL certificate for https access. You can use you own or we can generate one for you."
-      read -p "  Do you want us to generate a certificate for you ? (recommended) [Y/N] " yn
-      case $yn in
-          [Yy]* ) generate_certificate ${SSLDIR} ; break;;
-          [Nn]* ) echo -e "\n  Please copy your ssl certificate and private key in ${SSLDIR} as 'scirius.crt' and 'scririus.key' and come back"; exit;; # copy_existing_certificate ${SSLDIR}; break;;
-          * ) echo -e "  Please answer Y or N";;
-      esac
-  done
+  generate_certificate ${SSLDIR}
 fi
 
 
@@ -362,36 +343,44 @@ done
 # SURICATA LOGS PATH #
 ######################
 
-echo -e "With SELKS running, packets captures can take up a lot of disk space"
-echo -e "You might want to save them on an other disk/partition"
-echo -e "Current partition free space :$(df --output=avail -h . | tail -n 1 )"
-echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
-echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
-
-read suricata_logs_path
-
-if ! [ -z "${suricata_logs_path}" ]; then
-
-  if ! [ -w suricata_logs_path ]; then 
-    echo -e "\nYou don't seem to own write access to this directory\n"
-    echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
-    echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
-    read suricata_logs_path
-
-  fi
-echo "SURICATA_LOGS_PATH=${suricata_logs_path}" >> ${BASEDIR}/.env
-fi
-
-echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
+# echo -e "With SELKS running, packets captures can take up a lot of disk space"
+# echo -e "You might want to save them on an other disk/partition"
+# echo -e "Current partition free space :$(df --output=avail -h . | tail -n 1 )"
+# echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
+# echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
+# 
+# read suricata_logs_path
+# 
+# if ! [ -z "${suricata_logs_path}" ]; then
+# 
+#   if ! [ -w suricata_logs_path ]; then 
+#     echo -e "\nYou don't seem to own write access to this directory\n"
+#     echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
+#     echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
+#     read suricata_logs_path
+# 
+#   fi
+# echo "SURICATA_LOGS_PATH=${suricata_logs_path}" >> ${BASEDIR}/.env
+# fi
+# 
+# echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
 
 ######################
-# Generate KEY FOR DJANGO           #
+# Generate KEY FOR DJANGO #
 ######################
 
 output=$(docker run --rm -it python:3.8.6-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
 echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 
+
+
+######################
+# Setting Scirius branch to use #
+######################
+if [ ! -z "${SCIRIUS_VERSION}" ] ; then
+  echo "SCIRIUS_VERSION=$SCIRIUS_VERSION" >> ${BASEDIR}/.env
+fi
 
 
 echo -e "\n"
@@ -406,6 +395,8 @@ echo -e "\n"
 
 echo -e "Building containers, this can take a while...\n"
 
+now=$(date)
+echo -e "BUILD : $now\n\n=========================" >> ${BASEDIR}/build.log
 docker-compose build >> ${BASEDIR}/build.log
 
 
