@@ -406,6 +406,8 @@ echo -e "\n"
 
 echo -e "Building containers, this can take a while...\n"
 
+now=$(date)
+echo -e "BUILD : $now\n\n=========================" >> ${BASEDIR}/build.log
 docker-compose build >> ${BASEDIR}/build.log
 
 
