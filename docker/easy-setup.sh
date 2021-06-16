@@ -382,6 +382,13 @@ if [ ! -z "${SCIRIUS_VERSION}" ] ; then
   echo "SCIRIUS_VERSION=$SCIRIUS_VERSION" >> ${BASEDIR}/.env
 fi
 
+######################
+# Setting Stack name #
+######################
+echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
+
+
+
 
 echo -e "\n"
 echo "#######################"

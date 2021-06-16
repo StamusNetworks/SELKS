@@ -18,7 +18,7 @@
 version: '3.4'
 
 networks:
-  selks:
+  network:
 
 volumes:
   elastic-data:  #for ES data persistency
@@ -30,7 +30,7 @@ volumes:
 services:
   
   elasticsearch:
-    container_name: SELKS-elasticsearch
+    container_name: elasticsearch
     image: elasticsearch:7.12.0
     restart: unless-stopped
     healthcheck:
@@ -49,10 +49,10 @@ services:
         soft: -1
         hard: -1
     networks:
-      selks:
+      network:
       
   kibana:
-    container_name: SELKS-kibana
+    container_name: kibana
     image: kibana:7.12.0
     restart: unless-stopped
     healthcheck:
@@ -62,10 +62,10 @@ services:
       retries: 3
       start_period: 30s
     networks:
-      selks:
+      network:
     
   logstash:
-    container_name: SELKS-logstash
+    container_name: logstash
     image: logstash:7.12.0
     depends_on:
       scirius:
@@ -82,10 +82,10 @@ services:
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
-      selks:
+      network:
           
   suricata:
-    container_name: SELKS-suricata
+    container_name: suricata
     image: jasonish/suricata:master-amd64
     entrypoint: /etc/suricata/new_entrypoint.sh
     restart: unless-stopped
@@ -105,7 +105,7 @@ services:
        - ./containers-data/suricata/etc:/etc/suricata
     
   scirius:
-    container_name: SELKS-scirius
+    container_name: scirius
     build:
       context: ./scirius
       args:
@@ -136,18 +136,18 @@ services:
       - suricata-run:/var/run/suricata
       
     networks:
-      selks:
+      network:
           
   evebox:
-    container_name: SELKS-evebox
+    container_name: evebox
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
     restart: unless-stopped
     networks:
-      selks:
+      network:
         
   nginx:
-    container_name: SELKS-nginx
+    container_name: nginx
     image: nginx
     command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
     restart: unless-stopped
@@ -160,4 +160,4 @@ services:
       - 80:80
       - 443:443
     networks:
-      selks:
+      network:
