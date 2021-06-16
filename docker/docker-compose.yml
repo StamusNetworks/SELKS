@@ -18,7 +18,7 @@
 version: '3.4'
 
 networks:
-  selks:
+  network:
 
 volumes:
   elastic-data:  #for ES data persistency
@@ -49,7 +49,7 @@ services:
         soft: -1
         hard: -1
     networks:
-      selks:
+      network:
       
   kibana:
     container_name: kibana
@@ -62,7 +62,7 @@ services:
       retries: 3
       start_period: 30s
     networks:
-      selks:
+      network:
     
   logstash:
     container_name: logstash
@@ -82,7 +82,7 @@ services:
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
-      selks:
+      network:
           
   suricata:
     container_name: suricata
@@ -136,7 +136,7 @@ services:
       - suricata-run:/var/run/suricata
       
     networks:
-      selks:
+      network:
           
   evebox:
     container_name: evebox
@@ -144,7 +144,7 @@ services:
     command: ["-e", "http://elasticsearch:9200"]
     restart: unless-stopped
     networks:
-      selks:
+      network:
         
   nginx:
     container_name: nginx
@@ -160,4 +160,4 @@ services:
       - 80:80
       - 443:443
     networks:
-      selks:
+      network:
