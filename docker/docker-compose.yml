@@ -30,7 +30,7 @@ volumes:
 services:
   
   elasticsearch:
-    container_name: SELKS-elasticsearch
+    container_name: elasticsearch
     image: elasticsearch:7.12.0
     restart: unless-stopped
     healthcheck:
@@ -52,7 +52,7 @@ services:
       selks:
       
   kibana:
-    container_name: SELKS-kibana
+    container_name: kibana
     image: kibana:7.12.0
     restart: unless-stopped
     healthcheck:
@@ -65,7 +65,7 @@ services:
       selks:
     
   logstash:
-    container_name: SELKS-logstash
+    container_name: logstash
     image: logstash:7.12.0
     depends_on:
       scirius:
@@ -85,7 +85,7 @@ services:
       selks:
           
   suricata:
-    container_name: SELKS-suricata
+    container_name: suricata
     image: jasonish/suricata:master-amd64
     entrypoint: /etc/suricata/new_entrypoint.sh
     restart: unless-stopped
@@ -105,7 +105,7 @@ services:
        - ./containers-data/suricata/etc:/etc/suricata
     
   scirius:
-    container_name: SELKS-scirius
+    container_name: scirius
     build:
       context: ./scirius
       args:
@@ -139,7 +139,7 @@ services:
       selks:
           
   evebox:
-    container_name: SELKS-evebox
+    container_name: evebox
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
     restart: unless-stopped
@@ -147,7 +147,7 @@ services:
       selks:
         
   nginx:
-    container_name: SELKS-nginx
+    container_name: nginx
     image: nginx
     command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
     restart: unless-stopped
