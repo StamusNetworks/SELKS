@@ -49,52 +49,31 @@ function Version(){
   esac
 }
 
-function test_docker_root(){
-  hello=$(sudo docker run --rm hello-world) || \
-  echo "${red}-${reset} Docker test failed"
-  
-  if [[ $hello == *"Hello from Docker"* ]]; then
-    echo -e "${green}+${reset} Docker seems to be installed properly"
-  else
-    echo -e "${red}-${reset} Error running docker."
-    exit
-  fi
-}
-function test_docker_user(){
-  hello=$(docker run --rm hello-world) || \
-  echo "${red}-${reset} Docker test failed"
-  
-  if [[ $hello == *"Hello from Docker"* ]]; then
-    echo -e "${green}+${reset} Docker seems to be installed properly"
-  else
-    echo -e "${red}-${reset} Error running docker."
-    exit
-  fi
-}
-function install_docker(){
-  curl -fsSL https://get.docker.com -o get-docker.sh && \
-  sh get-docker.sh && \
-  echo "${green}+${reset} Docker installation succeeded" || \
-  echo "${red}-${reset} Docker installation failed"
-}
-function adduser_to_docker(){
-  sudo groupadd docker
-  sudo usermod -aG docker $USER && \
-  echo -e "${green}+${reset} Added user to docker group successfully \n  Please logout and login again for the group permissions to be applied, and re-run the script" || \
-  echo "${red}-${reset} Error while adding user to docker group"
-}
-function install_docker_compose(){
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-  sudo chmod +x /usr/local/bin/docker-compose && \
-  echo "${green}+${reset} docker-compose installation succeeded" || \
-  echo "${red}-${reset} docker-compose installation failed"
-}
-function install_portainer(){
-  docker volume create portainer_data && \
-  docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
-  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
-  echo -e "${red}-${reset} Portainer installation failed\n"
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ############################################################
@@ -145,15 +124,51 @@ echo -e "\n"
 #############################
 #          DOCKER           #
 #############################
+function test_docker_user(){
+  hello=$(docker run --rm hello-world) || \
+  echo "${red}-${reset} Docker test failed"
+  
+  if [[ $hello == *"Hello from Docker"* ]]; then
+    echo -e "${green}+${reset} Docker seems to be installed properly"
+  else
+    echo -e "${red}-${reset} Error running docker."
+    exit
+  fi
+}
+function install_docker(){
+  curl -fsSL https://get.docker.com -o get-docker.sh && \
+  sh get-docker.sh && \
+  echo "${green}+${reset} Docker installation succeeded" || \
+  echo "${red}-${reset} Docker installation failed"
+}
+function adduser_to_docker(){
+  sudo groupadd docker
+  sudo usermod -aG docker $USER && \
+  echo -e "${green}+${reset} Added user to docker group successfully \n  Please logout and login again for the group permissions to be applied, and re-run the script" || \
+  echo "${red}-${reset} Error while adding user to docker group"
+}
+function install_docker_compose(){
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  sudo chmod +x /usr/local/bin/docker-compose && \
+  echo "${green}+${reset} docker-compose installation succeeded" || \
+  echo "${red}-${reset} docker-compose installation failed"
+}
+function install_portainer(){
+  docker volume create portainer_data && \
+  docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
+  echo -e "${red}-${reset} Portainer installation failed\n"
+}
+
+
 dockerV=$(docker -v)
 if [[ $dockerV == *"Docker version"* ]]; then
   echo -e "${green}+${reset} Docker installation found: $dockerV"
-  test_docker_root
 else
   echo -e "${red}-${reset} No docker installation found\n\n  We can try to install docker for you"
   read -p "  Do you want to install docker automatically? [y/N] " yn
   case $yn in
-      [Yy]* ) install_docker; test_docker_root;;
+      [Yy]* ) install_docker;;
       * ) echo -e "  See https://docs.docker.com/engine/install to learn how to install docker on your system"; exit;;
   esac
 fi
