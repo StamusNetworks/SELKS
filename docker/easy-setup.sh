@@ -179,7 +179,7 @@ if [[ ! -z "$dockerV" ]]; then
   echo -e "${green}+${reset} Docker is available to the current user"
   test_docker_user
 else
-  echo -e "${red}-${reset} Docker engine is not available to the current user. Either allow current user to execute docker commands or run this script as privileged user.\n"
+  echo -e "${red}-${reset} Docker engine is not available to the current user.\n  Either allow current user to execute docker commands or run this script as privileged user.\n"
   read -p "  Do you want to allow '${USER}' to run docker commands? [y/N] " yn
   case $yn in
       [Yy]* ) adduser_to_docker; exit;;
@@ -415,11 +415,11 @@ echo -e "\n"
 ######################
 
 
-echo -e "Building containers, this can take a while...\n"
+echo -e "Building containers, this can take a while... (arround 10 minutes)\n"
 
 now=$(date)
 echo -e "BUILD : $now\n\n=========================" >> ${BASEDIR}/build.log
-docker-compose build >> ${BASEDIR}/build.log
+time docker-compose build >> ${BASEDIR}/build.log
 
 
 ######################
