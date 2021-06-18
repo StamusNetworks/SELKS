@@ -20,10 +20,10 @@ Requirements
 - 2 cores
 - 8 GB of free RAM
 - 10 GB of free disk space
-- Debian Buster (other distributions/versiosn are probably OK but are not officially supported)
+- Debian Buster (other distributions/versions are probably OK but are not officially supported)
 - docker > 17.06.0 (will be automatically installed if not found on the system)
 - docker-compose > 1.27.0 (will be automatically installed if not found on the system)
-- git
+- git, curl and time installed
 
 Install
 =======
@@ -34,7 +34,6 @@ Install
   ./easy-install.sh
   docker-compose up -d
   
-
 Advanced Install
 ================
 Using your own SSL certificate
@@ -42,3 +41,28 @@ Using your own SSL certificate
 Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key``
 
 
+Useful commands
+================
+Most docker-compose commands will have the following form ``docker-compose COMMAND [container-name]``
+Those commands must be run from the SELKS/docker directory
+If  no container-name is provided, it will be applied to all SELKS containers
+
+Stopping containers
+-------------------
+``docker-compose stop [container-name]``
+
+Starting containers
+-------------------
+``docker-compose start [container-name]``
+
+Restarting containers
+-------------------
+``docker-compose restart [container-name]``
+
+Removing containers along with their data
+-------------------
+``docker-compose down -v``
+
+Recreating containers
+-------------------
+``docker-compose up [container-name] --force-recreate``
