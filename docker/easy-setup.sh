@@ -69,12 +69,19 @@ function Version(){
 
 
 
+curl=$(curl -V)
+if [[ -z "$curl" ]]; then
+  echo -e "\n\n  Please install curl and re-run the script\n"
+  exit
+fi
 
-
-
-
-
-
+time=$(time echo "" && echo "time is installed")
+if [[ -z "$time" ]]; then
+  echo -e "\n\n  Please install time and re-run the script\n"
+  exit
+else
+  clear
+fi
 
 ############################################################
 # Process the input options. Add options as needed.        #
@@ -103,15 +110,6 @@ echo -e "DISCLAIMER : This conveniance script comes with absolutely no warranty.
 Altough this script should run properly on major linux distribution, it has only been tested on Debian 10 (buster)\n\n
 Press any key to continue or ^c to exit"
 read
-
-#############################
-#          CURL           #
-#############################
-curl=$(curl -V)
-if [[ -z "$curl" ]]; then
-  echo -e "\n\n  Please install curl and re-run the script\n"
-  exit
-fi
 
 echo -e "  This version of SELKS relies on docker containers. We will now check if docker is already installed"
 
@@ -354,31 +352,35 @@ while true; do
     esac
 done
 
+echo ""
+
 ######################
-# SURICATA LOGS PATH #
+# ELASTIC DATA PATH #
 ######################
 
-# echo -e "With SELKS running, packets captures can take up a lot of disk space"
-# echo -e "You might want to save them on an other disk/partition"
-# echo -e "Current partition free space :$(df --output=avail -h . | tail -n 1 )"
-# echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
-# echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
-# 
-# read suricata_logs_path
-# 
-# if ! [ -z "${suricata_logs_path}" ]; then
-# 
-#   if ! [ -w suricata_logs_path ]; then 
-#     echo -e "\nYou don't seem to own write access to this directory\n"
-#     echo -e "Please give the path where you want the captures to be saved, or hit enter to use the default value."
-#     echo -e "Default : [${BASEDIR}/containers-data/suricata/log]"
-#     read suricata_logs_path
-# 
-#   fi
-# echo "SURICATA_LOGS_PATH=${suricata_logs_path}" >> ${BASEDIR}/.env
-# fi
-# 
-# echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
+docker_root_dir=$(docker system info |grep "Docker Root Dir")
+docker_root_dir=${docker_root_dir/'Docker Root Dir: '/''}
+
+echo ""
+echo -e "With SELKS running, database can take up a lot of disk space"
+echo -e "You might want to save them on an other disk/partition"
+echo -e "Docker partition free space : ${docker_root_dir} - $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
+echo -e "Please give the path where you want the data to be saved, or hit enter to use a docker volume in the docker path :"
+
+read elastic_data_path
+
+if ! [ -z "${elastic_data_path}" ]; then
+
+  if ! [ -w elastic_data_path ]; then 
+    echo -e "\nYou don't seem to own write access to this directory\n"
+    echo -e "Please give the path where you want the data to be saved, or hit enter to use a docker volume in the docker path :"
+    read elastic_data_path
+
+  fi
+echo "ELASTIC_DATAPATH=${elastic_data_path}" >> ${BASEDIR}/.env
+fi
+
+echo "COMPOSE_PROJECT_NAME=SELKS" >> ${BASEDIR}/.env
 
 ######################
 # Generate KEY FOR DJANGO #

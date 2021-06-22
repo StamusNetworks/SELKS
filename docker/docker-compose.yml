@@ -43,7 +43,7 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - elastic-data:/usr/share/elasticsearch/data
+      - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
     ulimits:
       memlock:
         soft: -1
