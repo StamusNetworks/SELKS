@@ -31,20 +31,34 @@ Install
 
   git clone https://github.com/StamusNetworks/SELKS.git
   cd SELKS/docker/
-  ./easy-install.sh
+  ./easy-setup.sh
   docker-compose up -d
   
 Advanced Install
 ================
+Note
+----
+The ``easy-setup.sh`` does the following :
+1) Checking that docker and docker-compose are properly installed and available to the user, and installing them if needed
+2) Generating SSL certificates for Scirius web interface and a secret key for the underlying Django
+2) Creating a ``.env`` file containing environment variables deduced from the user inputs
+3) Build the containers
+
+In order to change the options you defined, just run ``easy-setup.sh`` again
+
 Using your own SSL certificate
 ------------------------------
-Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key``
+Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key`` before running the ``easy-setup.sh`` script
+
+Running the install script without user interaction
+---------------------------------------------------
+The script provides several command line options to avoid being prompted. This can be useful to automate SELKS deployment
 
 
 Useful commands
 ================
 Most docker-compose commands will have the following form ``docker-compose COMMAND [container-name]``
-Those commands must be run from the SELKS/docker directory
+Those commands must be run from the SELKS/docker/ directory
 If  no container-name is provided, it will be applied to all SELKS containers
 
 Stopping containers
@@ -65,4 +79,9 @@ Removing containers along with their data
 
 Recreating containers
 -------------------
+``docker-compose up [container-name] --force-recreate``
+
+Updating containers
+-------------------
+``docker-compose pull [container-name]``
 ``docker-compose up [container-name] --force-recreate``
