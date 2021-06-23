@@ -141,7 +141,9 @@ if [[ "${PRINT_PARAM}" == "true" ]]; then
   echo "SCIRIUS_VERSION = ${SCIRIUS_VERSION}"
   echo "ELK_VERSION = ${ELK_VERSION}"
   echo "ELASTIC_DATAPATH = ${ELASTIC_DATAPATH}"
-  read
+  if [[ "${INTERACTIVE}" == "true" ]] ; then
+    read
+  fi
 fi
 
 
@@ -174,10 +176,12 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 
 echo -e "DISCLAIMER : This script comes with absolutely no warranty. It provides a quick and easy way to install SELKS on your system\n
-Altough this script should run properly on major linux distribution, it has only been tested on Debian 10 (buster)\n\n
-Press any key to continue or ^c to exit"
-read
+Altough this script should run properly on major linux distribution, it has only been tested on Debian 10 (buster)\n"
 
+if [[ "${INTERACTIVE}" == "true" ]] ; then
+  echo "Press any key to continue or ^c to exit"
+  read
+fi
 echo -e "  This version of SELKS relies on docker containers. We will now check if docker is already installed"
 
 echo -e "\n"
