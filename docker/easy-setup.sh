@@ -208,19 +208,19 @@ function install_docker(){
   curl -fsSL https://get.docker.com -o get-docker.sh && \
   sh get-docker.sh && \
   echo "${green}+${reset} Docker installation succeeded" || \
-  echo "${red}-${reset} Docker installation failed"
+  ( echo "${red}-${reset} Docker installation failed" && exit )
 }
 function adduser_to_docker(){
   sudo groupadd docker
   sudo usermod -aG docker $USER && \
   echo -e "${green}+${reset} Added user to docker group successfully \n  Please logout and login again for the group permissions to be applied, and re-run the script" || \
-  echo "${red}-${reset} Error while adding user to docker group"
+  ( echo "${red}-${reset} Error while adding user to docker group" && exit )
 }
 function install_docker_compose(){
   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
   sudo chmod +x /usr/local/bin/docker-compose && \
   echo "${green}+${reset} docker-compose installation succeeded" || \
-  echo "${red}-${reset} docker-compose installation failed"
+  ( echo "${red}-${reset} docker-compose installation failed" && exit )
 }
 function install_portainer(){
   docker volume create portainer_data && \
@@ -549,7 +549,7 @@ echo -e "\n"
 
 echo -e "Pulling containers \n"
 
-docker-compose pull
+docker-compose pull || exit
 
 echo -e "Building containers, this can take a while... (arround 10 minutes)\n"
 
