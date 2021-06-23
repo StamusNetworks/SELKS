@@ -63,25 +63,37 @@ If  no container-name is provided, it will be applied to all SELKS containers
 
 Stopping containers
 -------------------
-``docker-compose stop [container-name]``
+.. code-block:: bash
+
+  docker-compose stop [container-name]
 
 Starting containers
 -------------------
-``docker-compose start [container-name]``
+.. code-block:: bash
+
+  docker-compose start [container-name]
 
 Restarting containers
 -------------------
-``docker-compose restart [container-name]``
+.. code-block:: bash
+
+  docker-compose restart [container-name]
 
 Removing containers along with their data
 -------------------
-``docker-compose down -v``
+.. code-block:: bash
+
+  docker-compose down -v
 
 Recreating containers
 -------------------
-``docker-compose up [container-name] --force-recreate``
+.. code-block:: bash
+
+  docker-compose up [container-name] --force-recreate
 
 Updating containers
 -------------------
-``docker-compose pull [container-name]``
-``docker-compose up [container-name] --force-recreate``
+.. code-block:: bash
+
+  docker-compose pull [container-name]
+  docker-compose up [container-name] --force-recreate
