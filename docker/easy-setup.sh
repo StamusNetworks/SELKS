@@ -24,34 +24,35 @@
 ############################################################
 function Help(){
   # Display Help
-  echo
-  echo "SELKS setup script"
-  echo
-  echo "    Syntax: easy-setup.sh [-h|--help] [-d|--debug] [-i|--interfaces <eth0 eth1 eth2 ...>] [-n|--non-interactive] [--skip-checks] [--scirius-version <version>] [--elk-version <version>] [--es-datapath <path>]"
-  echo
-  echo "OPTIONS"
-  echo "   -h, --help"
-  echo "        Display this help menu"
-  echo "   -d,--debug"
-  echo "        Activate debug mode for scirius and nginx."
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   -i,--interface <interface>"
-  echo "        Defines an interface on which SELKS should listen."
-  echo "        This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1"
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   -n,--non-interactive"
-  echo "        Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required"
-  echo "   --skip-checks"
-  echo "        Run the scirpt without checking if docker and docker-compose are installed"
-  echo "   --scirius-version <version>"
-  echo "        Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'"
-  echo "   --elk-version <version>"
-  echo "        Defines the version of the ELK stack to use. Default is '7.12.0'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub"
-  echo "   --es-datapath <path>"
-  echo "        Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   --print-options"
-  echo "        Print how the command line options have been interpreted "
+  { echo
+    echo "SELKS setup script"
+    echo
+    echo -e "\t Syntax: easy-setup.sh [-h|--help] [-d|--debug] [-i|--interfaces <eth0 eth1 eth2 ...>] [-n|--non-interactive] [--skip-checks] [--scirius-version <version>] [--elk-version <version>] [--es-datapath <path>]"
+    echo
+    echo "OPTIONS"
+    echo -e " -h, --help"
+    echo -e "       Display this help menu\n"
+    echo -e " -d,--debug"
+    echo -e "       Activate debug mode for scirius and nginx."
+    echo -e "       The interactive prompt regarding this option will be skipped\n"
+    echo -e " -i,--interface <interface>"
+    echo -e "       Defines an interface on which SELKS should listen."
+    echo -e "       This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1"
+    echo -e "       The interactive prompt regarding this option will be skipped\n"
+    echo -e " -n,--non-interactive"
+    echo -e "       Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required\n"
+    echo -e " --skip-checks"
+    echo -e "       Run the scirpt without checking if docker and docker-compose are installed\n"
+    echo -e " --scirius-version <version>"
+    echo -e "       Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'\n"
+    echo -e " --elk-version <version>"
+    echo -e "       Defines the version of the ELK stack to use. Default is '7.12.0'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub\n"
+    echo -e " --es-datapath <path>"
+    echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
+    echo -e "       The interactive prompt regarding this option will be skipped\n"
+    echo -e " --print-options"
+    echo -e "       Print how the command line options have been interpreted \n"
+  } | fmt
 }
 
 
