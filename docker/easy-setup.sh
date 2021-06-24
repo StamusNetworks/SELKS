@@ -24,34 +24,35 @@
 ############################################################
 function Help(){
   # Display Help
-  echo
-  echo "SELKS setup script"
-  echo
-  echo "    Syntax: easy-setup.sh [-h|--help] [-d|--debug] [-i|--interfaces <eth0 eth1 eth2 ...>] [-n|--non-interactive] [--skip-checks] [--scirius-version <version>] [--elk-version <version>] [--es-datapath <path>]"
-  echo
-  echo "OPTIONS"
-  echo "   -h, --help"
-  echo "        Display this help menu"
-  echo "   -d,--debug"
-  echo "        Activate debug mode for scirius and nginx."
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   -i,--interface <interface>"
-  echo "        Defines an interface on which SELKS should listen."
-  echo "        This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1"
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   -n,--non-interactive"
-  echo "        Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required"
-  echo "   --skip-checks"
-  echo "        Run the scirpt without checking if docker and docker-compose are installed"
-  echo "   --scirius-version <version>"
-  echo "        Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'"
-  echo "   --elk-version <version>"
-  echo "        Defines the version of the ELK stack to use. Default is '7.12.0'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub"
-  echo "   --es-datapath <path>"
-  echo "        Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
-  echo "        The interactive prompt regarding this option will be skipped"
-  echo "   --print-options"
-  echo "        Print how the command line options have been interpreted "
+  { echo
+    echo "SELKS setup script"
+    echo
+    echo -e "\t Syntax: easy-setup.sh [-h|--help] [-d|--debug] [-i|--interfaces <eth0 eth1 eth2 ...>] [-n|--non-interactive] [--skip-checks] [--scirius-version <version>] [--elk-version <version>] [--es-datapath <path>]"
+    echo
+    echo "OPTIONS"
+    echo -e "\t -h, --help"
+    echo -e "\t\t Display this help menu"
+    echo -e "\t -d,--debug"
+    echo -e "\t\t Activate debug mode for scirius and nginx."
+    echo -e "\t\t The interactive prompt regarding this option will be skipped"
+    echo -e "\t -i,--interface <interface>"
+    echo -e "\t\t Defines an interface on which SELKS should listen."
+    echo -e "\t\t This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1"
+    echo -e "\t\t The interactive prompt regarding this option will be skipped"
+    echo -e "\t -n,--non-interactive"
+    echo -e "\t\t Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required"
+    echo -e "\t --skip-checks"
+    echo -e "\t\t Run the scirpt without checking if docker and docker-compose are installed"
+    echo -e "\t --scirius-version <version>"
+    echo -e "\t\t Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'"
+    echo -e "\t --elk-version <version>"
+    echo -e "\t\t Defines the version of the ELK stack to use. Default is '7.12.0'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub"
+    echo -e "\t --es-datapath <path>"
+    echo -e "\t\t Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
+    echo -e "\t\t The interactive prompt regarding this option will be skipped"
+    echo -e "\t --print-options"
+    echo -e "\t\t Print how the command line options have been interpreted "
+  } | fmt
 }
 
 
