@@ -46,6 +46,14 @@ The ``easy-setup.sh`` does the following :
 
 In order to change the options you defined, just run ``easy-setup.sh`` again
 
+Help
+----
+A help is available
+.. code-block:: bash
+
+  ./easy-setup.sh --help
+
+
 Using your own SSL certificate
 ------------------------------
 Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key`` before running the ``easy-setup.sh`` script
@@ -54,6 +62,23 @@ Running the install script without user interaction
 ---------------------------------------------------
 The script provides several command line options to avoid being prompted. This can be useful to automate SELKS deployment
 
+Changing ELK stack version
+--------------------------
+You can set a specific ELK stack version
+.. code-block:: bash
+
+  ./easy-setup.sh --elk-version <version-number>
+
+The version will be the same for Elasticsearch, Kibana and Logstash. It is not possible (and not recommended) to set them individually.
+
+Changing scirius version
+--------------------------
+You can set a specific scirius version
+.. code-block:: bash
+
+  ./easy-setup.sh --scirius-version <version>
+
+The version can be a branch name, a tag, a release number or a git sha
 
 Useful commands
 ================
