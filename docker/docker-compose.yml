@@ -26,6 +26,7 @@ volumes:
   scirius-data: #for scirius data persistency
   scirius-static: #statics files to be served by nginx
   suricata-run: #path where the suricata socket resides
+  suricata-logs:
 
 services:
   
@@ -78,7 +79,7 @@ services:
       retries: 3
       start_period: 30s
     volumes:
-      - ./containers-data/suricata/log:/var/log/suricata:ro
+      - suricata-logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
@@ -99,7 +100,7 @@ services:
       - SYS_NICE
     network_mode: host
     volumes:
-       - ${SURICATA_LOGS_PATH:-./containers-data/suricata/log}:/var/log/suricata
+       - suricata-logs:/var/log/suricata
        - suricata-rules:/etc/suricata/rules
        - suricata-run:/var/run/suricata/
        - ./containers-data/suricata/etc:/etc/suricata
