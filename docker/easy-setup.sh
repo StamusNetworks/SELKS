@@ -206,9 +206,11 @@ function test_docker_user(){
 }
 function install_docker(){
   curl -fsSL https://get.docker.com -o get-docker.sh && \
-  sh get-docker.sh && \
-  echo "${green}+${reset} Docker installation succeeded" || \
+  sh get-docker.sh || \
   ( echo "${red}-${reset} Docker installation failed" && exit )
+  echo "${green}+${reset} Docker installation succeeded"
+  sudo systemctl enable docker && \
+  sudo systemctl start docker
 }
 function adduser_to_docker(){
   sudo groupadd docker
@@ -269,6 +271,7 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
         * ) echo -e "  See https://docs.docker.com/engine/install to learn how to install docker on your system"; exit;;
     esac
   fi
+  
 
   dockerV=$(docker version --format '{{.Server.Version}}')
 
