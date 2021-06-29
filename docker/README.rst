@@ -21,9 +21,9 @@ Requirements
 - 8 GB of free RAM
 - 10 GB of free disk space
 - Debian Buster (other distributions/versions are probably OK but are not officially supported)
-- docker > 17.06.0 (will be automatically installed if not found on the system)
-- docker-compose > 1.27.0 (will be automatically installed if not found on the system)
-- git, curl and time installed
+- ``docker`` > 17.06.0
+- ``docker-compose`` > 1.27.0
+- ``git``, ``curl`` and ``time``
 
 Install
 =======
