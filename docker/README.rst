@@ -2,13 +2,6 @@
 SELKS on Docker
 ===============
 
-BETA
-=====
-This project is in beta. Following functionalities are not yet implemented :
-
-- Full Packet Capture
-
-
 Intro
 =====
 This version of SELKS is based on docker and intended to provide easier deployment and management.
@@ -20,13 +13,15 @@ Requirements
 - 2 cores
 - 8 GB of free RAM
 - 10 GB of free disk space
-- Debian Buster (other distributions/versions are probably OK but are not officially supported)
+- Debian Buster (other distributions/versions are probably OK but are not officially supported)*
 - ``docker`` > 17.06.0
 - ``docker-compose`` > 1.27.0
 - ``git``, ``curl`` and ``time``
 
-Install
-=======
+\* If installing on other distribution, especially non debian-based, it is highly recommended to properly install and test docker and docker-compose before going through the install process
+
+Install process
+===============
 .. code-block:: bash
 
   git clone https://github.com/StamusNetworks/SELKS.git
@@ -34,21 +29,38 @@ Install
   ./easy-setup.sh
   docker-compose up -d
   
+Once the containers are up and running, you should just point your browser to  ``https://your.selks.IP.here/``
+
+If the setup script fails, please take a look at the manual setup process
+
+Credentials and log in
+----------------------
+In order to access scirius, you will need following credentials:
+ 
+- user: ``selks-user``
+- password: ``selks-user`` 
+
+
 Advanced Install
 ================
 Note
 ----
 The ``easy-setup.sh`` does the following :
+
 1) Checking that docker and docker-compose are properly installed and available to the user, and installing them if needed
+
 2) Generating SSL certificates for Scirius web interface and a secret key for the underlying Django
-2) Creating a ``.env`` file containing environment variables deduced from the user inputs
-3) Build the containers
+
+3) Creating a ``.env`` file containing environment variables deduced from the user inputs
+
+4) Build the containers
 
 In order to change the options you defined, just run ``easy-setup.sh`` again
 
 Help
 ----
 A help is available
+
 .. code-block:: bash
 
   ./easy-setup.sh --help
@@ -56,15 +68,20 @@ A help is available
 
 Using your own SSL certificate
 ------------------------------
-Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key`` before running the ``easy-setup.sh`` script
+Put your existing SSL certificate and private key in ``SELKS/docker/containers-data/nginx/ssl`` as ``scirius.crt`` and ``scirius.key`` before running the ``easy-setup.sh`` script.
 
 Running the install script without user interaction
 ---------------------------------------------------
-The script provides several command line options to avoid being prompted. This can be useful to automate SELKS deployment
+The script provides several command line options to avoid being prompted. This can be useful to automate SELKS deployment. Refer to the help
+
+.. code-block:: bash
+
+  ./easy-setup.sh --non-interactive
 
 Changing ELK stack version
 --------------------------
 You can set a specific ELK stack version
+
 .. code-block:: bash
 
   ./easy-setup.sh --elk-version <version-number>
@@ -74,6 +91,7 @@ The version will be the same for Elasticsearch, Kibana and Logstash. It is not p
 Changing scirius version
 --------------------------
 You can set a specific scirius version
+
 .. code-block:: bash
 
   ./easy-setup.sh --scirius-version <version>
