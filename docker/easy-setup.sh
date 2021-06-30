@@ -77,7 +77,7 @@ ELASTIC_DATAPATH=""
 PRINT_PARAM="false"
 # extract options and their arguments into variables.
 while true ; do
-  case "$1" in
+  case "${1}" in
     -h | --help )
       Help
       exit
@@ -224,12 +224,6 @@ function install_docker_compose(){
   echo "${green}+${reset} docker-compose installation succeeded" || \
   ( echo "${red}-${reset} docker-compose installation failed" && exit )
 }
-function install_portainer(){
-  docker volume create portainer_data && \
-  docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
-  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
-  echo -e "${red}-${reset} Portainer installation failed\n"
-}
 function Version(){
   # $1-a $2-op $3-$b
   # Compare a and b as version strings. Rules:
@@ -321,6 +315,20 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   #############################
   #         PORTAINER         #
   #############################
+  
+  function generate_portainer_certificate(){
+    docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/portainer.key -out /etc/nginx/ssl/portainer.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
+    return $?
+  }
+  function install_portainer(){
+    docker volume create portainer_data && \
+    docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ${BASEDIR}/portainer_certs:/certs -v portainer_data:/data portainer/portainer-ce --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+    generate_portainer_certificate "${BASEDIR}/portainer_certs" && \
+    PORTAINER_INSTALLED="true" && \
+    echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
+    echo -e "${red}-${reset} Portainer installation failed\n"
+  }
+  
   if $(docker ps | grep -q 'portainer'); then
     echo -e "  Found existing portainer installation, skipping...\n"
   else
@@ -344,10 +352,10 @@ fi
 #############################
 SSLDIR="${BASEDIR}/containers-data/nginx/ssl"
 
-function check_key_cert(){
-  # usage : check_key_cert [path_to_files] [filename_without_extension]
-  # example : check_key_cert [path_to_files] [filename_without_extension]
-  output=$(docker run --rm -it -v $1:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
+function check_scirius_key_cert(){
+  # usage : check_scirius_key_cert [path_to_files] [filename_without_extension]
+  # example : check_scirius_key_cert [path_to_files] [filename_without_extension]
+  output=$(docker run --rm -it -v ${1}:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
   
   SAVEIFS=$IFS   # Save current IFS
   IFS=$'\n'      # Change IFS to new line
@@ -365,18 +373,18 @@ function check_key_cert(){
 
   fi
 }
-function generate_certificate(){
-  docker run --rm -it -v $1:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
-  check_key_cert $1
+function generate_scirius_certificate(){
+  docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
+  check_scirius_key_cert ${1}
   return $?
 }
 
 
-if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ] && check_key_cert ${SSLDIR}; then
+if [ -f "${SSLDIR}/scirius.crt" ] && [ -f "${SSLDIR}/scirius.key" ] && check_scirius_key_cert ${SSLDIR}; then
   echo -e "  A valid SSL certificate has been found:\n\t${SSLDIR}/scirius.crt"
   echo -e "  Skipping SSL generation..."
 else
-  generate_certificate ${SSLDIR}
+  generate_scirius_certificate ${SSLDIR}
 fi
 
 
@@ -565,4 +573,4 @@ time docker-compose build >> ${BASEDIR}/build.log
 # Starting           #
 ######################
 echo -e "\n\nTo start SELKS, run 'docker-compose up -d'"
-echo "If you have chose to install Portainer, visit http://localhost:9000 to set your portainer password, and select the docker option"
+[[ PORTAINER_INSTALLED=="true" ]] && echo "You have chose to install Portainer, visit https://localhost:9000 to set your portainer password, and select the docker option"
