@@ -107,11 +107,7 @@ services:
     
   scirius:
     container_name: scirius
-    build:
-      context: ./scirius
-      args:
-        VERSION: ${SCIRIUS_VERSION:-master}
-    image: scirius:${SCIRIUS_VERSION:-master}
+    image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-master}
     restart: unless-stopped
     environment:
       - SECRET_KEY=${SCIRIUS_SECRET_KEY}
