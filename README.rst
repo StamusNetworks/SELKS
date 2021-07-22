@@ -1,3 +1,6 @@
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ℹ This README concerns the standard debian-based SELKS distribution. For instructions concerning the new implementation on Docker, please see `SELKS on docker <docker/README.rst>`_ |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 =====
 SELKS
 =====
@@ -63,7 +66,6 @@ For VirtualBox, the recommended network setup is to use a ``Bridged adapter`` an
 To run SELKS, you need to add declare that the ISO image of SELKS is in the CDROM. You can then
 reboot the virtual machine. If all goes well, you should see SELKS boot menu. Pressing enter will
 lead you to the graphical interface.
-
 
 Running on a physical box
 -------------------------
