@@ -98,6 +98,17 @@ You can set a specific scirius version
 
 The version can be a branch name, a tag, a release number or a git sha
 
+Update process
+===============
+.. code-block:: bash
+
+  docker-compose down
+  git pull
+  ./easy-setup.sh
+  docker-compose pull
+  docker-compose up -d --force-recreate
+  
+
 Useful commands
 ================
 Most docker-compose commands will have the following form ``docker-compose COMMAND [container-name]``
