@@ -31,7 +31,7 @@ Install process
   
 Once the containers are up and running, you should just point your browser to  ``https://your.selks.IP.here/``
 
-If the setup script fails, please take a look at the manual setup process
+If the setup script fails, please take a look at the  `manual setup process <https://github.com/StamusNetworks/SELKS/wiki/Manual-Docker-install>`_
 
 Credentials and log in
 ----------------------
@@ -96,7 +96,8 @@ You can set a specific scirius version
 
   ./easy-setup.sh --scirius-version <version>
 
-The version can be a branch name, a tag, a release number or a git sha
+The version can be a branch name, a tag, a release number or a commit hash.
+Available versions can be found there https://github.com/StamusNetworks/scirius/pkgs/container/scirius
 
 Update process
 ===============
@@ -151,3 +152,17 @@ Updating containers
 
   docker-compose pull [container-name]
   docker-compose up [container-name] --force-recreate
+  
+Enterring a running containers
+------------------------------
+.. code-block:: bash
+
+  docker exec -it [container-name] /bin/bash
+  
+Get logs from a container
+-------------------------
+.. code-block:: bash
+
+  docker logs [container-name]
+  
+logs can also be found in SELKS/docker/containers-data
