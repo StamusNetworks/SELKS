@@ -1026,6 +1026,3 @@ app-layer:
 
 # Limit for the maximum number of asn1 frames to decode (default 256)
 asn1-max-frames: 256
-
-# SELKS interface config. Do NOT remove.
-include: /etc/suricata/selks6-interfaces-config.yaml
