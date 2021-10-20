@@ -253,7 +253,18 @@ function Version(){
   esac
 }
 
-
+function generate_portainer_certificate(){
+  docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/portainer.key -out /etc/nginx/ssl/portainer.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
+  return $?
+}
+function install_portainer(){
+  docker volume create portainer_data && \
+  docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ${BASEDIR}/portainer_certs:/certs -v portainer_data:/data portainer/portainer-ce --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+  generate_portainer_certificate "${BASEDIR}/portainer_certs" && \
+  PORTAINER_INSTALLED="true" && \
+  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
+  echo -e "${red}-${reset} Portainer installation failed\n"
+}
 if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   dockerV=$(docker -v)
   if [[ $dockerV == *"Docker version"* ]]; then
@@ -316,20 +327,6 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   #############################
   #         PORTAINER         #
   #############################
-  
-  function generate_portainer_certificate(){
-    docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/portainer.key -out /etc/nginx/ssl/portainer.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
-    return $?
-  }
-  function install_portainer(){
-    docker volume create portainer_data && \
-    docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ${BASEDIR}/portainer_certs:/certs -v portainer_data:/data portainer/portainer-ce --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
-    generate_portainer_certificate "${BASEDIR}/portainer_certs" && \
-    PORTAINER_INSTALLED="true" && \
-    echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
-    echo -e "${red}-${reset} Portainer installation failed\n"
-  }
-  
   if $(docker ps | grep -q 'portainer'); then
     echo -e "  Found existing portainer installation, skipping...\n"
   else
@@ -343,7 +340,8 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
         esac
     done
   fi
-  
+else
+  install_portainer
 fi
 
 
@@ -574,4 +572,4 @@ time docker-compose build >> ${BASEDIR}/build.log
 # Starting           #
 ######################
 echo -e "\n\nTo start SELKS, run 'docker-compose up -d'"
-[[ PORTAINER_INSTALLED=="true" ]] && echo "You have chose to install Portainer, visit https://localhost:9000 to set your portainer password, and select the docker option"
+[[ ${PORTAINER_INSTALLED} ]] && echo "You have chose to install Portainer, visit http://localhost:9000 to set your portainer password, and select the docker option"
