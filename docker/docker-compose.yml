@@ -32,7 +32,7 @@ services:
   
   elasticsearch:
     container_name: elasticsearch
-    image: elasticsearch:${ELK_VERSION:-7.13.1}
+    image: elastic/elasticsearch:${ELK_VERSION:-7.15.1}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
@@ -42,7 +42,8 @@ services:
       start_period: 30s
     environment:
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
     ulimits:
@@ -54,7 +55,7 @@ services:
       
   kibana:
     container_name: kibana
-    image: kibana:${ELK_VERSION:-7.13.1}
+    image:  elastic/kibana:${ELK_VERSION:-7.15.1}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5601 || exit 1"]
@@ -67,7 +68,7 @@ services:
     
   logstash:
     container_name: logstash
-    image: logstash:${ELK_VERSION:-7.13.1}
+    image:  elastic/logstash:${ELK_VERSION:-7.15.1}
     depends_on:
       scirius:
         condition: service_healthy #because we need to wait for scirius to populate ILM policy
