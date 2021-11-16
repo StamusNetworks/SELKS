@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#
 # Copyright(C) 2021, Stamus Networks
 # Written by Raphaël Brogat <rbrogat@stamus-networks.com> based on the work of Peter Manev <pmanev@stamus-networks.com>
 #
@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ############################################################
-# Help Function       #
+# Help Function                                           #
 ############################################################
 function Help(){
   # Display Help
@@ -41,15 +41,25 @@ function Help(){
     echo -e "       The interactive prompt regarding this option will be skipped\n"
     echo -e " -n,--non-interactive"
     echo -e "       Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required\n"
-    echo -e " --skip-checks"
-    echo -e "       Run the scirpt without checking if docker and docker-compose are installed\n"
+    echo -e " --iD,--install-docker"
+    echo -e "       Install docker\n"
+    echo -e " --iC,--install-docker-compose"
+    echo -e "       Install docker-compose\n"
+    echo -e " --iP,--install-portainer"
+    echo -e "       Install portainer\n"
+    echo -e " --iA,--install-all"
+    echo -e "       equivalent to \"-iD -iC -iP\", install docker, docker-compose and portainer\n"
+    echo -e " -s,--skip-checks"
+    echo -e "       Run the scirpt without checking if docker and docker-compose are installed. Use this only if you know that both docker and docker-compose are already installed with proper versions. Otherwise, the script will probably fail\n"
     echo -e " --scirius-version <version>"
     echo -e "       Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'\n"
     echo -e " --elk-version <version>"
-    echo -e "       Defines the version of the ELK stack to use. Default is '7.12.0'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub\n"
+    echo -e "       Defines the version of the ELK stack to use. Default is '7.15.1'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub\n"
     echo -e " --es-datapath <path>"
     echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
     echo -e "       The interactive prompt regarding this option will be skipped\n"
+    echo -e " --es-memory"
+    echo -e "       Amount of memory to give to the elasticsearch java heap. Default is '2G'. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'"
     echo -e " --print-options"
     echo -e "       Print how the command line options have been interpreted \n"
   } | fmt
@@ -59,8 +69,8 @@ function Help(){
 # Parse command-line options
 
 # Option strings
-SHORT=hdi:n
-LONG=help,debug,interfaces:,non-interactive,skip-checks,scirius-version:,elk-version:,es-datapath:,print-options
+SHORT=hdi:ns
+LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options
 
 # read the options
 OPTS=$(getopt -o $SHORT -l $LONG --name "$0" -- "$@")
@@ -75,7 +85,12 @@ DEBUG="false"
 SKIP_CHECKS="false"
 INTERFACES=""
 ELASTIC_DATAPATH=""
+ELASTIC_MEMORY=""
 PRINT_PARAM="false"
+INSTALL_PORTAINER="false"
+INSTALL_DOCKER="false"
+INSTALL_COMPOSE="false"
+
 # extract options and their arguments into variables.
 while true ; do
   case "${1}" in
@@ -97,11 +112,28 @@ while true ; do
       ;;
     -n | --non-interactive )
       INTERACTIVE="false"
+      shift
+      ;;
+    -s | --skip-checks )
       SKIP_CHECKS="true"
       shift
       ;;
-    --skip-checks )
-      SKIP_CHECKS="true"
+    --iD | --install-docker )
+      INSTALL_DOCKER="true"
+      shift
+      ;;
+    --iC | --install-docker-compose )
+      INSTALL_COMPOSE="true"
+      shift
+      ;;
+    --iP | --install-portainer )
+      INSTALL_PORTAINER="true"
+      shift
+      ;;
+    --iA | --install-all )
+      INSTALL_DOCKER="true"
+      INSTALL_COMPOSE="true"
+      INSTALL_PORTAINER="true"
       shift
       ;;
     --scirius-version )
@@ -116,17 +148,26 @@ while true ; do
       ELASTIC_DATAPATH="$2"
       shift 2
       ;;
+    --es-memory)
+      ELASTIC_MEMORY="$2"
+      shift 2
+      ;;
       
     -- )
       shift
       break
       ;;
     *)
-      echo "Internal error!"
+      echo "No such option '${1}'"
       exit 1
       ;;
   esac
 done
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
 
 if [[ "${INTERACTIVE}" == "false" ]] && [[ "${INTERFACES}" == "" ]]; then
   echo "ERROR: --non-interactive option must be use with --interface option"
@@ -139,17 +180,19 @@ if [[ "${PRINT_PARAM}" == "true" ]]; then
   echo "INTERFACES = ${INTERFACES}"
   echo "INTERACTIVE = ${INTERACTIVE}"
   echo "SKIP_CHECKS = ${SKIP_CHECKS}"
+  echo "INSTALL_PORTAINER = ${INSTALL_PORTAINER}"
   echo "SCIRIUS_VERSION = ${SCIRIUS_VERSION}"
   echo "ELK_VERSION = ${ELK_VERSION}"
   echo "ELASTIC_DATAPATH = ${ELASTIC_DATAPATH}"
   if [[ "${INTERACTIVE}" == "true" ]] ; then
     read
   fi
+  exit 0
 fi
 
 
 ##########################
-# Check Curl and Time         #
+# Check Curl             #
 ##########################
 curl=$(curl -V)
 if [[ -z "$curl" ]]; then
@@ -157,13 +200,6 @@ if [[ -z "$curl" ]]; then
   exit
 fi
 
-time=$(time echo "" && echo "time is installed")
-if [[ -z "$time" ]]; then
-  echo -e "\n\n  Please install time and re-run the script\n"
-  exit
-else
-  clear
-fi
 
 
 ##########################
@@ -177,7 +213,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 
 echo -e "DISCLAIMER : This script comes with absolutely no warranty. It provides a quick and easy way to install SELKS on your system\n
-Altough this script should run properly on major linux distribution, it has only been tested on Debian 10 (buster)\n"
+Altough this script should run properly on major linux distribution, it has only been tested on Debian 10, Debian 11, Ubuntu 20.04 and Centos 8\n"
 
 if [[ "${INTERACTIVE}" == "true" ]] ; then
   echo "Press any key to continue or ^c to exit"
@@ -191,9 +227,6 @@ echo "#  INSTALLATION  #"
 echo "##################"
 echo -e "\n"
 
-#############################
-#          DOCKER           #
-#############################
 function test_docker_user(){
   hello=$(docker run --rm hello-world) || \
   echo "${red}-${reset} Docker test failed"
@@ -210,18 +243,12 @@ function install_docker(){
   sh get-docker.sh || \
   ( echo "${red}-${reset} Docker installation failed" && exit )
   echo "${green}+${reset} Docker installation succeeded"
-  sudo systemctl enable docker && \
-  sudo systemctl start docker
-}
-function adduser_to_docker(){
-  sudo groupadd docker
-  sudo usermod -aG docker $USER && \
-  echo -e "${green}+${reset} Added user to docker group successfully \n  Please logout and login again for the group permissions to be applied, and re-run the script" || \
-  ( echo "${red}-${reset} Error while adding user to docker group" && exit )
+  systemctl enable docker && \
+  systemctl start docker
 }
 function install_docker_compose(){
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-  sudo chmod +x /usr/local/bin/docker-compose && \
+  curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  chmod +x /usr/local/bin/docker-compose && \
   echo "${green}+${reset} docker-compose installation succeeded" || \
   ( echo "${red}-${reset} docker-compose installation failed" && exit )
 }
@@ -252,33 +279,40 @@ function Version(){
     * )         [ "$a" $op "$b" ] ;;
   esac
 }
+function install_portainer(){
+  docker volume create portainer_data && \
+  docker run -d -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+  PORTAINER_INSTALLED="true" && \
+  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9443" || \
+  echo -e "${red}-${reset} Portainer installation failed\n"
+}
 
 
 if [[ "${SKIP_CHECKS}" == "false" ]] ; then
+  
+  #############################
+  #          DOCKER           #
+  #############################  
   dockerV=$(docker -v)
   if [[ $dockerV == *"Docker version"* ]]; then
     echo -e "${green}+${reset} Docker installation found: $dockerV"
   else
     echo -e "${red}-${reset} No docker installation found\n\n  We can try to install docker for you"
-    read -p "  Do you want to install docker automatically? [y/N] " yn
+    echo -e "  Do you want to install docker automatically? [y/N] "
+    if [[ "${INSTALL_DOCKER}" == "true" ]]; then
+      yn="y"
+      echo "y"
+    else
+      if [[ "${INTERACTIVE}" == "true" ]]; then
+        read yn
+      else
+        yn="N"
+        echo "N"
+      fi
+    fi
     case $yn in
         [Yy]* ) install_docker;;
         * ) echo -e "  See https://docs.docker.com/engine/install to learn how to install docker on your system"; exit;;
-    esac
-  fi
-  
-
-  dockerV=$(docker version --format '{{.Server.Version}}')
-
-  if [[ ! -z "$dockerV" ]]; then
-    echo -e "${green}+${reset} Docker is available to the current user"
-    test_docker_user
-  else
-    echo -e "${red}-${reset} Docker engine is not available to the current user.\n  Either allow current user to execute docker commands or run this script as privileged user.\n"
-    read -p "  Do you want to allow '${USER}' to run docker commands? [y/N] " yn
-    case $yn in
-        [Yy]* ) adduser_to_docker; exit;;
-        * ) echo -e "  See https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user to learn how to allow current standard user to run docker commands."; exit;;
     esac
   fi
 
@@ -299,13 +333,23 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
     echo -e "${green}+${reset} docker-compose installation found"
   else
     echo -e "${red}-${reset} No docker-compose installation found, see https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"
-    read -p "  Do you want to install docker-compose automatically? [y/N] " yn
+    echo -e "  Do you want to install docker-compose automatically? [y/N] "
+    if [[ "${INSTALL_COMPOSE}" == "true" ]]; then
+      yn="y"
+      echo "y"
+    else
+      if [[ "${INTERACTIVE}" == "true" ]]; then
+        read yn
+      else
+        yn="N"
+        echo "N"
+      fi
+    fi
     case $yn in
         [Yy]* ) install_docker_compose;;
         * ) echo -e "  See https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"; exit;;
     esac
   fi
-
 
   dockerV=( $dockerV )
   dockerV=$( echo ${dockerV[2]} |tr ',' ' ')
@@ -317,25 +361,23 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   #         PORTAINER         #
   #############################
   
-  function generate_portainer_certificate(){
-    docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/portainer.key -out /etc/nginx/ssl/portainer.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
-    return $?
-  }
-  function install_portainer(){
-    docker volume create portainer_data && \
-    docker run -d -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v ${BASEDIR}/portainer_certs:/certs -v portainer_data:/data portainer/portainer-ce --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
-    generate_portainer_certificate "${BASEDIR}/portainer_certs" && \
-    PORTAINER_INSTALLED="true" && \
-    echo -e "${green}+${reset} Portainer has been installed and will be available on port 9000" || \
-    echo -e "${red}-${reset} Portainer installation failed\n"
-  }
-  
   if $(docker ps | grep -q 'portainer'); then
     echo -e "  Found existing portainer installation, skipping...\n"
   else
     echo -e "\n  Portainer is a web interface for managing docker containers. It is recommended if you are not experienced with docker."
     while true; do
-        read -p "  Do you want to install Portainer ? [y/n] " yn
+        echo -e "  Do you want to install Portainer ? [y/n] "
+        if [[ "${INSTALL_PORTAINER}" == "true" ]]; then
+          yn="y"
+          echo "y"
+        else
+          if [[ "${INTERACTIVE}" == "true" ]]; then
+            read yn
+          else
+            yn="N"
+            echo "N"
+          fi
+        fi
         case $yn in
             [Yy]* ) install_portainer; break;;
             [Nn]* ) break;;
@@ -452,7 +494,12 @@ function getInterfaces {
 
 getInterfaces
 
-while [[ ${INTERFACE_EXISTS} != "YES"  ]]; do
+while [[ ${INTERFACE_EXISTS} == "NO"  ]]; do
+  INTERFACES=""
+  if [[ ${INTERACTIVE} == "false" ]]; then
+    echo "This interface does not exists"
+    exit 1
+  fi
   getInterfaces
 done
 
@@ -468,15 +515,15 @@ echo "INTERFACES=${INTERFACES_LIST}" >> ${BASEDIR}/.env
 # DEBUG MODE #
 ##############
 
-
+echo -e "Do you want to use debug mode? [y/N] "
 if [[ "${DEBUG}" == "true" ]]; then
   echo "y"
   yn="y"
 else
   if [[ ${INTERACTIVE} == "true" ]]; then
-    read -p "Do you want to use debug mode? [y/N] " yn
+    read yn
   else
-    echo "n"
+    echo "N"
     yn="n"
   fi
 fi
@@ -495,10 +542,11 @@ docker_root_dir=$(docker system info |grep "Docker Root Dir")
 docker_root_dir=${docker_root_dir/'Docker Root Dir: '/''}
 
 echo ""
+echo -e "By default, elasticsearch database will be stored in a docker volume"
 echo -e "With SELKS running, database can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Docker partition free space : ${docker_root_dir} - $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
-echo -e "Please give the path where you want the data to be saved, or hit enter to use a docker volume in the docker path :"
+echo -e "You can specify a path where you want the data to be saved, or hit enter for default."
 
 if [[ "${ELASTIC_DATAPATH}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
   read elastic_data_path
@@ -511,7 +559,7 @@ if ! [ -z "${elastic_data_path}" ]; then
 
   while ! [ -w "${elastic_data_path}" ]; do 
     echo -e "\nYou don't seem to own write access to this directory\n"
-    echo -e "Please give the path where you want the data to be saved, or hit enter to use a docker volume in the docker path :"
+    echo -e "You can specify a path where you want the data to be saved, or hit enter for default."
     if [[ "${INTERACTIVE}" == "true" ]]; then
       read elastic_data_path
     else
@@ -522,13 +570,29 @@ if ! [ -z "${elastic_data_path}" ]; then
 echo "ELASTIC_DATAPATH=${elastic_data_path}" >> ${BASEDIR}/.env
 fi
 
+#####################
+# ELASTIC MEMORY    #
+#####################
 
+echo -e "By default, elasticsearch will get attributed 2G of RAM"
+echo -e "You can specify a different value or hit enter : [2G]"
+echo -e "(Accepted units are 'm','M','g','G'. Ex: \"512m\" or \"4G\")"
+
+if [[ "${ELASTIC_MEMORY}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
+  read ELASTIC_MEMORY
+else
+  echo "${ELASTIC_MEMORY}"
+fi
+
+if ! [ -z "${ELASTIC_MEMORY}" ]; then
+  echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
+fi
 
 ######################
 # Generate KEY FOR DJANGO #
 ######################
 
-output=$(docker run --rm -it python:3.8.6-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
+output=$(docker run --rm -it python:3.9.5-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
 echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 
@@ -552,7 +616,7 @@ fi
 
 echo -e "\n"
 echo "#######################"
-echo "# BUILDING CONTAINERS #"
+echo "# CREATING CONTAINERS #"
 echo "#######################"
 echo -e "\n"
 ######################
@@ -563,15 +627,12 @@ echo -e "Pulling containers \n"
 
 docker-compose pull || exit
 
-echo -e "Building containers, this can take a while... (arround 10 minutes)\n"
-
-now=$(date)
-echo -e "BUILD : $now\n\n=========================" >> ${BASEDIR}/build.log
-time docker-compose build >> ${BASEDIR}/build.log
-
 
 ######################
 # Starting           #
 ######################
-echo -e "\n\nTo start SELKS, run 'docker-compose up -d'"
-[[ PORTAINER_INSTALLED=="true" ]] && echo "You have chose to install Portainer, visit https://localhost:9000 to set your portainer password, and select the docker option"
+echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+
+if [[ "$PORTAINER_INSTALLED" == "true" ]]; then
+  echo -e "${red}IMPORTANT:${reset} You chose to install Portainer, visit https://localhost:9443 to set your portainer admin password"
+fi

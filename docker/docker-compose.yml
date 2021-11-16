@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 version: '3.4'
 
 networks:
@@ -43,7 +44,7 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY:-2G} -Xmx${ELASTIC_MEMORY:-2G}
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
     ulimits:
@@ -158,3 +159,6 @@ services:
       - 443:443
     networks:
       network:
+      
+      
+
