@@ -59,7 +59,7 @@ function Help(){
     echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
     echo -e "       The interactive prompt regarding this option will be skipped\n"
     echo -e " --es-memory"
-    echo -e "       Amount of memory to give to the elasticsearch java heap. Default is '2G'. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'"
+    echo -e "       Amount of memory to give to the elasticsearch java heap. Default is '2G'. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
     echo -e " --print-options"
     echo -e "       Print how the command line options have been interpreted \n"
   } | fmt
@@ -542,11 +542,10 @@ docker_root_dir=$(docker system info |grep "Docker Root Dir")
 docker_root_dir=${docker_root_dir/'Docker Root Dir: '/''}
 
 echo ""
-echo -e "By default, elasticsearch database will be stored in a docker volume"
+echo -e "By default, elasticsearch database is stored in a docker volume in ${docker_root_dir} (free space: $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
 echo -e "With SELKS running, database can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
-echo -e "Docker partition free space : ${docker_root_dir} - $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
-echo -e "You can specify a path where you want the data to be saved, or hit enter for default."
+echo -e "Alternatively, You can specify a path where you want the data to be saved, or hit enter for default."
 
 if [[ "${ELASTIC_DATAPATH}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
   read elastic_data_path
@@ -559,7 +558,7 @@ if ! [ -z "${elastic_data_path}" ]; then
 
   while ! [ -w "${elastic_data_path}" ]; do 
     echo -e "\nYou don't seem to own write access to this directory\n"
-    echo -e "You can specify a path where you want the data to be saved, or hit enter for default."
+    echo -e "You can specify a path where you want the data to be saved, or hit ENTER to use a [docker volume]."
     if [[ "${INTERACTIVE}" == "true" ]]; then
       read elastic_data_path
     else
