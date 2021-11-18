@@ -587,9 +587,9 @@ if ! [ -z "${ELASTIC_MEMORY}" ]; then
   echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
 fi
 
-######################
+###########################
 # Generate KEY FOR DJANGO #
-######################
+###########################
 
 output=$(docker run --rm -it python:3.9.5-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
@@ -597,18 +597,27 @@ echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 
 
 
-######################
+##################################
 # Setting Scirius branch to use #
-######################
+##################################
 if [ ! -z "${SCIRIUS_VERSION}" ] ; then
   echo "SCIRIUS_VERSION=$SCIRIUS_VERSION" >> ${BASEDIR}/.env
 fi
 
-######################
+#############################
 # Setting ELK VERSION to use #
-######################
+#############################
 if [ ! -z "${ELK_VERSION}" ] ; then
   echo "ELK_VERSION=$ELK_VERSION" >> ${BASEDIR}/.env
+fi
+
+
+#######################################
+# Disable ML if SSE 4.2 not supported #
+#######################################
+
+if ! grep -q sse4_2 /proc/cpuinfo; then
+  echo "ML_ENABLED=false" >> ${BASEDIR}/.env
 fi
 
 

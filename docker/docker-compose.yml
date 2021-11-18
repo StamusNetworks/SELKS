@@ -45,6 +45,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY:-2G} -Xmx${ELASTIC_MEMORY:-2G}
+      - xpack.ml.enabled=${ML_ENABLED:-true}
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
     ulimits:
@@ -159,6 +160,3 @@ services:
       - 443:443
     networks:
       network:
-      
-      
-
