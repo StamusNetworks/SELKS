@@ -171,7 +171,7 @@ fi
 
 if [[ "${INTERACTIVE}" == "false" ]] && [[ "${INTERFACES}" == "" ]]; then
   echo "ERROR: --non-interactive option must be use with --interface option"
-  exit
+  exit 1
 fi
 
 if [[ "${PRINT_PARAM}" == "true" ]]; then
@@ -197,7 +197,7 @@ fi
 curl=$(curl -V)
 if [[ -z "$curl" ]]; then
   echo -e "\n\n  Please install curl and re-run the script\n"
-  exit
+  exit 1
 fi
 
 
@@ -235,13 +235,13 @@ function test_docker_user(){
     echo -e "${green}+${reset} Docker seems to be installed properly"
   else
     echo -e "${red}-${reset} Error running docker."
-    exit
+    exit 1
   fi
 }
 function install_docker(){
   curl -fsSL https://get.docker.com -o get-docker.sh && \
   sh get-docker.sh || \
-  ( echo "${red}-${reset} Docker installation failed" && exit )
+  { echo "${red}-${reset} Docker installation failed" && exit }
   echo "${green}+${reset} Docker installation succeeded"
   systemctl enable docker && \
   systemctl start docker
@@ -250,7 +250,7 @@ function install_docker_compose(){
   curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
   chmod +x /usr/local/bin/docker-compose && \
   echo "${green}+${reset} docker-compose installation succeeded" || \
-  ( echo "${red}-${reset} docker-compose installation failed" && exit )
+  { echo "${red}-${reset} docker-compose installation failed" && exit }
 }
 function Version(){
   # $1-a $2-op $3-$b
