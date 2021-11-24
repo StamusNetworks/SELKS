@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+MINIMAL_DOCKER_VERSION="17.06.0"
+MINIMAL_COMPOSE_VERSION="1.27.0"
+
 ############################################################
 # Help Function                                           #
 ############################################################
@@ -65,6 +68,114 @@ function Help(){
   } | fmt
 }
 
+############################################################
+# Docker-related Functions                                 #
+############################################################
+function is_docker_installed(){
+  dockerV=$(docker -v 2>/dev/null)
+  if [[ "${dockerV}" == *"Docker version"* ]]; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+function is_compose_installed(){
+  composeV=$(docker-compose --version 2>/dev/null)
+  if [[ $composeV == *"docker-compose version"* ]]; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+function is_docker_availabale_for_user(){
+  dockerV=$(docker version --format '{{.Server.Version}}' 2>/dev/null)
+  if [[ ! -z "$dockerV" ]]; then
+    echo "yes"
+  else
+    echo "no"
+  fi
+}
+function test_docker(){
+  hello=$(docker run --rm hello-world) || \
+  echo "${red}-${reset} Docker test failed"
+  
+  if [[ $hello == *"Hello from Docker"* ]]; then
+    echo -e "${green}+${reset} Docker seems to be installed properly"
+  else
+    echo -e "${red}-${reset} Error running docker."
+    exit 1
+  fi
+}
+function install_docker(){
+  curl -fsSL https://get.docker.com -o get-docker.sh && \
+  sh get-docker.sh || \
+  { echo "${red}-${reset} Docker installation failed" && exit ; }
+  echo "${green}+${reset} Docker installation succeeded"
+  systemctl enable docker && \
+  systemctl start docker
+}
+function install_docker_compose(){
+  curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  chmod +x /usr/local/bin/docker-compose && \
+  echo "${green}+${reset} docker-compose installation succeeded" || \
+  { echo "${red}-${reset} docker-compose installation failed" && exit ; }
+}
+function install_portainer(){
+  docker volume create portainer_data && \
+  docker run -d -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
+  PORTAINER_INSTALLED="true" && \
+  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9443" || \
+  echo -e "${red}-${reset} Portainer installation failed\n"
+}
+function Version(){
+  # $1-a $2-op $3-$b
+  # Compare a and b as version strings. Rules:
+  # R1: a and b : dot-separated sequence of items. Items are numeric. The last item can optionally end with letters, i.e., 2.5 or 2.5a.
+  # R2: Zeros are automatically inserted to compare the same number of items, i.e., 1.0 < 1.0.1 means 1.0.0 < 1.0.1 => yes.
+  # R3: op can be '=' '==' '!=' '<' '<=' '>' '>=' (lexicographic).
+  # R4: Unrestricted number of digits of any item, i.e., 3.0003 > 3.0000004.
+  # R5: Unrestricted number of items.
+  local a=$1 op=$2 b=$3 al=${1##*.} bl=${3##*.}
+  while [[ $al =~ ^[[:digit:]] ]]; do al=${al:1}; done
+  while [[ $bl =~ ^[[:digit:]] ]]; do bl=${bl:1}; done
+  local ai=${a%$al} bi=${b%$bl}
+
+  local ap=${ai//[[:digit:]]} bp=${bi//[[:digit:]]}
+  ap=${ap//./.0} bp=${bp//./.0}
+
+  local w=1 fmt=$a.$b x IFS=.
+  for x in $fmt; do [ ${#x} -gt $w ] && w=${#x}; done
+  fmt=${*//[^.]}; fmt=${fmt//./%${w}s}
+  printf -v a $fmt $ai$bp; printf -v a "%s-%${w}s" $a $al
+  printf -v b $fmt $bi$ap; printf -v b "%s-%${w}s" $b $bl
+
+  case $op in
+    '<='|'>=' ) [ "$a" ${op:0:1} "$b" ] || [ "$a" = "$b" ] ;;
+    * )         [ "$a" $op "$b" ] ;;
+  esac
+}
+function check_docker_version(){
+  dockerV=$(docker version --format '{{.Server.Version}}')
+
+  if Version $dockerV '<' "${MINIMAL_DOCKER_VERSION}"; then
+    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_DOCKER_VERSION} minimum"
+    exit
+  fi
+}
+function check_compose_version(){
+  composeV=$(docker-compose --version)
+  composeV=( $composeV )
+  composeV=$( echo ${composeV[2]} |tr ',' ' ')
+
+  if Version $composeV '<' "${MINIMAL_COMPOSE_VERSION}"; then
+    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
+    exit
+  fi
+}
+
+##################################################################################
+#                                    START                                       #
+##################################################################################
 
 # Parse command-line options
 
@@ -164,11 +275,6 @@ while true ; do
   esac
 done
 
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
-   exit 1
-fi
-
 if [[ "${INTERACTIVE}" == "false" ]] && [[ "${INTERFACES}" == "" ]]; then
   echo "ERROR: --non-interactive option must be use with --interface option"
   exit 1
@@ -191,15 +297,33 @@ if [[ "${PRINT_PARAM}" == "true" ]]; then
 fi
 
 
-##########################
-# Check Curl             #
-##########################
-curl=$(curl -V)
-if [[ -z "$curl" ]]; then
-  echo -e "\n\n  Please install curl and re-run the script\n"
+#################################################
+# Check if root and curl are needed             #
+#################################################
+
+
+if [[ $(is_docker_installed) == "no" || $(is_compose_installed) == "no" ]]; then
+  if [[ $EUID -ne 0 ]]; then
+   ROOT_NEEDED="true"
+  fi
+  if [[ -z "$(curl -V)" ]]; then
+    CURL_NEEDED="true"
+  fi
+else
+  if [[ $(is_docker_availabale_for_user) == "no" ]]; then
+    ROOT_NEEDED="true"
+  fi
+fi
+
+if [[ "${CURL_NEEDED}" == "true" && "${ROOT_NEEDED}" == "true" ]]; then
+  echo "Curl not found. Please install curl and re-run this script as root or with sudo"
   exit 1
 fi
 
+if [[ "${ROOT_NEEDED}" == "true" ]]; then
+  echo "Please run this script as root or with sudo"
+  exit 1
+fi
 
 
 ##########################
@@ -227,75 +351,14 @@ echo "#  INSTALLATION  #"
 echo "##################"
 echo -e "\n"
 
-function test_docker_user(){
-  hello=$(docker run --rm hello-world) || \
-  echo "${red}-${reset} Docker test failed"
-  
-  if [[ $hello == *"Hello from Docker"* ]]; then
-    echo -e "${green}+${reset} Docker seems to be installed properly"
-  else
-    echo -e "${red}-${reset} Error running docker."
-    exit 1
-  fi
-}
-function install_docker(){
-  curl -fsSL https://get.docker.com -o get-docker.sh && \
-  sh get-docker.sh || \
-  { echo "${red}-${reset} Docker installation failed" && exit }
-  echo "${green}+${reset} Docker installation succeeded"
-  systemctl enable docker && \
-  systemctl start docker
-}
-function install_docker_compose(){
-  curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-  chmod +x /usr/local/bin/docker-compose && \
-  echo "${green}+${reset} docker-compose installation succeeded" || \
-  { echo "${red}-${reset} docker-compose installation failed" && exit }
-}
-function Version(){
-  # $1-a $2-op $3-$b
-  # Compare a and b as version strings. Rules:
-  # R1: a and b : dot-separated sequence of items. Items are numeric. The last item can optionally end with letters, i.e., 2.5 or 2.5a.
-  # R2: Zeros are automatically inserted to compare the same number of items, i.e., 1.0 < 1.0.1 means 1.0.0 < 1.0.1 => yes.
-  # R3: op can be '=' '==' '!=' '<' '<=' '>' '>=' (lexicographic).
-  # R4: Unrestricted number of digits of any item, i.e., 3.0003 > 3.0000004.
-  # R5: Unrestricted number of items.
-  local a=$1 op=$2 b=$3 al=${1##*.} bl=${3##*.}
-  while [[ $al =~ ^[[:digit:]] ]]; do al=${al:1}; done
-  while [[ $bl =~ ^[[:digit:]] ]]; do bl=${bl:1}; done
-  local ai=${a%$al} bi=${b%$bl}
-
-  local ap=${ai//[[:digit:]]} bp=${bi//[[:digit:]]}
-  ap=${ap//./.0} bp=${bp//./.0}
-
-  local w=1 fmt=$a.$b x IFS=.
-  for x in $fmt; do [ ${#x} -gt $w ] && w=${#x}; done
-  fmt=${*//[^.]}; fmt=${fmt//./%${w}s}
-  printf -v a $fmt $ai$bp; printf -v a "%s-%${w}s" $a $al
-  printf -v b $fmt $bi$ap; printf -v b "%s-%${w}s" $b $bl
-
-  case $op in
-    '<='|'>=' ) [ "$a" ${op:0:1} "$b" ] || [ "$a" = "$b" ] ;;
-    * )         [ "$a" $op "$b" ] ;;
-  esac
-}
-function install_portainer(){
-  docker volume create portainer_data && \
-  docker run -d -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce --logo "https://www.stamus-networks.com/hubfs/stamus_logo_blue_cropped-2.png" && \
-  PORTAINER_INSTALLED="true" && \
-  echo -e "${green}+${reset} Portainer has been installed and will be available on port 9443" || \
-  echo -e "${red}-${reset} Portainer installation failed\n"
-}
-
-
 if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   
   #############################
   #          DOCKER           #
   #############################  
-  dockerV=$(docker -v)
-  if [[ $dockerV == *"Docker version"* ]]; then
-    echo -e "${green}+${reset} Docker installation found: $dockerV"
+
+  if [[ $(is_docker_installed) == "yes" ]]; then
+    echo -e "${green}+${reset} Docker installation found: $(docker -v)"
   else
     echo -e "${red}-${reset} No docker installation found\n\n  We can try to install docker for you"
     echo -e "  Do you want to install docker automatically? [y/N] "
@@ -316,20 +379,15 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
     esac
   fi
 
-  dockerV=$(docker version --format '{{.Server.Version}}')
+  check_docker_version
 
-  if Version $dockerV '<' 17.06.0; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to 17.06.0 minimum"
-    exit
-  fi
+  test_docker
 
   #############################
   #      DOCKER-COMPOSE       #
   #############################
 
-  dockerV=$(docker-compose --version)
-
-  if [[ $dockerV == *"docker-compose version"* ]]; then
+  if [[ "$(is_compose_installed)" == "yes" ]]; then
     echo -e "${green}+${reset} docker-compose installation found"
   else
     echo -e "${red}-${reset} No docker-compose installation found, see https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"
@@ -351,12 +409,9 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
     esac
   fi
 
-  dockerV=( $dockerV )
-  dockerV=$( echo ${dockerV[2]} |tr ',' ' ')
-  if Version $dockerV '<' 1.27.0; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to 1.27.0 minimum"
-    exit
-  fi
+  check_compose_version
+
+
   #############################
   #         PORTAINER         #
   #############################
@@ -387,8 +442,6 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   fi
   
 fi
-
-
 
 #############################
 # GENERATE SSL CERTIFICATES #
