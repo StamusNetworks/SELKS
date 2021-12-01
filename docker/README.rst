@@ -109,6 +109,10 @@ Update process
   docker-compose pull
   docker-compose up -d --force-recreate
   
+Wiki
+====
+
+More info and details can be found on our `SELKS Docker Wiki <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_
 
 Useful commands
 ================
