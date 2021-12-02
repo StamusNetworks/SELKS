@@ -73,6 +73,21 @@ function Help(){
 }
 
 ############################################################
+# Functions for the ISO build                               #
+############################################################
+function load_docker_images_from_tar(){
+  tar_path="$1"
+  if [ -d "$tar_path" ]; then
+    echo -e "Found docker images tarballs"
+    for filename in $tar_path/*.tar; do
+    echo -e "\n Loading $filename into docker"
+      docker load -i "$filename"
+    done
+  fi
+}
+
+
+############################################################
 # Docker-related Functions                                 #
 ############################################################
 function is_docker_installed(){
@@ -362,6 +377,9 @@ echo "##################"
 echo "#  INSTALLATION  #"
 echo "##################"
 echo -e "\n"
+
+
+load_docker_images_from_tar ${BASEDIR}/tar_images
 
 if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   
