@@ -12,11 +12,10 @@ Requirements
 =====
 - 2 cores
 - 8 GB of free RAM
-- 10 GB of free disk space
-- Debian Buster (other distributions/versions are probably OK but are not officially supported)*
+- minimum 10 GB of free disk space (actual disk occupation will mainly depend of the number of rules and the amount of traffic on the network). 200GB+ SSD grade is recommended.
 - ``docker`` > 17.06.0
 - ``docker-compose`` > 1.27.0
-- ``git``, ``curl`` and ``time``
+- ``git``, ``curl``
 
 \* If installing on other distribution, especially non debian-based, it is highly recommended to properly install and test docker and docker-compose before going through the install process
 
@@ -109,6 +108,10 @@ Update process
   docker-compose pull
   docker-compose up -d --force-recreate
   
+Wiki
+====
+
+More info and details can be found on our `SELKS Docker Wiki <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_
 
 Useful commands
 ================
