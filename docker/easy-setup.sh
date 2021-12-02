@@ -62,7 +62,9 @@ function Help(){
     echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
     echo -e "       The interactive prompt regarding this option will be skipped\n"
     echo -e " --es-memory"
-    echo -e "       Amount of memory to give to the elasticsearch java heap. Default is '2G'. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e "       Amount of memory to give to the elasticsearch java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e " --ls-memory"
+    echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
     echo -e " --print-options"
     echo -e "       Print how the command line options have been interpreted \n"
   } | fmt
@@ -261,6 +263,10 @@ while true ; do
       ;;
     --es-memory)
       ELASTIC_MEMORY="$2"
+      shift 2
+      ;;
+    --ls-memory)
+      LOGSTASH_MEMORY="$2"
       shift 2
       ;;
       
@@ -625,7 +631,7 @@ fi
 #####################
 # ELASTIC MEMORY    #
 #####################
-
+: '
 echo -e "By default, elasticsearch will get attributed 2G of RAM"
 echo -e "You can specify a different value or hit enter : [2G]"
 echo -e "(Accepted units are 'm','M','g','G'. Ex: \"512m\" or \"4G\")"
@@ -639,6 +645,7 @@ fi
 if ! [ -z "${ELASTIC_MEMORY}" ]; then
   echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
 fi
+'
 
 ###########################
 # Generate KEY FOR DJANGO #
