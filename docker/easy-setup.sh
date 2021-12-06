@@ -54,6 +54,8 @@ function Help(){
     echo -e "       equivalent to \"-iD -iC -iP\", install docker, docker-compose and portainer\n"
     echo -e " -s,--skip-checks"
     echo -e "       Run the scirpt without checking if docker and docker-compose are installed. Use this only if you know that both docker and docker-compose are already installed with proper versions. Otherwise, the script will probably fail\n"
+    echo -e " --no-pull-containers"
+    echo -e "       Skip pulling the containers at the end of the script\n"
     echo -e " --scirius-version <version>"
     echo -e "       Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'\n"
     echo -e " --elk-version <version>"
@@ -62,11 +64,31 @@ function Help(){
     echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
     echo -e "       The interactive prompt regarding this option will be skipped\n"
     echo -e " --es-memory"
-    echo -e "       Amount of memory to give to the elasticsearch java heap. Default is '2G'. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e "       Amount of memory to give to the elasticsearch java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e " --ls-memory"
+    echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e " --restart-mode"
+    echo -e "       'no': never restart automatically the containers, 'always': automatically restart the containers even if they have been manually stopped, 'on-failure': only restart the containers if they failed,'unless-stopped': always restart the container except if it has been manually stopped"
     echo -e " --print-options"
     echo -e "       Print how the command line options have been interpreted \n"
   } | fmt
 }
+
+############################################################
+# Functions for the ISO build                               #
+############################################################
+function load_docker_images_from_tar(){
+  tar_path="$1"
+  if [ -d "$tar_path" ]; then
+    echo -e "Found docker images tarballs"
+    for filename in $tar_path/*.tar; do
+    ((loaded_images++))
+    echo -e "\n Loading $filename into docker"
+      docker load -i "$filename"
+    done
+  fi
+}
+
 
 ############################################################
 # Docker-related Functions                                 #
@@ -181,7 +203,7 @@ function check_compose_version(){
 
 # Option strings
 SHORT=hdi:ns
-LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options
+LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options,no-pull-containers
 
 # read the options
 OPTS=$(getopt -o $SHORT -l $LONG --name "$0" -- "$@")
@@ -194,6 +216,7 @@ eval set -- "$OPTS"
 INTERACTIVE="true"
 DEBUG="false"
 SKIP_CHECKS="false"
+PULL_CONTAINERS="true"
 INTERFACES=""
 ELASTIC_DATAPATH=""
 ELASTIC_MEMORY=""
@@ -227,6 +250,10 @@ while true ; do
       ;;
     -s | --skip-checks )
       SKIP_CHECKS="true"
+      shift
+      ;;
+    --no-pull-containers )
+      PULL_CONTAINERS="false"
       shift
       ;;
     --iD | --install-docker )
@@ -263,6 +290,14 @@ while true ; do
       ELASTIC_MEMORY="$2"
       shift 2
       ;;
+    --ls-memory)
+      LOGSTASH_MEMORY="$2"
+      shift 2
+      ;;
+    --restart-mode)
+      RESTART_MODE="$2"
+      shift 2
+      ;;
       
     -- )
       shift
@@ -286,6 +321,7 @@ if [[ "${PRINT_PARAM}" == "true" ]]; then
   echo "INTERFACES = ${INTERFACES}"
   echo "INTERACTIVE = ${INTERACTIVE}"
   echo "SKIP_CHECKS = ${SKIP_CHECKS}"
+  echo "PULL_CONTAINERS = ${PULL_CONTAINERS}"
   echo "INSTALL_PORTAINER = ${INSTALL_PORTAINER}"
   echo "SCIRIUS_VERSION = ${SCIRIUS_VERSION}"
   echo "ELK_VERSION = ${ELK_VERSION}"
@@ -350,6 +386,9 @@ echo "##################"
 echo "#  INSTALLATION  #"
 echo "##################"
 echo -e "\n"
+
+
+load_docker_images_from_tar ${BASEDIR}/tar_images
 
 if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   
@@ -587,6 +626,29 @@ esac
 
 echo
 
+################
+# RESTART MODE #
+################
+
+echo -e "Do you want the containers to restart automatically on startup? [Y/n] "
+if [[ ! -z "${RESTART_MODE}" ]]; then
+  echo "${RESTART_MODE}"
+  yn="${RESTART_MODE}"
+else
+  if [[ ${INTERACTIVE} == "true" ]]; then
+    read answer
+  else
+    echo "Y"
+    yn="Y"
+  fi
+fi
+case $yn in
+    [Nn]* ) echo "RESTART_MODE=on-failure" >> ${BASEDIR}/.env; break;;
+    * ) ;;
+esac
+
+echo
+
 ######################
 # ELASTIC DATA PATH #
 ######################
@@ -625,7 +687,7 @@ fi
 #####################
 # ELASTIC MEMORY    #
 #####################
-
+: '
 echo -e "By default, elasticsearch will get attributed 2G of RAM"
 echo -e "You can specify a different value or hit enter : [2G]"
 echo -e "(Accepted units are 'm','M','g','G'. Ex: \"512m\" or \"4G\")"
@@ -639,6 +701,7 @@ fi
 if ! [ -z "${ELASTIC_MEMORY}" ]; then
   echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
 fi
+'
 
 ###########################
 # Generate KEY FOR DJANGO #
@@ -674,19 +737,19 @@ if ! grep -q sse4_2 /proc/cpuinfo; then
 fi
 
 
-
-echo -e "\n"
-echo "#######################"
-echo "# CREATING CONTAINERS #"
-echo "#######################"
-echo -e "\n"
 ######################
-# BUILDING           #
+# PULLING           #
 ######################
+if [[ "${PULL_CONTAINERS}" == "true" ]]; then
+  echo -e "\n"
+  echo "#######################"
+  echo "# PULLING  CONTAINERS #"
+  echo "#######################"
+  echo -e "\n"v
 
-echo -e "Pulling containers \n"
+  docker-compose pull || exit
 
-docker-compose pull || exit
+fi
 
 
 ######################

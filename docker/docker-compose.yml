@@ -34,7 +34,7 @@ services:
   elasticsearch:
     container_name: elasticsearch
     image: elastic/elasticsearch:${ELK_VERSION:-7.15.1}
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
       interval: 10s
@@ -44,10 +44,10 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY:-2G} -Xmx${ELASTIC_MEMORY:-2G}
       - xpack.ml.enabled=${ML_ENABLED:-true}
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
+    mem_limit: ${ELASTIC_MEMORY:-2G}
     ulimits:
       memlock:
         soft: -1
@@ -58,7 +58,7 @@ services:
   kibana:
     container_name: kibana
     image:  elastic/kibana:${ELK_VERSION:-7.15.1}
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5601 || exit 1"]
       interval: 30s
@@ -74,13 +74,14 @@ services:
     depends_on:
       scirius:
         condition: service_healthy #because we need to wait for scirius to populate ILM policy
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9600 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 30s
+    mem_limit: ${LOGSTASH_MEMORY:-2G}
     volumes:
       - suricata-logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
@@ -92,7 +93,7 @@ services:
     container_name: suricata
     image: jasonish/suricata:master-amd64
     entrypoint: /etc/suricata/new_entrypoint.sh
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     depends_on:
       scirius:
         condition: service_healthy
@@ -111,7 +112,7 @@ services:
   scirius:
     container_name: scirius
     image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-master}
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     environment:
       - SECRET_KEY=${SCIRIUS_SECRET_KEY}
       - DEBUG=${SCIRIUS_DEBUG:-False}
@@ -142,7 +143,7 @@ services:
     container_name: evebox
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     networks:
       network:
         
@@ -150,7 +151,7 @@ services:
     container_name: nginx
     image: nginx
     command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
-    restart: unless-stopped
+    restart: ${RESTART_MODE:-unless-stopped}
     volumes:
       - scirius-static:/static/:ro
       - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
