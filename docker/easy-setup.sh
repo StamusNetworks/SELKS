@@ -65,6 +65,8 @@ function Help(){
     echo -e "       Amount of memory to give to the elasticsearch java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
     echo -e " --ls-memory"
     echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e " --restart-mode"
+    echo -e "       'no': never restart automatically the containers, 'always': automatically restart the containers even if they have been manually stopped, 'on-failure': only restart the containers if they failed,'unless-stopped': always restart the container except if it has been manually stopped"
     echo -e " --print-options"
     echo -e "       Print how the command line options have been interpreted \n"
   } | fmt
@@ -267,6 +269,10 @@ while true ; do
       ;;
     --ls-memory)
       LOGSTASH_MEMORY="$2"
+      shift 2
+      ;;
+    --restart-mode)
+      RESTART_MODE="$2"
       shift 2
       ;;
       
@@ -588,6 +594,29 @@ else
 fi
 case $yn in
     [Yy]* ) echo "SCIRIUS_DEBUG=True" >> ${BASEDIR}/.env; echo "NGINX_EXEC=nginx-debug" >> ${BASEDIR}/.env; break;;
+    * ) ;;
+esac
+
+echo
+
+################
+# RESTART MODE #
+################
+
+echo -e "Do you want the containers to restart automatically on startup? [Y/n] "
+if [[ ! -z "${RESTART_MODE}" ]]; then
+  echo "${RESTART_MODE}"
+  yn="${RESTART_MODE}"
+else
+  if [[ ${INTERACTIVE} == "true" ]]; then
+    read answer
+  else
+    echo "Y"
+    yn="Y"
+  fi
+fi
+case $yn in
+    [Nn]* ) echo "RESTART_MODE=on-failure" >> ${BASEDIR}/.env; break;;
     * ) ;;
 esac
 
