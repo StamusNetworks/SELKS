@@ -54,6 +54,8 @@ function Help(){
     echo -e "       equivalent to \"-iD -iC -iP\", install docker, docker-compose and portainer\n"
     echo -e " -s,--skip-checks"
     echo -e "       Run the scirpt without checking if docker and docker-compose are installed. Use this only if you know that both docker and docker-compose are already installed with proper versions. Otherwise, the script will probably fail\n"
+    echo -e " --no-pull-containers"
+    echo -e "       Skip pulling the containers at the end of the script\n"
     echo -e " --scirius-version <version>"
     echo -e "       Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'\n"
     echo -e " --elk-version <version>"
@@ -80,6 +82,7 @@ function load_docker_images_from_tar(){
   if [ -d "$tar_path" ]; then
     echo -e "Found docker images tarballs"
     for filename in $tar_path/*.tar; do
+    ((loaded_images++))
     echo -e "\n Loading $filename into docker"
       docker load -i "$filename"
     done
@@ -200,7 +203,7 @@ function check_compose_version(){
 
 # Option strings
 SHORT=hdi:ns
-LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options
+LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options,no-pull-containers
 
 # read the options
 OPTS=$(getopt -o $SHORT -l $LONG --name "$0" -- "$@")
@@ -213,6 +216,7 @@ eval set -- "$OPTS"
 INTERACTIVE="true"
 DEBUG="false"
 SKIP_CHECKS="false"
+PULL_CONTAINERS="true"
 INTERFACES=""
 ELASTIC_DATAPATH=""
 ELASTIC_MEMORY=""
@@ -246,6 +250,10 @@ while true ; do
       ;;
     -s | --skip-checks )
       SKIP_CHECKS="true"
+      shift
+      ;;
+    --no-pull-containers )
+      PULL_CONTAINERS="false"
       shift
       ;;
     --iD | --install-docker )
@@ -313,6 +321,7 @@ if [[ "${PRINT_PARAM}" == "true" ]]; then
   echo "INTERFACES = ${INTERFACES}"
   echo "INTERACTIVE = ${INTERACTIVE}"
   echo "SKIP_CHECKS = ${SKIP_CHECKS}"
+  echo "PULL_CONTAINERS = ${PULL_CONTAINERS}"
   echo "INSTALL_PORTAINER = ${INSTALL_PORTAINER}"
   echo "SCIRIUS_VERSION = ${SCIRIUS_VERSION}"
   echo "ELK_VERSION = ${ELK_VERSION}"
@@ -728,19 +737,19 @@ if ! grep -q sse4_2 /proc/cpuinfo; then
 fi
 
 
-
-echo -e "\n"
-echo "#######################"
-echo "# CREATING CONTAINERS #"
-echo "#######################"
-echo -e "\n"
 ######################
-# BUILDING           #
+# PULLING           #
 ######################
+if [[ "${PULL_CONTAINERS}" == "true" ]]; then
+  echo -e "\n"
+  echo "#######################"
+  echo "# PULLING  CONTAINERS #"
+  echo "#######################"
+  echo -e "\n"v
 
-echo -e "Pulling containers \n"
+  docker-compose pull || exit
 
-docker-compose pull || exit
+fi
 
 
 ######################
