@@ -66,7 +66,7 @@ function Help(){
     echo -e " --es-memory"
     echo -e "       Amount of memory to give to the elasticsearch java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
     echo -e " --ls-memory"
-    echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '2G'\n"
+    echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--ls-memory 512m\" or \"--ls-memory 4G\". Default is '512M'\n"
     echo -e " --restart-mode"
     echo -e "       'no': never restart automatically the containers, 'always': automatically restart the containers even if they have been manually stopped, 'on-failure': only restart the containers if they failed,'unless-stopped': always restart the container except if it has been manually stopped"
     echo -e " --print-options"
