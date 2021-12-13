@@ -81,7 +81,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    mem_limit: ${LOGSTASH_MEMORY:-512M}
+    mem_limit: ${LOGSTASH_MEMORY:-1G}
     volumes:
       - suricata-logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf

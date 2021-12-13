@@ -203,7 +203,7 @@ function check_compose_version(){
 
 # Option strings
 SHORT=hdi:ns
-LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,print-options,no-pull-containers
+LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,ls-memory:,print-options,no-pull-containers
 
 # read the options
 OPTS=$(getopt -o $SHORT -l $LONG --name "$0" -- "$@")
@@ -697,11 +697,18 @@ if [[ "${ELASTIC_MEMORY}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
 else
   echo "${ELASTIC_MEMORY}"
 fi
-
+'
 if ! [ -z "${ELASTIC_MEMORY}" ]; then
   echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
 fi
-'
+
+#####################
+# LOGSTASH MEMORY    #
+#####################
+
+if ! [ -z "${LOGSTASH_MEMORY}" ]; then
+  echo "LOGSTASH_MEMORY=${LOGSTASH_MEMORY}" >> ${BASEDIR}/.env
+fi
 
 ###########################
 # Generate KEY FOR DJANGO #
@@ -745,7 +752,7 @@ if [[ "${PULL_CONTAINERS}" == "true" ]]; then
   echo "#######################"
   echo "# PULLING  CONTAINERS #"
   echo "#######################"
-  echo -e "\n"v
+  echo -e "\n"
 
   docker-compose pull || exit
 
