@@ -83,7 +83,7 @@ services:
       start_period: 30s
     mem_limit: ${LOGSTASH_MEMORY:-1G}
     volumes:
-      - suricata-logs:/var/log/suricata:ro
+      - ./containers-data/suricata/logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
@@ -104,7 +104,7 @@ services:
       - SYS_NICE
     network_mode: host
     volumes:
-       - suricata-logs:/var/log/suricata
+       - ./containers-data/suricata/logs:/var/log/suricata
        - suricata-rules:/etc/suricata/rules
        - suricata-run:/var/run/suricata/
        - ./containers-data/suricata/etc:/etc/suricata
