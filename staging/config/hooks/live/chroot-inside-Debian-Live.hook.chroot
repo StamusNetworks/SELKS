@@ -120,9 +120,9 @@ python3 docker-drag/docker_pull.py python:3.9.5-slim-buster && \
 python3 docker-drag/docker_pull.py hello-world:latest && \
 python3 docker-drag/docker_pull.py portainer/portainer-ce:latest && \
 python3 docker-drag/docker_pull.py nginx:latest && \
-python3 docker-drag/docker_pull.py elastic/elasticsearch:7.15.1 && \
-python3 docker-drag/docker_pull.py elastic/kibana:7.15.1 && \
-python3 docker-drag/docker_pull.py elastic/logstash:7.15.1 && \
+python3 docker-drag/docker_pull.py elastic/elasticsearch:7.16.1 && \
+python3 docker-drag/docker_pull.py elastic/kibana:7.16.1 && \
+python3 docker-drag/docker_pull.py elastic/logstash:7.16.1 && \
 python3 docker-drag/docker_pull.py jasonish/suricata:master-amd64 && \
 python3 docker-drag/docker_pull.py ghcr.io/stamusnetworks/scirius:master && \
 python3 docker-drag/docker_pull.py jasonish/evebox:master
