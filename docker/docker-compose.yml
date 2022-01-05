@@ -45,6 +45,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.ml.enabled=${ML_ENABLED:-true}
+      - ingest.geoip.downloader.enabled=false
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
     mem_limit: ${ELASTIC_MEMORY:-2G}
