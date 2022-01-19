@@ -27,4 +27,4 @@ done
 
 cat /etc/suricata/suricata.yaml | grep "include: selks6-addin.yaml" || echo "include: selks6-addin.yaml" >> /etc/suricata/suricata.yaml && echo 'suricata.yaml edited'
 
-/docker-entrypoint.sh
+exec /docker-entrypoint.sh $@
