@@ -42,12 +42,12 @@ In order to access scirius, you will need following credentials:
 
 ### Wiki
 
-More info and details can be found on our `SELKS Docker Wiki <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_
+More info and details can be found on our [wiki](https://github.com/StamusNetworks/SELKS/wiki/Docker)
 
 
 ### Advanced installation
 
-For detailed instructions, please visit the [wiki](https://github.com/StamusNetworks/SELKS/wiki/Docker#understanding-the-setup-script)
+For detailed instructions, please visit the advanced installation guide - [wiki](https://github.com/StamusNetworks/SELKS/wiki/Docker#understanding-the-setup-script)
 
 Report an issue
 ---------------
