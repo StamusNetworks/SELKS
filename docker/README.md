@@ -49,6 +49,11 @@ More info and details can be found on our [wiki](https://github.com/StamusNetwor
 
 For detailed instructions, please visit the advanced installation guide - [wiki](https://github.com/StamusNetworks/SELKS/wiki/Docker#understanding-the-setup-script)
 
+Getting help
+------------
+
+There are many ways to get help incvluding in our live chat - [Getting Help](https://github.com/StamusNetworks/SELKS/wiki/Getting-Help)
+
 Report an issue
 ---------------
 
