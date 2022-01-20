@@ -191,7 +191,7 @@
               "ip": {
                 "type": "ip",
                 "fields": {
-                  "raw": {"type": "keyword"}
+                  "keyword": {"type": "keyword"}
                 }
               }
             }
@@ -201,7 +201,7 @@
               "ip": {
                 "type": "ip",
                 "fields": {
-                  "raw": {"type": "keyword"}
+                  "keyword": {"type": "keyword"}
                 }
               }
             }
