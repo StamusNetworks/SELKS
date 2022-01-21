@@ -48,7 +48,7 @@ services:
       - ingest.geoip.downloader.enabled=false
     volumes:
       - ${ELASTIC_DATAPATH:-elastic-data}:/usr/share/elasticsearch/data
-    mem_limit: ${ELASTIC_MEMORY:-2G}
+    mem_limit: ${ELASTIC_MEMORY:-3G}
     ulimits:
       memlock:
         soft: -1
@@ -82,7 +82,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    mem_limit: ${LOGSTASH_MEMORY:-1G}
+    mem_limit: ${LOGSTASH_MEMORY:-2G}
     volumes:
       - ./containers-data/suricata/logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
