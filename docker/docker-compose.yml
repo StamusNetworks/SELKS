@@ -27,7 +27,6 @@ volumes:
   scirius-data: #for scirius data persistency
   scirius-static: #statics files to be served by nginx
   suricata-run: #path where the suricata socket resides
-  suricata-logs:
 
 services:
   
