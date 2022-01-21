@@ -163,3 +163,21 @@ services:
       - 443:443
     networks:
       network:
+
+  cron:
+    # This containers handles crontabs for the other containers, following the 1 task per container principle.
+    # It is based on  `docker:latest` image, wich is an alpine image with docker binary
+    container_name: cron
+    image: docker:latest
+    command: ["crond", "-f", "-l", "8"]
+    restart: ${RESTART_MODE:-unless-stopped}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # This bind-mout allows using the hosts docker deamon instead of created one inside the container
+
+      # Those volumes will contain the cron jobs
+      - ./containers-data/cron-jobs/15min:/etc/periodic/15min/:ro
+      - ./containers-data/cron-jobs/daily:/etc/periodic/daily/:ro
+      - ./containers-data/cron-jobs/hourly:/etc/periodic/hourly/:ro
+      - ./containers-data/cron-jobs/monthly:/etc/periodic/monthly/:ro
+      - ./containers-data/cron-jobs/weekly:/etc/periodic/weekly/:ro
+
