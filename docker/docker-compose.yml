@@ -27,6 +27,7 @@ volumes:
   scirius-data: #for scirius data persistency
   scirius-static: #statics files to be served by nginx
   suricata-run: #path where the suricata socket resides
+  logstash-sincedb: #where logstash stores it's state so it doesn't re-ingest
 
 services:
   
@@ -83,6 +84,7 @@ services:
       start_period: 30s
     mem_limit: ${LOGSTASH_MEMORY:-2G}
     volumes:
+      - logstash-sincedb:/since.db
       - ./containers-data/suricata/logs:/var/log/suricata:ro
       - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
