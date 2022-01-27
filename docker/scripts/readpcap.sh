@@ -204,6 +204,9 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
 
 function Cleanup(){
     ${BASEDIR}/scripts/cleanup.sh
+    if [ $? -ne 0 ];then
+      exit $?
+    fi
 }
 
 ## TEST IF DOCKER IS ACCESSIBLE TO THIS USER ##
@@ -238,6 +241,12 @@ else
   MODE="single"
 fi
 
+# Test if path exists
+test=$(docker volume inspect selks_suricata-rules 2>&1 1>/dev/null)
+if [[ "${test}" == *"Error"* ]]; then
+  echo "${test}"
+  exit 1
+fi
 
 docker run --name suricata-replay --rm -it \
 --cap-add=net_admin --cap-add=sys_nice \

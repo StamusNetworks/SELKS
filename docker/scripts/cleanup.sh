@@ -25,7 +25,7 @@ function Help(){
 
 if [ $# -gt 0 ]; then
     Help
-    exit
+    exit -1
 fi
 
 
@@ -37,11 +37,11 @@ if [[ -z "$dockerV" ]]; then
 fi
 
 echo "Delete suricata logs:"
-rm -f ${BASEDIR}/containers-data/suricata/logs/* && echo -e "OK\n" || echo -e "ERROR\n"
+rm -f ${BASEDIR}/containers-data/suricata/logs/* && echo -e "OK\n" || { echo -e "ERROR\n" && exit 1; }
 
 echo "send SIGHUP to suricata:"
 docker kill --signal=HUP suricata | grep -q "suricata" && echo -e "OK\n" || echo -e "ERROR\n"
 
 echo "Delete elasticsearch indexes:"
 OUT=$( docker exec scirius curl -s -X DELETE -i 'http://elasticsearch:9200/logstash-*' )
-echo "${OUT}" | grep -q "200 OK" && echo -e "OK\n" || echo -e "ERROR\n ${OUT}\n"
+echo "${OUT}" | grep -q "200 OK" && echo -e "OK\n" || { echo -e "ERROR\n ${OUT}\n" && exit 1; }
