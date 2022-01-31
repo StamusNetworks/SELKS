@@ -255,4 +255,4 @@ docker run --name suricata-replay --rm -it \
 -v ${BASEDIR}/containers-data/suricata/etc:/etc/suricata \
 -v ${HOST_PATH}:${LOCAL_PATH} \
 --entrypoint /etc/suricata/new_entrypoint.sh \
-jasonish/suricata:master -k none -r ${LOCAL_PATH} --runmode ${MODE} -l /var/log/suricata --set sensor-name=${FILENAME}
+jasonish/suricata:master-amd64 -k none -r ${LOCAL_PATH} --runmode ${MODE} -l /var/log/suricata --set sensor-name=${FILENAME}
