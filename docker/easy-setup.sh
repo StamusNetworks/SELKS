@@ -930,7 +930,7 @@ fi
 ####################
 # CREATING FOLDERS #
 ####################
-mkdir -p ${BASEDIR}/containers-data/cron-jobs/{15min,hourly,daily,weekly,monthly}
+mkdir -p ${BASEDIR}/containers-data/cron-jobs/{1min,15min,hourly,daily,weekly,monthly}
 mkdir -p ${BASEDIR}/containers-data/suricata/{logs,logrotate}
 
 

@@ -177,12 +177,13 @@ services:
     # It is based on  `docker:latest` image, wich is an alpine image with docker binary
     container_name: cron
     image: docker:latest
-    command: ["crond", "-f", "-l", "8"]
+    command: [sh, -c, "echo '*	*	 *	*	 *	run-parts /etc/periodic/1min' >> /etc/crontabs/root && crond -f -l 8"]
     restart: ${RESTART_MODE:-unless-stopped}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # This bind-mout allows using the hosts docker deamon instead of created one inside the container
 
       # Those volumes will contain the cron jobs
+      - ./containers-data/cron-jobs/1min:/etc/periodic/1min/:ro
       - ./containers-data/cron-jobs/15min:/etc/periodic/15min/:ro
       - ./containers-data/cron-jobs/daily:/etc/periodic/daily/:ro
       - ./containers-data/cron-jobs/hourly:/etc/periodic/hourly/:ro
