@@ -22,57 +22,332 @@
 MINIMAL_DOCKER_VERSION="17.06.0"
 MINIMAL_COMPOSE_VERSION="1.27.0"
 
+
+
 ############################################################
-# Help Function                                           #
+#                                                          #
+#                 PARSING HELPER FUNCTIONS                 #
+#          JUMP TO LINE 474 FOR THE ACTUAL SCRIPT          #
+#                                                          #
 ############################################################
-function Help(){
-  # Display Help
-  { echo
-    echo "SELKS setup script"
-    echo
-    echo -e "\t Syntax: easy-setup.sh [-h|--help] [-d|--debug] [-i|--interfaces <eth0 eth1 eth2 ...>] [-n|--non-interactive] [--skip-checks] [--scirius-version <version>] [--elk-version <version>] [--es-datapath <path>]"
-    echo
-    echo "OPTIONS"
-    echo -e " -h, --help"
-    echo -e "       Display this help menu\n"
-    echo -e " -d,--debug"
-    echo -e "       Activate debug mode for scirius and nginx."
-    echo -e "       The interactive prompt regarding this option will be skipped\n"
-    echo -e " -i,--interface <interface>"
-    echo -e "       Defines an interface on which SELKS should listen."
-    echo -e "       This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1"
-    echo -e "       The interactive prompt regarding this option will be skipped\n"
-    echo -e " -n,--non-interactive"
-    echo -e "       Run the script without interacive prompt. This will activate the '--skip-checks' option. '--interfaces' option is required\n"
-    echo -e " --iD,--install-docker"
-    echo -e "       Install docker\n"
-    echo -e " --iC,--install-docker-compose"
-    echo -e "       Install docker-compose\n"
-    echo -e " --iP,--install-portainer"
-    echo -e "       Install portainer\n"
-    echo -e " --iA,--install-all"
-    echo -e "       equivalent to \"-iD -iC -iP\", install docker, docker-compose and portainer\n"
-    echo -e " -s,--skip-checks"
-    echo -e "       Run the scirpt without checking if docker and docker-compose are installed. Use this only if you know that both docker and docker-compose are already installed with proper versions. Otherwise, the script will probably fail\n"
-    echo -e " --no-pull-containers"
-    echo -e "       Skip pulling the containers at the end of the script\n"
-    echo -e " --scirius-version <version>"
-    echo -e "       Defines the version of scirius to use. The version can be a branch name, a github tag or a commit hash. Default is 'master'\n"
-    echo -e " --elk-version <version>"
-    echo -e "       Defines the version of the ELK stack to use. Default is '7.15.1'. The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub\n"
-    echo -e " --es-datapath <path>"
-    echo -e "       Defines the path where Elasticsearch will store it's data. The path must already exists and the current user must have write permissions. Default will be in a named docker volume ('/var/lib/docker')"
-    echo -e "       The interactive prompt regarding this option will be skipped\n"
-    echo -e " --es-memory"
-    echo -e "       Amount of memory to give to the elasticsearch java heap. Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\". Default is '3G'\n"
-    echo -e " --ls-memory"
-    echo -e "       Amount of memory to give to the logstash java heap. Accepted units are 'm','M','g','G'. ex \"--ls-memory 512m\" or \"--ls-memory 4G\". Default is '2G'\n"
-    echo -e " --restart-mode"
-    echo -e "       'no': never restart automatically the containers, 'always': automatically restart the containers even if they have been manually stopped, 'on-failure': only restart the containers if they failed,'unless-stopped': always restart the container except if it has been manually stopped"
-    echo -e " --print-options"
-    echo -e "       Print how the command line options have been interpreted \n"
-  } | fmt
+
+# Partially Generated with Argbash
+### TEMPLATE
+#
+# ARG_HELP([SELKS setup script])
+#
+# ARG_OPTIONAL_REPEATED([interface],[i],[Defines an interface on which SELKS should listen.\This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1.])
+#
+# ARG_OPTIONAL_BOOLEAN([debug],[d],[Activate debug mode for scirius and nginx.])
+#
+# ARG_OPTIONAL_BOOLEAN([non-interactive],[n],[Run the script without interactive prompt.])
+#
+# ARG_OPTIONAL_BOOLEAN([install-docker],[],[Install docker on the fly if not found])
+#
+# ARG_OPTIONAL_BOOLEAN([install-compose],[],[Install docker-compose on the fly if not found])
+#
+# ARG_OPTIONAL_BOOLEAN([install-portainer],[],[Install portainer on the fly if not found])
+#
+# ARG_OPTIONAL_BOOLEAN([install-all],[],[Install docker, docker-compose and portainer on the fly if not found])
+#
+# ARG_OPTIONAL_BOOLEAN([skip-checks],[s],[Run the script without checking if docker and docker-compose are installed.\nUse this only if you know that both docker and docker-compose are already installed with proper versions.\nOtherwise, the script will probably fail])
+#
+# ARG_OPTIONAL_BOOLEAN([pull-containers],[],[Skip pulling the containers at the end of the script.\nUsefull when no internet connection is available.],[on])
+#
+# ARG_OPTIONAL_SINGLE([scirius-version],[],[Defines the version of scirius to use.\nThe version can be a branch name, a github tag or a commit hash. Default is 'master'])
+#
+# ARG_OPTIONAL_SINGLE([elk-version],[],[Defines the version of the ELK stack to use. Default is '7.15.1'.\nThe version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub])
+#
+# ARG_OPTIONAL_SINGLE([es-datapath],[],[Defines the path where Elasticsearch will store it's data.\nThe path must already exists and the current user must have write permissions.\nDefault will be in a named docker volume ('/var/lib/docker')])
+#
+# ARG_OPTIONAL_SINGLE([es-memory],[],[Amount of memory to give to the elasticsearch container.\nAccepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\".\nDefault is '3G'])
+#
+# ARG_OPTIONAL_SINGLE([ls-memory],[],[Amount of memory to give to the logstash container.\nAccepted units are 'm','M','g','G'. ex \"--ls-memory 512m\" or \"--ls-memory 4G\".\nDefault is '2G'])
+#
+# ARG_OPTIONAL_SINGLE([restart-mode],[],['no': never restart automatically the containers\n'always': automatically restart the containers even if they have been manually stopped\n'on-failure': only restart the containers if they failed\n'unless-stopped': always restart the container except if it has been manually stopped])
+#
+# ARG_OPTIONAL_BOOLEAN([print-options],[],[print how the options have been interpreted and exit])
+#
+# ARG_POSITIONAL_DOUBLEDASH([])
+# ARGBASH_SET_INDENT([  ])
+# ARGBASH_GO()
+# needed because of Argbash --> m4_ignore([
+### START OF CODE GENERATED BY Argbash v2.9.0 one line above ###
+# Argbash is a bash code generator used to get arguments parsing right.
+# Argbash is FREE SOFTWARE, see https://argbash.io for more info
+# Generated online by https://argbash.io/generate
+
+
+# # When called, the process ends.
+# Args:
+#   $1: The exit message (print to stderr)
+#   $2: The exit code (default is 1)
+# if env var _PRINT_HELP is set to 'yes', the usage is print to stderr (prior to $1)
+# Example:
+#   test -f "$_arg_infile" || _PRINT_HELP=yes die "Can't continue, have to supply file as an argument, got '$_arg_infile'" 4
+die()
+{
+  local _ret="${2:-1}"
+  test "${_PRINT_HELP:-no}" = yes && print_help >&2
+  echo "$1" >&2
+  exit "${_ret}"
 }
+
+
+# Function that evaluates whether a value passed to it begins by a character
+# that is a short option of an argument the script knows about.
+# This is required in order to support getopts-like short options grouping.
+begins_with_short_option()
+{
+  local first_option all_short_options='hidns'
+  first_option="${1:0:1}"
+  test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
+}
+
+# THE DEFAULTS INITIALIZATION - OPTIONALS
+_arg_interface=()
+_arg_debug="off"
+_arg_non_interactive="off"
+_arg_install_docker="off"
+_arg_install_compose="off"
+_arg_install_portainer="off"
+_arg_install_all="off"
+_arg_skip_checks="off"
+_arg_pull_containers="on"
+_arg_scirius_version=
+_arg_elk_version=
+_arg_es_datapath=
+_arg_es_memory=
+_arg_ls_memory=
+_arg_restart_mode=
+_arg_print_options="off"
+
+
+# Function that prints general usage of the script.
+# This is useful if users asks for it, or if there is an argument parsing error (unexpected / spurious arguments)
+# and it makes sense to remind the user how the script is supposed to be called.
+print_help()
+{
+  printf '%s\n' "SELKS setup script"
+  printf 'Usage: %s [-h|--help] [-i|--interface <arg>] [-d|--debug] [-n|--non-interactive] [--install-docker] [--install-compose] [--install-portainer] [--install-all] [-s|--skip-checks] [--no-pull-containers] [--scirius-version <arg>] [--elk-version <arg>] [--es-datapath <arg>] [--es-memory <arg>] [--ls-memory <arg>] [--restart-mode <arg>] [--print-options]\n' "$0"
+  printf '\t%s\n\n' "-h, --help: Prints help"
+  printf '\t%s\n\n' "-i, --interface: Defines an interface on which SELKS should listen.
+    This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1."
+  printf '\t%s\n\n' "-d, --debug: Activate debug mode for scirius and nginx."
+  printf '\t%s\n\n' "-n, --non-interactive: Run the script without interactive prompt."
+  printf '\t%s\n\n' "--iD, --install-docker: Install docker on the fly if not found"
+  printf '\t%s\n\n' "--iC, --install-compose: Install docker-compose on the fly if not found"
+  printf '\t%s\n\n' "--iP, --install-portainer: Install portainer on the fly if not found"
+  printf '\t%s\n\n' "--iA, --install-all: Install docker, docker-compose and portainer on the fly if not found"
+  printf '\t%s\n\n' "-s, --skip-checks: Run the script without checking if docker and docker-compose are installed.
+		Use this only if you know that both docker and docker-compose are already installed with proper versions.
+		Otherwise, the script will probably fail"
+  printf '\t%s\n\n' "--no-pull-containers: Skip pulling the containers at the end of the script.
+		Usefull when no internet connection is available."
+  printf '\t%s\n\n' "--scirius-version: Defines the version of scirius to use.
+		The version can be a branch name, a github tag or a commit hash. Default is 'master'"
+  printf '\t%s\n\n' "--elk-version: Defines the version of the ELK stack to use. Default is '7.15.1'.
+		The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub"
+  printf '\t%s\n\n' "--es-datapath: Defines the path where Elasticsearch will store it's data.
+		The path must already exists and the current user must have write permissions.
+		Default will be in a named docker volume ('/var/lib/docker')"
+  printf '\t%s\n\n' "--es-memory: Amount of memory to give to the elasticsearch container.
+		Accepted units are 'm','M','g','G'. ex \"--es-memory 512m\" or \"--es-memory 4G\".
+		Default is '3G'"
+  printf '\t%s\n\n' "--ls-memory: Amount of memory to give to the logstash container.
+		Accepted units are 'm','M','g','G'. ex \"--ls-memory 512m\" or \"--ls-memory 4G\".
+		Default is '2G'"
+  printf '\t%s\n\n' "--restart-mode: 'no': never restart automatically the containers
+		'always': automatically restart the containers even if they have been manually stopped
+		'on-failure': only restart the containers if they failed
+		'unless-stopped': always restart the container except if it has been manually stopped"
+  printf '\t%s\n\n' "--print-options: print how the options have been interpreted and exit"
+}
+
+
+# The parsing of the command-line
+parse_commandline()
+{
+  while test $# -gt 0
+  do
+    _key="$1"
+    case "$_key" in
+      # The help argurment doesn't accept a value,
+      # we expect the --help or -h, so we watch for them.
+      -h|--help)
+        print_help
+        exit 0
+        ;;
+      # We support getopts-style short arguments clustering,
+      # so as -h doesn't accept value, other short options may be appended to it, so we watch for -h*.
+      # After stripping the leading -h from the argument, we have to make sure
+      # that the first character that follows coresponds to a short option.
+      -h*)
+        print_help
+        exit 0
+        ;;
+      # We support whitespace as a delimiter between option argument and its value.
+      # Therefore, we expect the --interface or -i value.
+      # so we watch for --interface and -i.
+      # Since we know that we got the long or short option,
+      # we just reach out for the next argument to get the value.
+      -i|--interface)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_interface+=("$2")
+        shift
+        ;;
+      # We support the = as a delimiter between option argument and its value.
+      # Therefore, we expect --interface=value, so we watch for --interface=*
+      # For whatever we get, we strip '--interface=' using the ${var##--interface=} notation
+      # to get the argument value
+      --interface=*)
+        _arg_interface+=("${_key##--interface=}")
+        ;;
+      # We support getopts-style short arguments grouping,
+      # so as -i accepts value, we allow it to be appended to it, so we watch for -i*
+      # and we strip the leading -i from the argument string using the ${var##-i} notation.
+      -i*)
+        _arg_interface+=("${_key##-i}")
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      -d|--debug)
+        _arg_debug="on"
+        test "${1:0:5}" = "--no-" && _arg_debug="off"
+        ;;
+      # See the comment of option '-h' to see what's going on here - principle is the same.
+      -d*)
+        _arg_debug="on"
+        _next="${_key##-d}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          { begins_with_short_option "$_next" && shift && set -- "-d" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      -n|--non-interactive)
+        _arg_non_interactive="on"
+        ;;
+      # See the comment of option '-h' to see what's going on here - principle is the same.
+      -n*)
+        _arg_non_interactive="on"
+        _next="${_key##-n}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          { begins_with_short_option "$_next" && shift && set -- "-n" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --iD|--install-docker)
+        _arg_install_docker="on"
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --iC|--install-compose)
+        _arg_install_compose="on"
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --iP|--install-portainer)
+        _arg_install_portainer="on"
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --iA|--install-all)
+        _arg_install_all="on"
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      -s|--skip-checks)
+        _arg_skip_checks="on"
+        ;;
+      # See the comment of option '-h' to see what's going on here - principle is the same.
+      -s*)
+        _arg_skip_checks="on"
+        _next="${_key##-s}"
+        if test -n "$_next" -a "$_next" != "$_key"
+        then
+          { begins_with_short_option "$_next" && shift && set -- "-s" "-${_next}" "$@"; } || die "The short option '$_key' can't be decomposed to ${_key:0:2} and -${_key:2}, because ${_key:0:2} doesn't accept value and '-${_key:2:1}' doesn't correspond to a short option."
+        fi
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --no-pull-containers)
+         _arg_pull_containers="off"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --scirius-version)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_scirius_version="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --scirius-version=*)
+        _arg_scirius_version="${_key##--scirius-version=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --elk-version)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_elk_version="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --elk-version=*)
+        _arg_elk_version="${_key##--elk-version=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --es-datapath)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_es_datapath="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --es-datapath=*)
+        _arg_es_datapath="${_key##--es-datapath=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --es-memory)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_es_memory="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --es-memory=*)
+        _arg_es_memory="${_key##--es-memory=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --ls-memory)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_ls_memory="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --ls-memory=*)
+        _arg_ls_memory="${_key##--ls-memory=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --restart-mode)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_restart_mode="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --restart-mode=*)
+        _arg_restart_mode="${_key##--restart-mode=}"
+        ;;
+      # See the comment of option '--help' to see what's going on here - principle is the same.
+      --print-options)
+        _arg_print_options="on"
+        ;;
+      *)
+        _PRINT_HELP=yes die "FATAL ERROR: Got an unexpected argument '$1'" 1
+        ;;
+    esac
+    shift
+  done
+}
+
+# Now call all the functions defined above that are needed to get the job done
+parse_commandline "$@"
+
+# OTHER STUFF GENERATED BY Argbash
+
+### END OF CODE GENERATED BY Argbash (sortof) ### ])
+
 
 ############################################################
 # Functions for the ISO build                               #
@@ -199,133 +474,42 @@ function check_compose_version(){
 #                                    START                                       #
 ##################################################################################
 
-# Parse command-line options
+# Setting variables
 
-# Option strings
-SHORT=hdi:ns
-LONG=help,debug,interfaces:,non-interactive,skip-checks,install-docker,iD,install-docker-compose,iC,install-portainer,iP,install-all,iA,scirius-version:,elk-version:,es-datapath:,es-memory:,ls-memory:,print-options,no-pull-containers
+[ "${_arg_non_interactive}" == "on" ] && INTERACTIVE="false" || INTERACTIVE="true"
+if [ "${_arg_install_all}" == "on" ];then
+  _arg_install_docker="on"
+  _arg_install_compose="on"
+  _arg_install_portainer="on"
+fi
+INTERFACES=$(printf " %s" "${_arg_interface[@]}")
+INTERFACES=${INTERFACES:1}
 
-# read the options
-OPTS=$(getopt -o $SHORT -l $LONG --name "$0" -- "$@")
 
-if [ $? != 0 ] ; then echo "Failed to parse options...exiting." >&2 ; exit 1 ; fi
 
-eval set -- "$OPTS"
-
-# set initial values
-INTERACTIVE="true"
-DEBUG="false"
-SKIP_CHECKS="false"
-PULL_CONTAINERS="true"
-INTERFACES=""
-ELASTIC_DATAPATH=""
-ELASTIC_MEMORY=""
-PRINT_PARAM="false"
-INSTALL_PORTAINER="false"
-INSTALL_DOCKER="false"
-INSTALL_COMPOSE="false"
-
-# extract options and their arguments into variables.
-while true ; do
-  case "${1}" in
-    -h | --help )
-      Help
-      exit
-      ;;
-    --print-options )
-      PRINT_PARAM="true"
-      shift
-      ;;
-    -d | --debug )
-      DEBUG="true"
-      shift
-      ;;
-    -i | --interfaces )
-      INTERFACES="${INTERFACES} $2"
-      shift 2
-      ;;
-    -n | --non-interactive )
-      INTERACTIVE="false"
-      shift
-      ;;
-    -s | --skip-checks )
-      SKIP_CHECKS="true"
-      shift
-      ;;
-    --no-pull-containers )
-      PULL_CONTAINERS="false"
-      shift
-      ;;
-    --iD | --install-docker )
-      INSTALL_DOCKER="true"
-      shift
-      ;;
-    --iC | --install-docker-compose )
-      INSTALL_COMPOSE="true"
-      shift
-      ;;
-    --iP | --install-portainer )
-      INSTALL_PORTAINER="true"
-      shift
-      ;;
-    --iA | --install-all )
-      INSTALL_DOCKER="true"
-      INSTALL_COMPOSE="true"
-      INSTALL_PORTAINER="true"
-      shift
-      ;;
-    --scirius-version )
-      SCIRIUS_VERSION="$2"
-      shift 2
-      ;;
-    --elk-version)
-      ELK_VERSION="$2"
-      shift 2
-      ;;
-    --es-datapath)
-      ELASTIC_DATAPATH="$2"
-      shift 2
-      ;;
-    --es-memory)
-      ELASTIC_MEMORY="$2"
-      shift 2
-      ;;
-    --ls-memory)
-      LOGSTASH_MEMORY="$2"
-      shift 2
-      ;;
-    --restart-mode)
-      RESTART_MODE="$2"
-      shift 2
-      ;;
-      
-    -- )
-      shift
-      break
-      ;;
-    *)
-      echo "No such option '${1}'"
-      exit 1
-      ;;
-  esac
-done
 
 if [[ "${INTERACTIVE}" == "false" ]] && [[ "${INTERFACES}" == "" ]]; then
   echo "ERROR: --non-interactive option must be use with --interface option"
   exit 1
 fi
 
-if [[ "${PRINT_PARAM}" == "true" ]]; then
+if [[ "${_arg_print_options}" == "on" ]]; then
   # Print the variables
-  echo "DEBUG = ${DEBUG}"
-  echo "INTERFACES = ${INTERFACES}"
-  echo "INTERACTIVE = ${INTERACTIVE}"
-  echo "SKIP_CHECKS = ${SKIP_CHECKS}"
-  echo "PULL_CONTAINERS = ${PULL_CONTAINERS}"
-  echo "INSTALL_PORTAINER = ${INSTALL_PORTAINER}"
-  echo "SCIRIUS_VERSION = ${SCIRIUS_VERSION}"
-  echo "ELK_VERSION = ${ELK_VERSION}"
-  echo "ELASTIC_DATAPATH = ${ELASTIC_DATAPATH}"
+  echo "DEBUG = ${_arg_debug}" #
+  echo "INTERFACES = ${INTERFACES}" #
+  echo "INTERACTIVE = ${INTERACTIVE}" #
+  echo "INSTALL_DOCKER = ${_arg_install_docker}" #
+  echo "INSTALL_COMPOSE = ${_arg_install_compose}" #
+  echo "INSTALL_PORTAINER = ${_arg_install_portainer}" #
+  echo "INSTALL_ALL = ${_arg_install_all}" #
+  echo "SKIP_CHECKS = ${_arg_skip_checks}" #
+  echo "PULL_CONTAINERS = ${_arg_pull_containers}" #
+  echo "SCIRIUS_VERSION = ${_arg_scirius_version}" #
+  echo "ELK_VERSION = ${_arg_elk_version}" #
+  echo "ELASTIC_DATAPATH = ${_arg_es_datapath}" #
+  echo "RESTART_MODE = ${_arg_restart_mode}" #
+  echo "ELASTIC_MEMORY = ${_arg_es_memory}" #
+  echo "LOGSTASH_MEMORY = ${_arg_ls_memory}" #
   if [[ "${INTERACTIVE}" == "true" ]] ; then
     read
   fi
@@ -390,7 +574,7 @@ echo -e "\n"
 
 load_docker_images_from_tar ${BASEDIR}/tar_images
 
-if [[ "${SKIP_CHECKS}" == "false" ]] ; then
+if [[ "${_arg_skip_checks}" == "off" ]] ; then
   
   #############################
   #          DOCKER           #
@@ -401,7 +585,7 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   else
     echo -e "${red}-${reset} No docker installation found\n\n  We can try to install docker for you"
     echo -e "  Do you want to install docker automatically? [y/N] "
-    if [[ "${INSTALL_DOCKER}" == "true" ]]; then
+    if [[ "${_arg_install_docker}" == "on" ]]; then
       yn="y"
       echo "y"
     else
@@ -431,7 +615,7 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
   else
     echo -e "${red}-${reset} No docker-compose installation found, see https://docs.docker.com/compose/install/ to learn how to install docker-compose on your system"
     echo -e "  Do you want to install docker-compose automatically? [y/N] "
-    if [[ "${INSTALL_COMPOSE}" == "true" ]]; then
+    if [[ "${_arg_install_compose}" == "on" ]]; then
       yn="y"
       echo "y"
     else
@@ -461,7 +645,7 @@ if [[ "${SKIP_CHECKS}" == "false" ]] ; then
     echo -e "\n  Portainer is a web interface for managing docker containers. It is recommended if you are not experienced with docker."
     while true; do
         echo -e "  Do you want to install Portainer ? [y/n] "
-        if [[ "${INSTALL_PORTAINER}" == "true" ]]; then
+        if [[ "${_arg_install_portainer}" == "on" ]]; then
           yn="y"
           echo "y"
         else
@@ -608,7 +792,7 @@ echo "INTERFACES=${INTERFACES_LIST}" >> ${BASEDIR}/.env
 ##############
 
 echo -e "Do you want to use debug mode? [y/N] "
-if [[ "${DEBUG}" == "true" ]]; then
+if [[ "${_arg_debug}" == "on" ]]; then
   echo "y"
   yn="y"
 else
@@ -631,9 +815,9 @@ echo
 ################
 
 echo -e "Do you want the containers to restart automatically on startup? [Y/n] "
-if [[ ! -z "${RESTART_MODE}" ]]; then
-  echo "${RESTART_MODE}"
-  yn="${RESTART_MODE}"
+if [[ ! -z "${_arg_restart_mode}" ]]; then
+  echo "${_arg_restart_mode}"
+  yn="${_arg_restart_mode}"
 else
   if [[ ${INTERACTIVE} == "true" ]]; then
     read answer
@@ -662,11 +846,11 @@ echo -e "With SELKS running, database can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Alternatively, You can specify a path where you want the data to be saved, or hit enter for default."
 
-if [[ "${ELASTIC_DATAPATH}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
+if [[ "${_arg_es_datapath}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
   read elastic_data_path
 else
-  echo "${ELASTIC_DATAPATH}"
-  elastic_data_path=${ELASTIC_DATAPATH}
+  echo "${_arg_es_datapath}"
+  elastic_data_path=${_arg_es_datapath}
 fi
 
 if ! [ -z "${elastic_data_path}" ]; then
@@ -698,16 +882,16 @@ else
   echo "${ELASTIC_MEMORY}"
 fi
 '
-if ! [ -z "${ELASTIC_MEMORY}" ]; then
-  echo "ELASTIC_MEMORY=${ELASTIC_MEMORY}" >> ${BASEDIR}/.env
+if ! [ -z "${_arg_es_memory}" ]; then
+  echo "ELASTIC_MEMORY=${_arg_es_memory}" >> ${BASEDIR}/.env
 fi
 
 #####################
 # LOGSTASH MEMORY    #
 #####################
 
-if ! [ -z "${LOGSTASH_MEMORY}" ]; then
-  echo "LOGSTASH_MEMORY=${LOGSTASH_MEMORY}" >> ${BASEDIR}/.env
+if ! [ -z "${_arg_ls_memory}" ]; then
+  echo "LOGSTASH_MEMORY=${_arg_ls_memory}" >> ${BASEDIR}/.env
 fi
 
 ###########################
@@ -723,15 +907,15 @@ echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 ##################################
 # Setting Scirius branch to use #
 ##################################
-if [ ! -z "${SCIRIUS_VERSION}" ] ; then
-  echo "SCIRIUS_VERSION=$SCIRIUS_VERSION" >> ${BASEDIR}/.env
+if [ ! -z "${_arg_scirius_version}" ] ; then
+  echo "SCIRIUS_VERSION=$_arg_scirius_version" >> ${BASEDIR}/.env
 fi
 
 #############################
 # Setting ELK VERSION to use #
 #############################
-if [ ! -z "${ELK_VERSION}" ] ; then
-  echo "ELK_VERSION=$ELK_VERSION" >> ${BASEDIR}/.env
+if [ ! -z "${_arg_elk_version}" ] ; then
+  echo "ELK_VERSION=$_arg_elk_version" >> ${BASEDIR}/.env
 fi
 
 
@@ -747,7 +931,7 @@ fi
 ######################
 # PULLING           #
 ######################
-if [[ "${PULL_CONTAINERS}" == "true" ]]; then
+if [[ "${_arg_pull_containers}" == "on" ]]; then
   echo -e "\n"
   echo "#######################"
   echo "# PULLING  CONTAINERS #"
