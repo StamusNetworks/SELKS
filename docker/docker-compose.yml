@@ -34,6 +34,9 @@ volumes:
       o: bind
       device: ./containers-data/suricata/logrotate
   logstash-sincedb: #where logstash stores it's state so it doesn't re-ingest
+  arkime-logs:
+  arkime-pcap:
+  arkime-config:
 
 
 services:
@@ -195,11 +198,12 @@ services:
 
   arkime:
     container_name: arkime
-    image: arkime:local
-    restart: ${RESTART_MODE:-unless-stopped}
+    image: ghcr.io/yodapotatofly/arkimeviewer:${ARKIMEVIEWER_VERSION:-master} ## Repo will need to be changed to stamusnetwork once image built
+    restart: ${RESTART_MODE:-no}
     volumes:
-    - ./containers-data/suricata/logs:/suricata-logs:ro
-    ports:
-      - 8005:8005
+      - ./containers-data/suricata/logs:/suricata-logs:ro
+      - arkime-config:/data/config
+      - arkime-pcap:/data/pcap
+      - arkime-logs:/data/logs
     networks:
       network:
