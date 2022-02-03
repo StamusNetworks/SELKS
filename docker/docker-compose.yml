@@ -138,6 +138,8 @@ services:
       - USE_EVEBOX=True #gives access to evebox in the top menu
       - EVEBOX_ADDRESS=evebox:5636 #Default
       - USE_SURICATA_STATS=True #display more informations on the suricata page
+      - USE_MOLOCH=True
+      - MOLOCH_URL=http://arkime:8005
       
     volumes:
       - scirius-static:/static/
@@ -190,3 +192,14 @@ services:
       - ./containers-data/cron-jobs/monthly:/etc/periodic/monthly/:ro
       - ./containers-data/cron-jobs/weekly:/etc/periodic/weekly/:ro
 
+
+  arkime:
+    container_name: arkime
+    image: arkime:local
+    restart: ${RESTART_MODE:-unless-stopped}
+    volumes:
+    - ./containers-data/suricata/logs:/suricata-logs:ro
+    ports:
+      - 8005:8005
+    networks:
+      network:
