@@ -4,10 +4,17 @@ echo "Giving ES time to start..."
 until curl -sS "http://$ES_HOST:$ES_PORT/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
 do
     echo "Waiting for ES to start"
-    sleep 1
+    sleep 3
 done
+
 echo
 echo "ES started..."
+
+until [[ -d "/suricata-logs/fpc" ]]
+do
+    echo "Waiting for Suricata to populate FPC"
+    sleep 3
+done
 
 # set runtime environment variables
 export ARKIME_ELASTICSEARCH="http://"$ES_HOST":"$ES_PORT
@@ -32,7 +39,7 @@ else
 fi
 
 echo "Starting Arkime capture in the background..."
-exec $ARKIMEDIR/bin/capture -m -s -R /suricata-logs/ >> $ARKIMEDIR/logs/capture.log 2>&1 &
+exec $ARKIMEDIR/bin/capture -m -s -R /suricata-logs/fpc/ >> $ARKIMEDIR/logs/capture.log 2>&1 &
 
 echo "Look at log files for errors"
 echo "  /data/logs/viewer.log"
