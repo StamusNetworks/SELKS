@@ -10,9 +10,9 @@ done
 echo
 echo "ES started..."
 
-until [[ -d "/suricata-logs/fpc" ]]
+until [[ -d "/suricata-logs/fpc" ]] && [[ -f "/suricata-logs/eve.json" ]]
 do
-    echo "Waiting for Suricata to populate FPC"
+    echo "Waiting for Suricata to populate FPC and eve.json"
     sleep 3
 done
 
