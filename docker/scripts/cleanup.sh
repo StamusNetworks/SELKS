@@ -37,7 +37,7 @@ if [[ -z "$dockerV" ]]; then
 fi
 
 echo "Delete suricata logs:"
-rm -f ${BASEDIR}/containers-data/suricata/logs/* && echo -e "OK\n" || { echo -e "ERROR\n" && exit 1; }
+rm -rf ${BASEDIR}/containers-data/suricata/logs/* && echo -e "OK\n" || { echo -e "ERROR\n" && exit 1; }
 
 echo "send SIGHUP to suricata:"
 docker kill --signal=HUP suricata | grep -q "suricata" && echo -e "OK\n" || echo -e "ERROR\n"

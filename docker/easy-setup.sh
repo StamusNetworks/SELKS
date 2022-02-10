@@ -56,6 +56,8 @@ MINIMAL_COMPOSE_VERSION="1.27.0"
 #
 # ARG_OPTIONAL_SINGLE([scirius-version],[],[Defines the version of scirius to use.\nThe version can be a branch name, a github tag or a commit hash. Default is 'master'])
 #
+# ARG_OPTIONAL_SINGLE([arkimeviewer-version],[],[Defines the version of arkimeviewer to use.\nThe version can be a branch name, a github tag or a commit hash. Default is 'master'])
+#
 # ARG_OPTIONAL_SINGLE([elk-version],[],[Defines the version of the ELK stack to use. Default is '7.15.1'.\nThe version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub])
 #
 # ARG_OPTIONAL_SINGLE([es-datapath],[],[Defines the path where Elasticsearch will store it's data.\nThe path must already exists and the current user must have write permissions.\nDefault will be in a named docker volume ('/var/lib/docker')])
@@ -115,6 +117,7 @@ _arg_install_all="off"
 _arg_skip_checks="off"
 _arg_pull_containers="on"
 _arg_scirius_version=
+_arg_arkimeviewer_version=
 _arg_elk_version=
 _arg_es_datapath=
 _arg_es_memory=
@@ -129,7 +132,7 @@ _arg_print_options="off"
 print_help()
 {
   printf '%s\n' "SELKS setup script"
-  printf 'Usage: %s [-h|--help] [-i|--interface <arg>] [-d|--debug] [-n|--non-interactive] [--install-docker] [--install-compose] [--install-portainer] [--install-all] [-s|--skip-checks] [--no-pull-containers] [--scirius-version <arg>] [--elk-version <arg>] [--es-datapath <arg>] [--es-memory <arg>] [--ls-memory <arg>] [--restart-mode <arg>] [--print-options]\n' "$0"
+  printf 'Usage: %s [-h|--help] [-i|--interface <arg>] [-d|--debug] [-n|--non-interactive] [--iD|--install-docker] [--iC|--install-compose] [--iP|--install-portainer] [--iA|--install-all] [-s|--skip-checks] [--no-pull-containers] [--scirius-version <arg>] [--arkimeviewer-version <arg>] [--elk-version <arg>] [--es-datapath <arg>] [--es-memory <arg>] [--ls-memory <arg>] [--restart-mode <arg>] [--print-options]\n' "$0"
   printf '\t%s\n\n' "-h, --help: Prints help"
   printf '\t%s\n\n' "-i, --interface: Defines an interface on which SELKS should listen.
     This options can be called multiple times. Ex : easy-setup.sh -i eth0 -i eth1."
@@ -145,6 +148,8 @@ print_help()
   printf '\t%s\n\n' "--no-pull-containers: Skip pulling the containers at the end of the script.
 		Usefull when no internet connection is available."
   printf '\t%s\n\n' "--scirius-version: Defines the version of scirius to use.
+		The version can be a branch name, a github tag or a commit hash. Default is 'master'"
+  printf '\t%s\n\n' "--arkimeviewer-version: Defines the version of arkimeviewer to use.
 		The version can be a branch name, a github tag or a commit hash. Default is 'master'"
   printf '\t%s\n\n' "--elk-version: Defines the version of the ELK stack to use. Default is '7.15.1'.
 		The version should match a tag of Elasticsearch, Kibana and Logstash images on the dockerhub"
@@ -278,6 +283,16 @@ parse_commandline()
       # See the comment of option '--interface=' to see what's going on here - principle is the same.
       --scirius-version=*)
         _arg_scirius_version="${_key##--scirius-version=}"
+        ;;
+      # See the comment of option '--interface' to see what's going on here - principle is the same.
+      --arkimeviewer-version)
+        test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+        _arg_arkimeviewer_version="$2"
+        shift
+        ;;
+      # See the comment of option '--interface=' to see what's going on here - principle is the same.
+      --arkimeviewer-version=*)
+        _arg_arkimeviewer_version="${_key##--arkimeviewer-version=}"
         ;;
       # See the comment of option '--interface' to see what's going on here - principle is the same.
       --elk-version)
@@ -505,6 +520,7 @@ if [[ "${_arg_print_options}" == "on" ]]; then
   echo "SKIP_CHECKS = ${_arg_skip_checks}" #
   echo "PULL_CONTAINERS = ${_arg_pull_containers}" #
   echo "SCIRIUS_VERSION = ${_arg_scirius_version}" #
+  echo "ARKIMEVIEWER_VERSION = ${_arg_arkimeviewer_version}" #
   echo "ELK_VERSION = ${_arg_elk_version}" #
   echo "ELASTIC_DATAPATH = ${_arg_es_datapath}" #
   echo "RESTART_MODE = ${_arg_restart_mode}" #
@@ -910,6 +926,14 @@ echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 if [ ! -z "${_arg_scirius_version}" ] ; then
   echo "SCIRIUS_VERSION=$_arg_scirius_version" >> ${BASEDIR}/.env
 fi
+
+##################################
+# Setting Arkimeviewer branch to use #
+##################################
+if [ ! -z "${_arg_arkimeviewer_version}" ] ; then
+  echo "ARKIMEVIEWER_VERSION=$_arg_arkimeviewer_version" >> ${BASEDIR}/.env
+fi
+
 
 #############################
 # Setting ELK VERSION to use #

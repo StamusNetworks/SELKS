@@ -528,7 +528,7 @@ outputs:
 
       # Directory to place pcap files. If not provided the default log
       # directory will be used. Required for "sguil" mode.
-      #dir: /data/nsm/
+      dir: /var/log/suricata/fpc/
 
       #ts-format: usec # sec or usec second format (default) is filename.sec usec is filename.sec.usec
       use-stream-depth: no #If set to "yes" packets seen after reaching stream inspection depth are ignored. "no" logs all packets
