@@ -333,3 +333,6 @@ docker run --name suricata-replay --rm -it \
 ${RULE_MOUNT} \
 --entrypoint /etc/suricata/new_entrypoint.sh \
 ${IMAGE} -k none -r ${LOCAL_PATH} --runmode ${MODE} -l /var/log/suricata --set sensor-name=${FILENAME} ${OPTIONSTRING}
+
+docker cp ${HOST_PATH} arkime:/readpcap/
+docker exec arkime bash -c "\$ARKIMEDIR/bin/capture -r /readpcap/${FILENAME} -t ${FILENAME} >> \$ARKIMEDIR/logs/capture-readpcap.log 2>&1 && rm -rf /readpcap/* "
