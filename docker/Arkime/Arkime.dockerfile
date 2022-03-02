@@ -32,7 +32,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/* && \
     rm /data/$ARKIME_DEB_PACKAGE && \
     $ARKIMEDIR/bin/arkime_update_geo.sh && \
-    chmod 755 /start-arkimeviewer.sh
+    chmod 755 /start-arkimeviewer.sh && \
+    mkdir -p /readpcap
 
 # add config
 COPY arkimepcapread-selks-config.ini /data/config/config.ini
