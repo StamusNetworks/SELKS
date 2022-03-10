@@ -1,0 +1,18 @@
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: "logstash"
+  labels:
+    app: "logstash"
+  namespace: elasticsearch
+spec:
+  clusterIP: None
+  selector:
+    app: "logstash"
+  ports:
+    - name: http
+      port: 9600
+    - name: beats
+      port: 5044
