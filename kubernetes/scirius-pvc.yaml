@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: scirius-data
+  name: scirius-data
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: scirius-data
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: scirius-logs
+  name: scirius-logs
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: scirius-logs
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: scirius-static
+  name: scirius-static
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: scirius-static
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

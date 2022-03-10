@@ -1,0 +1,93 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: scirius-rules-refresh
+  namespace: suricata
+  labels:
+    k8s-app: scirius-rules-refresh
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: scirius-rules-refresh
+  namespace: suricata
+  labels:
+    k8s-app: scirius-rules-refresh
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  verbs:
+  - '*'
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: scirius-rules-refresh
+  namespace: suricata
+roleRef:
+  kind: Role
+  name: scirius-rules-refresh
+  apiGroup: ""
+subjects:
+- kind: ServiceAccount
+  name: scirius-rules-refresh
+  namespace: suricata
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scirius-rules-refresh
+  namespace: suricata
+  labels:
+    k8s-app: scirius-rules-refresh
+spec:
+  # Run every day at 13:13
+  schedule: "13 13 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: scirius-rules-refresh
+          containers:
+          - name: scirius-rules-refresh
+            image: "bitnami/minideb:latest"
+            command: ["bash","-c"]
+            args:
+            - |
+              install_packages curl ca-certificates
+              curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+              chmod +x ./kubectl
+              mv ./kubectl /usr/local/bin/kubectl
+
+              echo "Updating Suricata rules from Scirius"
+              kubectl exec -n suricata scirius -- python /opt/scirius/manage.py updatesuricata && echo "done." || echo "ERROR"
+
+              #echo "Rotating Suricata logs"
+              #docker exec -n suricata suricata -- logrotate -v /etc/logrotate.d/suricata $@ && echo "done." || echo "ERROR"
+
+            resources:
+              requests:
+                memory: 100Mi
+                cpu: 50m
+
+            securityContext:
+              runAsUser: 998
+              runAsGroup: 996
+
+          securityContext:
+            fsGroup: 996
+
+          restartPolicy: Never

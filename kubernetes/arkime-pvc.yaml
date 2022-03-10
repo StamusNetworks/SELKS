@@ -1,0 +1,17 @@
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: arkime-log
+  name: arkime-log
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: arkime-log
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

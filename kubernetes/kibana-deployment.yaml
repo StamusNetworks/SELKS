@@ -1,0 +1,123 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: kibana
+  name: kibana
+  namespace: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: kibana
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: kibana
+          image: "docker.elastic.co/kibana/kibana:7.16.3"
+
+          env:
+          - name: ELASTICSEARCH_HOSTS
+            value: "http://elasticsearch:9200"
+          - name: SERVER_HOST
+            value: "0.0.0.0"
+          - name: NODE_OPTIONS
+            value: --max-old-space-size=1800
+
+          ports:
+            - containerPort: 5601
+
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 3
+            timeoutSeconds: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  #!/usr/bin/env bash -e
+
+                  # Disable nss cache to avoid filling dentry cache when calling curl
+                  # This is required with Kibana Docker using nss < 3.52
+                  export NSS_SDB_USE_CACHE=no
+
+                  http () {
+                      local path="${1}"
+                      set -- -XGET -s --fail -L
+
+                      if [ -n "${ELASTICSEARCH_USERNAME}" ] && [ -n "${ELASTICSEARCH_PASSWORD}" ]; then
+                        set -- "$@" -u "${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}"
+                      fi
+
+                      STATUS=$(curl --output /dev/null --write-out "%{http_code}" -k "$@" "http://localhost:5601${path}")
+                      if [[ "${STATUS}" -eq 200 ]]; then
+                        exit 0
+                      fi
+
+                      echo "Error: Got HTTP code ${STATUS} but expected a 200"
+                      exit 1
+                  }
+
+                  http "/app/kibana"
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  #!/usr/bin/env bash -e
+
+                  # Disable nss cache to avoid filling dentry cache when calling curl
+                  # This is required with Kibana Docker using nss < 3.52
+                  export NSS_SDB_USE_CACHE=no
+
+                  http () {
+                      local path="${1}"
+                      set -- -XGET -s --fail -L
+
+                      if [ -n "${ELASTICSEARCH_USERNAME}" ] && [ -n "${ELASTICSEARCH_PASSWORD}" ]; then
+                        set -- "$@" -u "${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}"
+                      fi
+
+                      STATUS=$(curl --output /dev/null --write-out "%{http_code}" -k "$@" "http://localhost:5601${path}")
+                      if [[ "${STATUS}" -eq 200 ]]; then
+                        exit 0
+                      fi
+
+                      echo "Error: Got HTTP code ${STATUS} but expected a 200"
+                      exit 1
+                  }
+
+                  http "/app/kibana"
+
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
+      restartPolicy: Always

@@ -1,0 +1,135 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: suricata
+  annotations: {}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path:: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: scirius
+            port:
+              number: 80
+
+      - path: /static/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 5601
+
+      - path: /media/
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 5601
+
+      - path: /plugins
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /dlls
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /socket.io
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /dataset
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /translations
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: ^~ /built_assets
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /ui
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /spaces
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /node_modules
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /bootstrap.js {
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: /internal
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+
+      - path: ~ "^/([\d]{5}/.*)" {
+        backend:
+          service:
+            name: kibana.elasticsearch
+            port:
+              number: 5601
+  # tls:
+  # - hosts:
+  #   - localhost
+  #   secretName: nginx-tls-key

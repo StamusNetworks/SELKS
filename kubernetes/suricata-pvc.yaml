@@ -1,0 +1,80 @@
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: suricata-log
+  name: suricata-log
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: suricata-log
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: suricata-logrotate
+  name: suricata-logrotate
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: suricata-logrotate
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: suricata-run
+  name: suricata-run
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: suricata-run
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: suricata-rules
+  name: suricata-rules
+  namespace: suricata
+spec:
+  storageClassName: "local-storage"
+  volumeName: suricata-rules
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

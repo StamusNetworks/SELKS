@@ -1,0 +1,116 @@
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: suricata
+  namespace: suricata
+spec:
+  selector:
+    matchLabels:
+      app: suricata
+  template:
+    metadata:
+      labels:
+        app: suricata
+      name: suricata
+    spec:
+      hostNetwork: true
+
+      containers:
+        - name: suricata
+          image: jasonish/suricata:master-amd64
+          command:
+            - /usr/bin/suricata
+            - -i
+            - enx24b6ff700899
+
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 150m
+            limits:
+              cpu: 2
+              memory: 4000Mi
+
+          securityContext:
+            capabilities:
+              add: [NET_ADMIN, SYS_NICE]
+
+          volumeMounts:
+            - mountPath: /host/dev
+              name: dev
+            - name: "varlog"
+              mountPath: /var/log/suricata
+
+        # suricata-tail-eve-log container
+        - name: suricata-tail-eve-log
+          image: bash
+          command:
+            - tail
+            - -F
+            - /var/log/suricata/eve.json
+
+          resources:
+            requests:
+              memory: 0Mi
+
+          volumeMounts:
+            - name: "varlog"
+              mountPath: /var/log/suricata
+
+        # suricata-tail-fast-log container
+        - name: suricata-tail-fast-log
+          image: bash
+          command:
+            - tail
+            - -F
+            - /var/log/suricata/fast.log
+
+          resources:
+            requests:
+              memory: 0Mi
+
+          volumeMounts:
+            - name: "varlog"
+              mountPath: /var/log/suricata
+
+        # suricata-tail-stats-log container
+        - name: suricata-tail-stats-log
+          image: bash
+          command:
+            - tail
+            - -F
+            - /var/log/suricata/stats.log
+
+          resources:
+            requests:
+              memory: 0Mi
+
+          volumeMounts:
+            - name: "varlog"
+              mountPath: /var/log/suricata
+
+        # suricata-tail-suricata-log container
+        - name: suricata-tail-suricata-log
+          image: bash
+          command:
+            - tail
+            - -F
+            - /var/log/suricata/suricata.log
+
+          resources:
+            requests:
+              memory: 0Mi
+
+          volumeMounts:
+            - name: "varlog"
+              mountPath: /var/log/suricata
+
+      volumes:
+        - name: dev
+          hostPath:
+            path: /dev
+
+        - name: "varlog"
+          emptyDir: {}

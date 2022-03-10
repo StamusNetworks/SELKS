@@ -1,0 +1,107 @@
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: suricata-log
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: suricata-log
+    namespace: suricata
+  local:
+    path: /data/suricata/suricata/logs/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: suricata-logrotate
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: suricata-logrotate
+    namespace: suricata
+  local:
+    path: /data/suricata/suricata/logrotate/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: suricata-run
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: suricata-run
+    namespace: suricata
+  local:
+    path: /data/suricata/suricata/run/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: suricata-rules
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: suricata-rules
+    namespace: suricata
+  local:
+    path: /data/suricata/suricata/rules/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - localhost.localdomain
