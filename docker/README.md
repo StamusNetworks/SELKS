@@ -4,7 +4,8 @@ SELKS on Docker
 Intro
 -----
 
-This version of SELKS is based on docker and intended to provide easier deployment and management.
+This version of SELKS is based on docker and intended to provide easier deployment and management.      
+The installation procedure here is valid for any Linux OS that supports docker.
 
 For informations on standard SELKS implementation, see https://github.com/StamusNetworks/SELKS#selks
 
