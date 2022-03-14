@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluentd
+  namespace: logging
+  labels:
+    app: fluentd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      initContainers:
+      - name: configure-sysctl
+        securityContext:
+          runAsUser: 0
+          privileged: true
+        image: "docker.io/bitnami/minideb:buster"
+        imagePullPolicy: "IfNotPresent"
+        command: ["bash","-c"]
+        args:
+          - |
+            set -o errexit
+            set -o pipefail
+            set -o nounset
+
+            if ! [ -x "$(command -v sysctl)" ]; then
+              echo 'sysctl not installed. Installing it...'
+              distro=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+              case $distro in
+                ol | centos)
+                  yum install -y procps
+                  rm -rf /var/cache/yum;;
+                ubuntu | debian)
+                  apt-get update -qq && apt-get install -y --no-install-recommends procps
+                  rm -rf /var/lib/apt/lists /var/cache/apt/archives;;
+              esac
+            fi
+
+            sysctl -w fs.file-max=65536
+            sysctl -w fs.protected_hardlinks=1
+            sysctl -w fs.protected_symlinks=1
+
+      containers:
+      - name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset:v1.14.5-debian-elasticsearch7-amd64-1.1
+
+        ports:
+          - name: fluent-bit
+            containerPort: 24224
+            protocol: TCP
+          - name: metrics
+            containerPort: 24231
+            protocol: TCP
+
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+
+        resources:
+          limits:
+            memory: 1000Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+
+        volumeMounts:
+        - name: fluentd-config
+          mountPath: /fluentd/etc/
+          readOnly: True
+
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: fluentd-config
+        configMap:
+          name: fluentd-config

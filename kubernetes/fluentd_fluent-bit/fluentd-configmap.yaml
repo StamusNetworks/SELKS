@@ -1,0 +1,326 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: logging
+data:
+  fluent.conf: |
+    ##########
+    # INPUTS #
+    ##########
+    # Input from FluentBit
+    <source>
+      @type            forward
+      bind             0.0.0.0
+      port             24224
+    </source>
+
+    # Prometheus metrics
+    <source>
+      @type prometheus
+      @id in_prometheus
+      bind "0.0.0.0"
+      port 24231
+      metrics_path "/metrics"
+    </source>
+
+    ###########
+    # FILTERS #
+    ###########
+    # Requires ua_parser plugin
+    # <filter eve_json>
+    #   @type ua_parser
+    #   key_name $http['http_user_agent']
+    #   out_key $http['user_agent']
+    # </filter>
+
+    <filter eve_json>
+      @type record_transformer
+      enable_ruby
+
+      <record>
+        # Key
+        fileinfo_type "${\
+          if (record['event_type'].match?('fileinfo'))
+            st = record['fileinfo']['magic']
+            split = st.to_s.split(',')
+            # Value
+            split.first
+          end
+        }"
+        # Key
+        alert_signature "${\
+          if (record['event_type'].match?('alert'))
+            sp = record['alert']['signature'].to_s.split(' group ')
+            reg_a = /\\A\\d+\\z/
+            if (sp.length == 2) and reg_a.match(sp[1])
+             # Value
+             sp[0]
+            end
+          end
+        }"
+
+        fileinfo['type'] fileinfo_type
+        alert['signature'] alert_signature
+      </record>
+      remove_keys fileinfo_type,alert_signature
+    </filter>
+
+    ###########
+    # OUTPUTS #
+    ###########
+    # Output kubernetes to Elasticsearch
+    <match kube.*>
+      @type           elasticsearch
+      host            elasticsearch.logging
+      port            9200
+      logstash_format true
+      logstash_prefix logstash
+      default_elasticsearch_version 7
+    </match>
+
+    # Output Suricata to Elasticsearch
+    <match eve_json>
+      @type copy
+      <store>
+        @type           elasticsearch
+        host            elasticsearch.logging
+        port            9200
+        logstash_format true
+        logstash_prefix logstash-${event_type}
+        template_name   logstash
+        template_file   /fluentd/etc/elasticsearch7-template.json
+        default_elasticsearch_version 7
+
+        <buffer tag, event_type>
+          @type memory
+        </buffer>
+      </store>
+    </match>
+
+    <match eve_json_stats>
+      @type           elasticsearch
+      host            elasticsearch.logging
+      port            9200
+      logstash_format true
+      logstash_prefix logstash
+      template_name   logstash
+      template_file   /fluentd/etc/elasticsearch7-template.json
+      default_elasticsearch_version 7
+    </match>
+
+  elasticsearch7-template.json: |
+    {
+      "template" : "logstash",
+      "order": 1,
+      "version" : 70002,
+      "index_patterns": [
+        "logstash-*"
+      ],
+      "settings" : {
+            "index": {
+          "number_of_replicas": 0,
+          "refresh_interval" : "5s",
+          "mapping.total_fields.limit": 10000
+        },
+          "analysis": {
+          "analyzer": {
+            "sn_analyzer": {
+              "type": "custom",
+              "tokenizer": "whitespace",
+              "char_filter": [
+                "sn_lowercase"
+              ]
+            }
+          },
+          "char_filter": {
+                    "sn_lowercase": {
+              "type": "mapping",
+              "mappings": [
+                          "A => a",                      "B => b",                      "C => c",                      "D => d",                      "E => e",                      "F => f",                      "G => g",                      "H => h",                      "I => i",                      "J => j",                      "K => k",                      "L => l",                      "M => m",                      "N => n",                      "O => o",                      "P => p",                      "Q => q",                      "R => r",                      "S => s",                      "T => t",                      "U => u",                      "V => v",                      "W => w",                      "X => x",                      "Y => y",                      "Z => z"                    ]
+            }
+          }
+        }
+      },
+      "mappings" : {
+        "dynamic_templates" : [ {
+          "message_field" : {
+            "path_match" : "message",
+            "match_mapping_type" : "string",
+            "mapping" : {
+              "type" : "text",
+              "norms" : false,
+              "analyzer": "sn_analyzer",
+              "search_analyzer":"sn_analyzer",
+              "search_quote_analyzer":"sn_analyzer"
+            }
+          }
+        }, {
+          "string_fields" : {
+            "match" : "*",
+            "match_mapping_type" : "string",
+            "mapping" : {
+              "type" : "text", "norms" : false,
+              "analyzer": "sn_analyzer",
+              "search_analyzer":"sn_analyzer",
+              "search_quote_analyzer":"sn_analyzer",
+              "fields" : {
+                "keyword" : { "type": "keyword", "ignore_above": 256 },
+                "raw" : { "type": "keyword", "ignore_above": 256 }
+              }
+            }
+          }
+        }, {
+          "percentage_fields_long_to_float": {
+            "path_match": "*.pct",
+            "match_mapping_type": "long",
+            "mapping": {
+              "type": "float"
+            }
+          }
+        } ],
+        "properties" : {
+          "@timestamp": { "type": "date" },
+          "@version": { "type": "keyword" },
+          "geoip"  : {
+            "dynamic": true,
+            "properties" : {
+              "ip": { "type": "ip" },
+              "location" : { "type" : "geo_point" },
+              "latitude" : { "type" : "half_float" },
+              "longitude" : { "type" : "half_float" }
+            }
+          },
+          "discovery"  : {
+            "dynamic": true,
+            "properties" : {
+              "asset": {
+                "type": "ip",
+                "fields": {
+                  "raw": {"type": "keyword"},
+                  "keyword": {"type": "keyword"}
+                }
+              }
+            }
+          },
+          "dest_ip": {
+              "type": "ip",
+              "fields": {
+                  "raw": {"type": "keyword"},
+                  "keyword": {"type": "keyword"}
+               }
+          },
+          "src_ip": {
+              "type": "ip",
+              "fields": {
+                  "raw": {"type": "keyword"},
+                  "keyword": {"type": "keyword"}
+               }
+          },
+          "cpu": {
+            "properties": {
+              "system_p": {
+                "doc_values": "true",
+                "type": "float"
+              },
+              "user_p": {
+                "doc_values": "true",
+                "type": "float"
+              }
+            }
+          },
+          "fs": {
+            "properties": {
+              "used_p": {
+                "doc_values": "true",
+                "type": "float"
+              }
+            }
+          },
+          "load": {
+            "properties": {
+              "load1": {
+                "doc_values": "true",
+                "type": "float"
+              },
+              "load15": {
+                "doc_values": "true",
+                "type": "float"
+              },
+              "load5": {
+                "doc_values": "true",
+                "type": "float"
+              }
+            }
+          },
+          "mem": {
+            "properties": {
+              "actual_used_p": {
+                "doc_values": "true",
+                "type": "float"
+              },
+              "used_p": {
+                "doc_values": "true",
+                "type": "float"
+              }
+            }
+          },
+          "proc": {
+            "properties": {
+              "cpu": {
+                "properties": {
+                  "user_p": {
+                    "doc_values": "true",
+                    "type": "float"
+                  }
+                }
+              },
+              "mem": {
+                "properties": {
+                  "rss_p": {
+                    "doc_values": "true",
+                    "type": "float"
+                  }
+                }
+              }
+            }
+          },
+          "swap": {
+            "properties": {
+              "used_p": {
+                "doc_values": "true",
+                "type": "float"
+              }
+            }
+          },
+          "ip": {
+            "type": "ip"
+          },
+          "alert": {
+            "properties": {
+              "source": {
+                "properties": {
+                  "ip": {
+                    "type": "ip",
+                    "fields": {
+                      "keyword": {"type": "keyword"}
+                    }
+                  }
+                }
+              },
+              "target": {
+                "properties": {
+                  "ip": {
+                    "type": "ip",
+                    "fields": {
+                      "keyword": {"type": "keyword"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }

@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+  namespace: suricata
+data:
+  nginx.conf: |
+    user www-data;
+    worker_processes auto;
+    pid /run/nginx.pid;
+    include /etc/nginx/modules-enabled/*.conf;
+
+    events {
+    	worker_connections 768;
+    	# multi_accept on;
+    }
+
+    http {
+
+    	##
+    	# Basic Settings
+    	##
+
+    	sendfile on;
+    	tcp_nopush on;
+    	tcp_nodelay on;
+    	keepalive_timeout 65;
+    	types_hash_max_size 2048;
+      client_max_body_size 20M;
+    	# server_tokens off;
+
+    	# server_names_hash_bucket_size 64;
+    	# server_name_in_redirect off;
+
+    	include /etc/nginx/mime.types;
+    	default_type application/octet-stream;
+
+    	##
+    	# SSL Settings
+    	##
+
+    	ssl_protocols TLSv1.2;
+    	ssl_prefer_server_ciphers on;
+
+    	##
+    	# Logging Settings
+    	##
+
+    	access_log /var/log/nginx/access.log;
+    	error_log /var/log/nginx/error.log;
+
+    	##
+    	# Gzip Settings
+    	##
+
+    	gzip on;
+
+    	# gzip_vary on;
+    	# gzip_proxied any;
+    	# gzip_comp_level 6;
+    	# gzip_buffers 16 8k;
+    	# gzip_http_version 1.1;
+    	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    	##
+    	# Virtual Host Configs
+    	##
+
+    	include /etc/nginx/conf.d/*.conf;
+    	#include /etc/nginx/sites-enabled/*;
+    }
+  default.conf: |
+  selks6.conf: |
+    server {
+        # listen 80 default_server;
+        # listen 443 default_server ssl;
+        listen 80;
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/ssl/tls.crt;
+        ssl_certificate_key /etc/nginx/ssl/tls.key;
+        server_name SELKS;
+        access_log /var/log/nginx/scirius.access.log;
+        error_log /var/log/nginx/scirius.error.log;
+
+        # https://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-production
+        location /static/ { # STATIC_URL
+            alias /static/; # STATIC_ROOT
+            expires 30d;
+        }
+
+        location /media/ { # MEDIA_URL
+            alias /static/; # MEDIA_ROOT
+            expires 30d;
+        }
+
+        location /plugins/ {
+            proxy_pass http://kibana.logging:5601/plugins/;
+            proxy_redirect off;
+        }
+
+        location /dlls/ {
+            proxy_pass http://kibana.logging:5601/dlls/;
+            proxy_redirect off;
+        }
+
+        location /socket.io/ {
+            proxy_pass http://kibana.logging:5601/socket.io/;
+            proxy_redirect off;
+        }
+
+        location /dataset/ {
+            proxy_pass http://kibana.logging:5601/dataset/;
+            proxy_redirect off;
+        }
+
+        location /translations/ {
+            proxy_pass http://kibana.logging:5601/translations/;
+            proxy_redirect off;
+        }
+
+        location ^~ /built_assets/ {
+            proxy_pass http://kibana.logging:5601/built_assets/;
+            proxy_redirect off;
+        }
+
+        location /ui/ {
+            proxy_pass http://kibana.logging:5601/ui/;
+            proxy_redirect off;
+        }
+
+       location /spaces/ {
+            proxy_pass http://kibana.logging:5601/spaces/;
+            proxy_redirect off;
+        }
+
+      location /node_modules/ {
+            proxy_pass http://kibana.logging:5601/node_modules/;
+            proxy_redirect off;
+        }
+
+      location /bootstrap.js {
+            proxy_pass http://kibana.logging:5601/bootstrap.js;
+            proxy_redirect off;
+        }
+
+     location /internal/ {
+            proxy_pass http://kibana.logging:5601/internal/;
+            proxy_redirect off;
+        }
+
+     location /moloch/ {
+            proxy_pass http://arkime.suricata:8005/moloch/;
+            proxy_redirect off;
+        }
+
+     location ~ "^/([\d]{5}/.*)" {
+            proxy_pass http://kibana.logging:5601/$1;
+            proxy_redirect off;
+        }
+
+
+     location / {
+           proxy_pass http://scirius.suricata:80;
+           proxy_read_timeout 600;
+           proxy_set_header Host $http_host;
+           proxy_set_header X-Forwarded-Proto https;
+           proxy_redirect off;
+           client_max_body_size 100M;
+        }
+
+    }

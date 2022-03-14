@@ -1,0 +1,24 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: suricata
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path:: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+  # tls:
+  # - hosts:
+  #   - localhost
+  #   secretName: nginx-tls-key

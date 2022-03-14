@@ -1,0 +1,57 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: suricata
+  labels:
+    app: filebeat
+data:
+  filebeat.yml: |-
+    filebeat.inputs:
+    - type: filestream
+      paths:
+        - /var/log/suricata/*.json
+      json.keys_under_root: true
+
+    filebeat.autodiscover:
+      providers:
+        - type: kubernetes
+          templates:
+            - condition:
+                and:
+                  - not:
+                      equals:
+                        kubernetes.namespace: kube-public
+                  - not:
+                      equals:
+                        kubernetes.namespace: kube-node-lease
+                  - not:
+                      equals:
+                        kubernetes.namespace: default
+                  - not:
+                      equals:
+                        kubernetes.namespace: logging
+              config:
+                - type: container
+                  paths:
+                    - /var/log/containers/*-${data.kubernetes.container.id}.log
+                  exclude_lines: ["^\\s+[\\-`('.|_]"]  # drop asciiart lines
+
+    processors:
+    - add_fields:
+        target: ''
+        fields:
+          type: "SELKS"
+    - add_kubernetes_metadata:
+        host: ${NODE_NAME}
+        matchers:
+        - logs_path:
+            logs_path: "/var/log/containers/"
+
+    output.logstash:
+      enabled: true
+      host: '${NODE_NAME}'
+      hosts: ["logstash.logging.svc.cluster.local:5044"]
+      worker: 1

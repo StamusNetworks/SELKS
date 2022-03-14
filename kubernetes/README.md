@@ -14,22 +14,26 @@ Minimum Requirements
 - 8 GB of free RAM
 - 10 GB of free disk space (actual disk occupation will mainly depend of the number of rules and the amount of traffic on the network). 200GB+ SSD grade is recommended.
 - ``git``, ``curl``
-- ``docker`` > 17.06.0 (will be installed during SELKS initial setup)
-- ``docker-compose`` > 1.27.0 (will be installed during SELKS initial setup)
+- ``Kubernetes`` >= 1.21 (tested on k3s 1.22)
+- ``docker or containerd``
 
 Install process
 ---------------
 ### Basic installation
+Clone the Git repository from SELKS
 
 ```bash
 git clone https://github.com/StamusNetworks/SELKS.git
 cd SELKS/kubernetes/
+```
 
-# Alter YAML's to your need. Update the PV's and storage class according to your own needs. Replace username and password in the secret definitions.
+Update the PV's and storage class according to your own needs. Replace username and password in the secret definitions.
 
+Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M), but you need to build your own container image with certain plugins and push to a (self-hosted) Private Docker Registry in order to use all of the features available by default via Logstash. We've included some basic Kubernetes logging in the Fluentd/Fluent-bit configuration.
+
+```bash
 # Setup storage
 mkdir -p /data/arkime/{pcap,logs} /data/suricata/{logrotate,rules,run,logs/fpc} /data/scirius/{data,logs,static} /data/elasticsearch
-
 chown -R 998:996 /data/suricata
 chown -R 1000:996 /data/scirius
 chown -R 1000:1000 /data/elasticsearch
@@ -37,29 +41,13 @@ chown -R 1000:1000 /data/arkime
 
 # Create NGINX TLS keys and create secret template
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout ./tls.key -out tls.crt -extensions v3_ca
-kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run -o yaml > nginx-secret.yaml
+kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run -o yaml > nginx/nginx-secret.yaml
 
-
-# Apply configuration
-kubectl create --save-config -f *-ns.yaml
-
-kubectl create --save-config -f storageclass.yaml
-kubectl create --save-config -f *-pv.yaml
-kubectl create --save-config -f *-pvc.yaml
-
-kubectl create --save-config -f *-configmap.yaml
-kubectl create --save-config -f *-secret.yaml
-
-kubectl create --save-config -f *-statefulset.yaml
-kubectl create --save-config -f *-deployment.yaml
-kubectl create --save-config -f *-daemonset.yaml
-
-kubectl create --save-config -f *-service.yaml
-
-kubectl create --save-config -f *-cronjob.yaml
+chmod +x install.sh
+./install.sh
 
 # To load the Kibana dashboards, once Kibana is up and running
-kubectl create --save-config -f alpine.yaml
+kubectl create --save-config -f kibana/alpine.yaml
 ```
 Once the services have been applied, you can get the NodePort using the following command:
 ```

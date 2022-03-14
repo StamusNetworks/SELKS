@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es
+  labels:
+    service: elasticsearch
+  namespace: logging
+spec:
+  # Setting clusterIP to none makes sure communication is directly between pods
+  clusterIP: None
+  ports:
+  - port: 9300
+    name: transport
+  selector:
+    service: elasticsearch
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: elasticsearch
+  name: elasticsearch
+  namespace: logging
+spec:
+  ports:
+  - port: 9200
+    protocol: TCP
+    targetPort: 9200
+    name: http
+  selector:
+    service: elasticsearch

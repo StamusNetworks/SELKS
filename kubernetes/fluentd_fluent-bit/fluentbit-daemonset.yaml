@@ -1,0 +1,155 @@
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluent-bit
+  namespace: suricata
+  labels:
+    app: fluent-bit
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluent-bit
+  labels:
+    app: fluent-bit
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fluent-bit
+  labels:
+    app: fluent-bit
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluent-bit
+subjects:
+  - kind: ServiceAccount
+    name: fluent-bit
+    namespace: suricata
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit
+  namespace: suricata
+  labels:
+    app: fluent-bit
+    kubernetes.io/cluster-service: "true"
+  annotations:
+    keel.sh/policy: minor
+    keel.sh/trigger: poll
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+        kubernetes.io/cluster-service: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2020"
+        prometheus.io/path: /api/v1/metrics/prometheus
+    spec:
+      serviceAccountName: fluent-bit
+      containers:
+      - name: fluent-bit
+        image: fluent/fluent-bit:1.8.13
+
+        ports:
+          - name: http
+            containerPort: 2020
+            protocol: TCP
+
+        livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: http
+
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+
+        securityContext:
+          privileged: false
+          runAsUser: 0
+
+        volumeMounts:
+        - name: var-log
+          mountPath: /var/log
+        - name: suricata-log
+          mountPath: /var/log/suricata
+          readOnly: True
+
+        - name: var-lib-containers
+          mountPath: /var/lib/containers
+          readOnly: true
+
+        - name: fluent-bit-config
+          mountPath: /fluent-bit/etc/
+
+        - name: etcmachineid
+          mountPath: /etc/machine-id
+          readOnly: true
+
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: var-log
+        hostPath:
+          path: /var/log
+      - name: suricata-log
+        persistentVolumeClaim:
+          claimName: suricata-log
+          readOnly: true
+
+      - name: var-lib-containers
+        hostPath:
+          path: /var/lib/containers
+
+      - name: fluent-bit-config
+        configMap:
+          name: fluent-bit-config
+
+      - name: etcmachineid
+        hostPath:
+          path: /etc/machine-id
+          type: File
+
+      nodeSelector:
+        kubernetes.io/os: linux
+
+      # serviceAccountName: fluent-bit
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - operator: "Exists"
+        effect: "NoExecute"
+      - operator: "Exists"
+        effect: "NoSchedule"
