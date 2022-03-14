@@ -1,0 +1,105 @@
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+  labels:
+    service: suricata
+  name: suricata
+  namespace: suricata
+spec:
+  selector:
+    matchLabels:
+      service: suricata
+  template:
+    metadata:
+      annotations:
+      labels:
+        service: suricata
+    spec:
+      hostNetwork: true
+
+      containers:
+        - name: suricata
+          image: jasonish/suricata:master-amd64
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: SURICATA_OPTIONS
+              value: "-i eth0 -vvv --set sensor-name=suricata --set outputs.7.pcap-log.filename=log.$(NODE_NAME).%n.%t.pcap"
+          command: ["/etc/suricata/new_entrypoint.sh"]
+
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 200m
+            limits:
+              cpu: 2
+              memory: 4Gi
+
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_NICE
+
+          volumeMounts:
+            - mountPath: /var/log/suricata
+              name: suricata-log
+            - mountPath: /var/run/suricata
+              name: suricata-run
+            - mountPath: /etc/suricata/rules
+              name: suricata-rules
+            - mountPath: /etc/suricata/selks6-addin.yaml
+              name: suricata-etcselks6-addin
+              subPath: selks6-addin.yaml
+            - mountPath: /etc/suricata/new_entrypoint.sh
+              name: suricata-new-entrypoint
+              subPath: new_entrypoint.sh
+            - mountPath: /docker-entrypoint.sh
+              name: suricata-docker-entrypoint
+              subPath: docker-entrypoint.sh
+            - mountPath: /etc/logrotate.d
+              name: suricata-logrotate
+
+      securityContext:
+        fsGroup: 996
+
+      volumes:
+        - name: suricata-log
+          persistentVolumeClaim:
+            claimName: suricata-log
+        - name: suricata-logrotate
+          persistentVolumeClaim:
+            claimName: suricata-logrotate
+        - name: suricata-run
+          persistentVolumeClaim:
+            claimName: suricata-run
+        - name: suricata-rules
+          persistentVolumeClaim:
+            claimName: suricata-rules
+
+        - name: suricata-etcselks6-addin
+          configMap:
+            name: suricata-etc
+            items:
+              - key: selks6-addin.yaml
+                path: selks6-addin.yaml
+                mode: 0444
+        - name: suricata-new-entrypoint
+          configMap:
+            name: suricata-etc
+            items:
+              - key: new_entrypoint.sh
+                path: new_entrypoint.sh
+                mode: 0555
+        - name: suricata-docker-entrypoint
+          configMap:
+            name: suricata-etc
+            items:
+              - key: docker-entrypoint.sh
+                path: docker-entrypoint.sh
+                mode: 0555

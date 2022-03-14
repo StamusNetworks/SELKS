@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: alpine
+  name: alpine
+  namespace: logging
+spec:
+  containers:
+  - image: alpine
+    name: alpine
+    command: ["sh","-c"]
+    args:
+      - |
+        apk add git curl
+        git clone https://github.com/StamusNetworks/KTS7.git
+        cd KTS7/API-KIBANA7
+        curl -X POST "kibana:5601/api/saved_objects/_import?overwrite=true" -H 'kbn-xsrf: true' --form file=@index-pattern.ndjson
+        curl -X POST "kibana:5601/api/saved_objects/_import?overwrite=true" -H 'kbn-xsrf: true' --form file=@search.ndjson
+        curl -X POST "kibana:5601/api/saved_objects/_import?overwrite=true" -H 'kbn-xsrf: true' --form file=@visualization.ndjson
+        curl -X POST "kibana:5601/api/saved_objects/_import?overwrite=true" -H 'kbn-xsrf: true' --form file=@dashboard.ndjson
+        curl -X POST "kibana:5601/api/saved_objects/_import?overwrite=true" -H 'kbn-xsrf: true' --form file=@query.ndjson

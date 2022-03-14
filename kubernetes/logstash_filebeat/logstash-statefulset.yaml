@@ -1,0 +1,102 @@
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+  labels:
+    app: logstash
+  name: logstash
+  namespace: logging
+spec:
+  replicas: 1
+  serviceName: logstash
+  selector:
+    matchLabels:
+      app: logstash
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: logstash
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+
+      containers:
+        - name: logstash
+          image: "docker.elastic.co/logstash/logstash:7.16.3"
+
+          env:
+          - name: LS_JAVA_OPTS
+            value: "-Xms512m -Xmx512m"
+
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
+
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 300
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 3
+            timeoutSeconds: 5
+
+          ports:
+          - name: http
+            containerPort: 9600
+          - name: beats
+            containerPort: 5044
+
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
+            requests:
+              cpu: 100m
+              memory: 1536Mi
+
+          volumeMounts:
+            - mountPath: /usr/share/logstash/pipeline/logstash.conf
+              name: logstash-pipeline-conf
+              subPath: logstash.conf
+              readOnly: True
+            - mountPath: /usr/share/logstash/config/elasticsearch7-template.json
+              name: logstash-elasticsearch-conf
+              subPath: elasticsearch7-template.json
+              readOnly: True
+
+      restartPolicy: Always
+      volumes:
+        - name: logstash-pipeline-conf
+          configMap:
+            name: logstash-configmap
+            items:
+              - key: logstash.conf
+                path: logstash.conf
+                mode: 0444
+        - name: logstash-elasticsearch-conf
+          configMap:
+            name: logstash-configmap
+            items:
+              - key: elasticsearch7-template.json
+                path: elasticsearch7-template.json
+                mode: 0444

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: evebox
+  name: evebox
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evebox
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: evebox
+    spec:
+      containers:
+        - args:
+            - -e
+            - http://elasticsearch.logging:9200
+          image: jasonish/evebox:master
+          name: evebox
+
+          ports:
+            - containerPort: 5636
+
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              cpu: 500m
+              memory: 500Mi
+
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            allowPrivilegeEscalation: false
+            # runAsNonRoot: true
+
+      restartPolicy: Always

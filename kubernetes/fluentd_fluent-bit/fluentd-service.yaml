@@ -1,0 +1,18 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd
+  namespace: logging
+  labels:
+    app: fluentd
+spec:
+  type: ClusterIP
+  ports:
+    - port: 24224
+      protocol: TCP
+      name: fluentd
+      targetPort: 24224
+  selector:
+    app: fluentd

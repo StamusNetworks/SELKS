@@ -1,0 +1,258 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: suricata
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Daemon Off
+        Flush 1
+        Log_Level info
+        Parsers_File parsers.conf
+        HTTP_Server On
+        HTTP_Listen 0.0.0.0
+        HTTP_Port 2020
+        Health_Check On
+
+    @INCLUDE input.conf
+    @INCLUDE filter-kubernetes.conf
+    @INCLUDE filter-suricata.conf
+    @INCLUDE output.conf
+
+  input.conf: |
+    [INPUT]
+        Name systemd
+        Tag host.*
+        Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+        Read_From_Tail On
+
+    [INPUT]
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/containers/*.log
+        multiline.parser  docker, cri
+        DB                /var/log/flb_kube.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+
+    [INPUT]
+        Name              tail
+        Tag               eve_json
+        Path              /var/log/suricata/eve.json
+        Parser            suricata
+        Db                /var/log/flb_suricata.db
+        Db.sync           full
+        Refresh_Interval  10
+
+  output.conf: |
+    [OUTPUT]
+        Name            es
+        Match           kube.*
+        Host            elasticsearch.logging
+        Port            9200
+        Logstash_Format On
+        Retry_Limit     False
+
+    # Suricata to Fluentd
+    [OUTPUT]
+        Name          forward
+        Match         eve_json*
+        Host          fluentd.logging
+        Port          24224
+        # Shared_Key    secret
+        # Self_Hostname flb.local
+        # tls           off
+        # tls.verify    off
+
+  filter-kubernetes.conf: |
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix     kube.var.log.containers.
+        Merge_Log           On
+        Keep_Log            Off
+        Merge_Log_Key       log_processed
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+
+  filter-suricata.conf: |
+    [FILTER]
+        Name  modify
+        Match eve_json
+        Condition Key_Value_Does_Not_Match src_ip 192.168.**
+        Condition Key_Value_Does_Not_Match src_ip 172.(1[6-9]|2[0-9]|3[0-1]).**
+        Condition Key_Value_Does_Not_Match src_ip 10.**
+        Copy src_ip ip
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Does_Not_Match dest_ip 192.168.**
+        Condition Key_Value_Does_Not_Match dest_ip 172.(1[6-9]|2[0-9]|3[0-1]).**
+        Condition Key_Value_Does_Not_Match dest_ip 10.**
+        Copy dest_ip ip
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Matches src_ip 192.168.**
+        Condition Key_Value_Matches dest_ip 192.168.**
+
+        Condition Key_Value_Matches src_ip 172.(1[6-9]|2[0-9]|3[0-1]).**
+        Condition Key_Value_Matches src_ip 10.**
+        Condition Key_Value_Matches dest_ip 192.168.178.*
+        Condition Key_Value_Matches src_ip 192.168.178.*
+        Add ip 80.100.143.31
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Matches src_ip 172.(1[6-9]|2[0-9]|3[0-1]).**
+        Condition Key_Value_Matches dest_ip 172.(1[6-9]|2[0-9]|3[0-1]).**
+        Add ip 80.100.143.31
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Matches src_ip 10.**
+        Condition Key_Value_Matches dest_ip 10.**
+        Add ip 80.100.143.31
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Matches src_ip 192.168.**
+        Condition Key_Value_Matches dest_ip 10.**
+        Add ip 80.100.143.31
+
+    [FILTER]
+        Name modify
+        Match eve_json
+        Condition Key_Value_Matches src_ip 10.**
+        Condition Key_Value_Matches dest_ip 192.168.**
+        Add ip 80.100.143.31
+
+    # [FILTER]
+    #     Name                  geoip2
+    #     Database              /usr/share/GeoIP/GeoLite2-City.mmdb
+    #     Match                 eve_json
+    #     Lookup_key            geoip
+    #     Record lon            ip %{location.longitude}
+    #     Record lat            ip %{location.latitude}
+    #     Record country_name   ip %{country.names.en}
+    #     Record city_name      ip %{city.names.en}
+    #     Record region_code    ip %{postal.code}
+    #     Record timezone       ip %{location.time_zone}
+    #     Record country_code3  ip %{country.iso_code}
+    #     Record region_name    ip %{subdivisions.0.iso_code}
+    #     Record latitude       ip %{location.latitude}
+    #     Record longitude      ip %{location.longitude}
+    #     Record continent_code ip %{continent.code}
+    #     Record country_code2  ip %{country.iso_code}
+    #
+    # [FILTER]
+    #     Name       nest
+    #     Match      eve_json
+    #     Operation  nest
+    #     Wildcard   country
+    #     Wildcard   lon
+    #     Wildcard   lat
+    #     Nest_under location
+    #
+    # [FILTER]
+    #     Name       nest
+    #     Match      eve_json
+    #     Operation  nest
+    #     Wildcard   country_name
+    #     Wildcard   city_name
+    #     Wildcard   region_code
+    #     Wildcard   timezone
+    #     Wildcard   country_code3
+    #     Wildcard   region_name
+    #     Wildcard   ip
+    #     Wildcard   latitude
+    #     Wildcard   longitude
+    #     Wildcard   continent_code
+    #     Wildcard   country_code2
+    #     Wildcard   location
+    #     Nest_under geoip
+
+    [FILTER]
+        Name        modify
+        Match       eve_json
+        Condition   Key_value_equals     event_type stats
+        Hard_rename $type['eve_json']    $type['eve_json_stats']
+
+  parsers.conf: |
+    [PARSER]
+        Name   apache
+        Format regex
+        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   apache2
+        Format regex
+        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^ ]*) +\S*)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   apache_error
+        Format regex
+        Regex  ^\[[^ ]* (?<time>[^\]]*)\] \[(?<level>[^\]]*)\](?: \[pid (?<pid>[^\]]*)\])?( \[client (?<client>[^\]]*)\])? (?<message>.*)$
+
+    [PARSER]
+        Name   nginx
+        Format regex
+        Regex ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name   json
+        Format json
+        Time_Key time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep   On
+
+    [PARSER]
+        Name docker_no_time
+        Format json
+        Time_Keep Off
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+
+    [PARSER]
+        # http://rubular.com/r/tjUt3Awgg4
+        Name cri
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+    [PARSER]
+        Name        syslog
+        Format      regex
+        Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key    time
+        Time_Format %b %d %H:%M:%S
+
+    [PARSER]
+        Name        suricata
+        Format      json
+        Time_Key    timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
