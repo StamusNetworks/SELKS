@@ -63,7 +63,7 @@ spec:
 
           resources:
             requests:
-              memory: 1Gi
+              memory: 600Mi
               cpu: 100m
             limits:
               cpu: 500m

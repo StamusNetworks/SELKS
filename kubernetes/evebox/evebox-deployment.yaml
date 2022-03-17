@@ -29,11 +29,11 @@ spec:
 
           resources:
             requests:
-              memory: 100Mi
+              memory: 50Mi
               cpu: 50m
             limits:
-              cpu: 500m
-              memory: 500Mi
+              cpu: 100m
+              memory: 100Mi
 
           securityContext:
             capabilities:

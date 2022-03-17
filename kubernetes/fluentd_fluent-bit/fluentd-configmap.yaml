@@ -37,7 +37,7 @@ data:
 
     <filter eve_json>
       @type record_transformer
-      enable_ruby
+      enable_ruby true
 
       <record>
         # Key
@@ -46,25 +46,24 @@ data:
             st = record['fileinfo']['magic']
             split = st.to_s.split(',')
             # Value
-            split.first
+            record['fileinfo']['type'] = split.first
           end
         }"
         # Key
         alert_signature "${\
           if (record['event_type'].match?('alert'))
-            sp = record['alert']['signature'].to_s.split(' group ')
+            sp = record['alert_signature'].to_s.split(' group ')
             reg_a = /\\A\\d+\\z/
             if (sp.length == 2) and reg_a.match(sp[1])
              # Value
-             sp[0]
+             record['alert']['signature'] = sp[0]
             end
           end
         }"
 
-        fileinfo['type'] fileinfo_type
-        alert['signature'] alert_signature
       </record>
-      remove_keys fileinfo_type,alert_signature
+      remove_keys fileinfo_type
+      remove_keys alert_signature
     </filter>
 
     ###########

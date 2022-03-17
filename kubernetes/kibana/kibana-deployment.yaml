@@ -108,11 +108,11 @@ spec:
 
           resources:
             limits:
-              cpu: 1000m
+              cpu: 200m
               memory: 1Gi
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 100m
+              memory: 500Mi
 
           securityContext:
             capabilities:
