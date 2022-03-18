@@ -44,6 +44,7 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
+                - NET_RAW
                 - SYS_NICE
 
           volumeMounts:
@@ -72,9 +73,6 @@ spec:
         - name: suricata-log
           persistentVolumeClaim:
             claimName: suricata-log
-        - name: suricata-logrotate
-          persistentVolumeClaim:
-            claimName: suricata-logrotate
         - name: suricata-run
           persistentVolumeClaim:
             claimName: suricata-run
@@ -103,3 +101,10 @@ spec:
               - key: docker-entrypoint.sh
                 path: docker-entrypoint.sh
                 mode: 0555
+        - name: suricata-logrotate
+          configMap:
+            name: suricata-etc
+            items:
+              - key: logrotate
+                path: suricata
+                mode: 0444
