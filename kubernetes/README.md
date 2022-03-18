@@ -34,8 +34,8 @@ Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses 
 ```bash
 # Setup storage
 mkdir -p /data/arkime/{pcap,logs} /data/suricata/{logrotate,rules,run,logs/fpc} /data/scirius/{data,logs,static} /data/elasticsearch
-chown -R 998:996 /data/suricata
-chown -R 1000:996 /data/scirius
+chown -R 997:995 /data/suricata
+chown -R 1000:995 /data/scirius
 chown -R 1000:1000 /data/elasticsearch
 chown -R 1000:1000 /data/arkime
 

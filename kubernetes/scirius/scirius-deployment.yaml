@@ -20,7 +20,7 @@ spec:
         app: scirius
     spec:
       securityContext:
-        fsGroup: 996
+        fsGroup: 995
       containers:
         - name: scirius
           image: ghcr.io/stamusnetworks/scirius:master
