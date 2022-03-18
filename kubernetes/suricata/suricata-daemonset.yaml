@@ -22,7 +22,7 @@ spec:
 
       containers:
         - name: suricata
-          image: jasonish/suricata:master-amd64
+          image: jasonish/suricata:6.0.4-amd64
           env:
             - name: NODE_NAME
               valueFrom:
@@ -66,7 +66,7 @@ spec:
               name: suricata-logrotate
 
       securityContext:
-        fsGroup: 996
+        fsGroup: 995
 
       volumes:
         - name: suricata-log
