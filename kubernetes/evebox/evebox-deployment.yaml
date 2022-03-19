@@ -49,7 +49,7 @@ spec:
             failureThreshold: 6
             initialDelaySeconds: 10
             periodSeconds: 10
-            successThreshold: 3
+            successThreshold: 1
             timeoutSeconds: 5
             httpGet:
               path: /
