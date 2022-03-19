@@ -25,7 +25,8 @@ spec:
           name: evebox
 
           ports:
-            - containerPort: 5636
+            - name: web
+              containerPort: 5636
 
           resources:
             requests:
@@ -34,6 +35,25 @@ spec:
             limits:
               cpu: 100m
               memory: 100Mi
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: web
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+          # Need to wait for Elasticsearch
+          startupProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 3
+            timeoutSeconds: 5
+            httpGet:
+              path: /
+              port: web
 
           securityContext:
             capabilities:
