@@ -61,6 +61,10 @@ spec:
             - name: USE_SURICATA_STATS
               value: "True"
 
+          ports:
+            - name: http
+              containerPort: 8000
+
           resources:
             requests:
               memory: 600Mi
@@ -68,6 +72,26 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
+
+          livenessProbe:
+            failureThreshold: 5
+            periodSeconds: 30
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            failureThreshold: 5
+            periodSeconds: 30
+            httpGet:
+              path: /
+              port: http
+          startupProbe:
+            initialDelaySeconds: 60
+            failureThreshold: 18
+            periodSeconds: 10
+            httpGet:
+              path: /
+              port: http
 
           volumeMounts:
             - mountPath: /static/
