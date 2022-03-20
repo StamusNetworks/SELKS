@@ -65,11 +65,21 @@ spec:
               subPath: selks6.conf
             - mountPath: /etc/nginx/nginx.conf
               name: nginx-server-conf
-              readOnly: false
+              readOnly: true
               subPath: nginx.conf
             - mountPath: /etc/nginx/ssl
               name: nginx-tls
               readOnly: true
+
+            # - mountPath: /etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+            #   name: nginx-modsecurity-request-900-exclusion-rules-before-crs
+            #   readOnly: true
+            #   subPath: REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+            # - mountPath: /etc/modsecurity.d/owasp-crs/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+            #   name: nginx-modsecurity-response-999-exclusion-rules-after-crs
+            #   readOnly: true
+            #   subPath: RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+
             - mountPath: /docker-entrypoint.sh
               name: nginx-docker-entrypoint
               subPath: docker-entrypoint.sh
@@ -80,16 +90,20 @@ spec:
           persistentVolumeClaim:
             claimName: scirius-static
             readOnly: true
-        - name: nginx-tls
-          secret:
-            secretName: nginx-tls
-            defaultMode: 0440
+
         - name: nginx-default-conf
           configMap:
             name: nginx-owasp-configmap
             items:
               - key: default.conf
                 path: default.conf
+                mode: 0440
+        - name: nginx-selks-conf
+          configMap:
+            name: nginx-owasp-configmap
+            items:
+              - key: selks6.conf
+                path: selks6.conf
                 mode: 0440
         - name: nginx-server-conf
           configMap:
@@ -98,6 +112,28 @@ spec:
               - key: nginx.conf
                 path: nginx.conf
                 mode: 0440
+        - name: nginx-tls
+          secret:
+            secretName: nginx-tls
+            defaultMode: 0440
+
+        - name: nginx-modsecurity-request-900-exclusion-rules-before-crs
+          configMap:
+            name: nginx-owasp-configmap
+            optional: true
+            items:
+              - key: request-900-exclusion-rules-before-crs.conf
+                path: request-900-exclusion-rules-before-crs.conf
+                mode: 0440
+        - name: nginx-modsecurity-response-999-exclusion-rules-after-crs
+          configMap:
+            name: nginx-owasp-configmap
+            optional: true
+            items:
+              - key: response-999-exclusion-rules-after-crs.conf
+                path: response-999-exclusion-rules-after-crs.conf
+                mode: 0440
+
         - name: nginx-docker-entrypoint
           configMap:
             name: nginx-owasp-configmap
@@ -105,10 +141,3 @@ spec:
               - key: docker-entrypoint.sh
                 path: docker-entrypoint.sh
                 mode: 0555
-        - name: nginx-selks-conf
-          configMap:
-            name: nginx-owasp-configmap
-            items:
-              - key: selks6.conf
-                path: selks6.conf
-                mode: 0440
