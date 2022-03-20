@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app: nginx-owasp
+  name: nginx
+  namespace: suricata
+spec:
+  ports:
+    - name: "https"
+      port: 443
+      targetPort: 443
+    - name: "http"
+      port: 80
+      targetPort: 80
+  selector:
+    app: nginx-owasp
+  sessionAffinity: None
+  type: NodePort
