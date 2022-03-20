@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: nginx-owasp
+  name: nginx
+  namespace: suricata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-owasp
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: nginx-owasp
+    spec:
+      containers:
+        - name: nginx
+          image: owasp/modsecurity-crs:3.3.2-nginx-alpine
+
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              cpu: 1
+              memory: 500Mi
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+
+          securityContext:
+            allowPrivilegeEscalation: false
+          #   capabilities:
+          #     drop:
+          #     - ALL
+          #   runAsNonRoot: true
+
+          volumeMounts:
+            - mountPath: /static
+              name: scirius-static
+              readOnly: true
+            - mountPath: /etc/nginx/conf.d/default.conf
+              name: nginx-default-conf
+              readOnly: true
+              subPath: default.conf
+            - mountPath: /etc/nginx/conf.d/selks6.conf
+              name: nginx-selks-conf
+              readOnly: true
+              subPath: selks6.conf
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-server-conf
+              readOnly: false
+              subPath: nginx.conf
+            - mountPath: /etc/nginx/ssl
+              name: nginx-tls
+              readOnly: true
+            - mountPath: /docker-entrypoint.sh
+              name: nginx-docker-entrypoint
+              subPath: docker-entrypoint.sh
+
+      restartPolicy: Always
+      volumes:
+        - name: scirius-static
+          persistentVolumeClaim:
+            claimName: scirius-static
+            readOnly: true
+        - name: nginx-tls
+          secret:
+            secretName: nginx-tls
+            defaultMode: 0440
+        - name: nginx-default-conf
+          configMap:
+            name: nginx-owasp-configmap
+            items:
+              - key: default.conf
+                path: default.conf
+                mode: 0440
+        - name: nginx-server-conf
+          configMap:
+            name: nginx-owasp-configmap
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+                mode: 0440
+        - name: nginx-docker-entrypoint
+          configMap:
+            name: nginx-owasp-configmap
+            items:
+              - key: docker-entrypoint.sh
+                path: docker-entrypoint.sh
+                mode: 0555
+        - name: nginx-selks-conf
+          configMap:
+            name: nginx-owasp-configmap
+            items:
+              - key: selks6.conf
+                path: selks6.conf
+                mode: 0440

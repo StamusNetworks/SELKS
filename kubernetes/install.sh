@@ -48,8 +48,16 @@ kubectl create --save-config -f arkime/arkime-secret.yaml
 kubectl create --save-config -f arkime/arkime-configmap.yaml
 kubectl create --save-config -f arkime/arkime-deployment.yaml
 
+# For a regular NGINX installation
 kubectl create --save-config -f nginx/nginx-secret.yaml
 kubectl create --save-config -f nginx/nginx-configmap.yaml
 kubectl create --save-config -f nginx/nginx-deployment.yaml
 kubectl create --save-config -f nginx/nginx-service.yaml
 kubectl create --save-config -f nginx/nginx-ingress.yaml
+
+# For a NGINX installation hardened with OWASP mod-security
+# kubectl create --save-config -f nginx/nginx-secret.yaml
+# kubectl create --save-config -f nginx/nginx-owasp-configmap.yaml
+# kubectl create --save-config -f nginx/nginx-owasp-deployment.yaml
+# kubectl create --save-config -f nginx/nginx-owasp-service.yaml
+# kubectl create --save-config -f nginx/nginx-ingress.yaml
