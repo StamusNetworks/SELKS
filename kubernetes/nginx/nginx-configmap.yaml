@@ -5,9 +5,9 @@ metadata:
   namespace: suricata
 data:
   nginx.conf: |
-    user www-data;
-    worker_processes auto;
-    pid /run/nginx.pid;
+    user nginx;
+    worker_processes 1;
+    pid /var/run/nginx.pid;
     include /etc/nginx/modules-enabled/*.conf;
 
     events {
@@ -39,15 +39,26 @@ data:
     	# SSL Settings
     	##
 
-    	ssl_protocols TLSv1.2;
-    	ssl_prefer_server_ciphers on;
+    	ssl_protocols TLSv1.2 TLSv1.3;
+      ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+
+      ssl_stapling off;
+      ssl_stapling_verify off;
+
+      ssl_verify_client off;
 
     	##
     	# Logging Settings
     	##
 
-    	access_log /var/log/nginx/access.log;
-    	error_log /var/log/nginx/error.log;
+      log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+      access_log /var/log/nginx/access.log main;
+      access_log /dev/null combined;
+
+      error_log /var/log/nginx/error.log warn;
 
     	##
     	# Gzip Settings
@@ -67,105 +78,107 @@ data:
     	##
 
     	include /etc/nginx/conf.d/*.conf;
-    	#include /etc/nginx/sites-enabled/*;
     }
   default.conf: |
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
   selks6.conf: |
     server {
-        # listen 80 default_server;
-        # listen 443 default_server ssl;
-        listen 80;
-        listen 443 ssl;
-        ssl_certificate /etc/nginx/ssl/tls.crt;
-        ssl_certificate_key /etc/nginx/ssl/tls.key;
-        server_name SELKS;
-        access_log /var/log/nginx/scirius.access.log;
-        error_log /var/log/nginx/scirius.error.log;
 
-        # https://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-production
-        location /static/ { # STATIC_URL
-            alias /static/; # STATIC_ROOT
-            expires 30d;
-        }
+      listen 80;
+      listen 443 ssl;
+      ssl_certificate /etc/nginx/ssl/tls.crt;
+      ssl_certificate_key /etc/nginx/ssl/tls.key;
 
-        location /media/ { # MEDIA_URL
-            alias /static/; # MEDIA_ROOT
-            expires 30d;
-        }
+      server_name SELKS;
 
-        location /plugins/ {
-            proxy_pass http://kibana.logging:5601/plugins/;
-            proxy_redirect off;
-        }
+      access_log /var/log/nginx/scirius.access.log;
+      error_log /var/log/nginx/scirius.error.log;
 
-        location /dlls/ {
-            proxy_pass http://kibana.logging:5601/dlls/;
-            proxy_redirect off;
-        }
+      # https://docs.djangoproject.com/en/dev/howto/static-files/#serving-static-files-in-production
+      location /static/ { # STATIC_URL
+          alias /static/; # STATIC_ROOT
+          expires 30d;
+      }
 
-        location /socket.io/ {
-            proxy_pass http://kibana.logging:5601/socket.io/;
-            proxy_redirect off;
-        }
+      location /media/ { # MEDIA_URL
+          alias /static/; # MEDIA_ROOT
+          expires 30d;
+      }
 
-        location /dataset/ {
-            proxy_pass http://kibana.logging:5601/dataset/;
-            proxy_redirect off;
-        }
+      location /plugins/ {
+          proxy_pass http://kibana.logging:5601/plugins/;
+          proxy_redirect off;
+      }
 
-        location /translations/ {
-            proxy_pass http://kibana.logging:5601/translations/;
-            proxy_redirect off;
-        }
+      location /dlls/ {
+          proxy_pass http://kibana.logging:5601/dlls/;
+          proxy_redirect off;
+      }
 
-        location ^~ /built_assets/ {
-            proxy_pass http://kibana.logging:5601/built_assets/;
-            proxy_redirect off;
-        }
+      location /socket.io/ {
+          proxy_pass http://kibana.logging:5601/socket.io/;
+          proxy_redirect off;
+      }
 
-        location /ui/ {
-            proxy_pass http://kibana.logging:5601/ui/;
-            proxy_redirect off;
-        }
+      location /mnt/tank/crypt/k8sset/ {
+          proxy_pass http://kibana.logging:5601/mnt/tank/crypt/k8sset/;
+          proxy_redirect off;
+      }
 
-       location /spaces/ {
-            proxy_pass http://kibana.logging:5601/spaces/;
-            proxy_redirect off;
-        }
+      location /translations/ {
+          proxy_pass http://kibana.logging:5601/translations/;
+          proxy_redirect off;
+      }
+
+      location ^~ /built_assets/ {
+          proxy_pass http://kibana.logging:5601/built_assets/;
+          proxy_redirect off;
+      }
+
+      location /ui/ {
+          proxy_pass http://kibana.logging:5601/ui/;
+          proxy_redirect off;
+      }
+
+      location /spaces/ {
+          proxy_pass http://kibana.logging:5601/spaces/;
+          proxy_redirect off;
+      }
 
       location /node_modules/ {
-            proxy_pass http://kibana.logging:5601/node_modules/;
-            proxy_redirect off;
-        }
+          proxy_pass http://kibana.logging:5601/node_modules/;
+          proxy_redirect off;
+      }
 
       location /bootstrap.js {
-            proxy_pass http://kibana.logging:5601/bootstrap.js;
-            proxy_redirect off;
-        }
+          proxy_pass http://kibana.logging:5601/bootstrap.js;
+          proxy_redirect off;
+      }
 
-     location /internal/ {
-            proxy_pass http://kibana.logging:5601/internal/;
-            proxy_redirect off;
-        }
+      location /internal/ {
+          proxy_pass http://kibana.logging:5601/internal/;
+          proxy_redirect off;
+      }
 
-     location /moloch/ {
-            proxy_pass http://arkime.suricata:8005/moloch/;
-            proxy_redirect off;
-        }
+      # location /moloch/ {
+      #        proxy_pass http://arkime.suricata:8005/moloch/;
+      #        proxy_redirect off;
+      #    }
 
-     location ~ "^/([\d]{5}/.*)" {
-            proxy_pass http://kibana.logging:5601/$1;
-            proxy_redirect off;
-        }
+      location ~ "^/([\d]{5}/.*)" {
+          proxy_pass http://kibana.logging:5601/$1;
+          proxy_redirect off;
+      }
 
-
-     location / {
-           proxy_pass http://scirius.suricata:80;
-           proxy_read_timeout 600;
-           proxy_set_header Host $http_host;
-           proxy_set_header X-Forwarded-Proto https;
-           proxy_redirect off;
-           client_max_body_size 100M;
-        }
-
+      location / {
+         proxy_pass http://scirius.suricata:80;
+         proxy_read_timeout 600;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Proto https;
+         proxy_redirect off;
+         client_max_body_size 100M;
+      }
     }
