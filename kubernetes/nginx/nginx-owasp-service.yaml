@@ -4,7 +4,7 @@ metadata:
   annotations:
   labels:
     app: nginx-owasp
-  name: nginx
+  name: nginx-owasp
   namespace: suricata
 spec:
   ports:
