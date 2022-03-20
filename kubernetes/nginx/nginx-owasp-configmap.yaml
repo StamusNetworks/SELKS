@@ -23,6 +23,8 @@ data:
     . /opt/modsecurity/activate-rules.sh
 
     exec "$@"
+  # request-900-exclusion-rules-before-crs.conf: |
+  # response-999-exclusion-rules-after-crs.conf: |
   nginx.conf: |
     load_module modules/ngx_http_modsecurity_module.so;
 
