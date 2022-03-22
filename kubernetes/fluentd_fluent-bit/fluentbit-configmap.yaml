@@ -48,6 +48,16 @@ data:
         Refresh_Interval  10
 
   output.conf: |
+    # Systemd to Fluentd
+    [OUTPUT]
+        Name            es
+        Match           host.*
+        Host            elasticsearch.logging
+        Port            9200
+        Logstash_Format On
+        Retry_Limit     False
+
+    # Kubernetes to Fluentd
     [OUTPUT]
         Name            es
         Match           kube.*

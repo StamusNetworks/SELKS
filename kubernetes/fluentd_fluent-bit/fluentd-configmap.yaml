@@ -69,13 +69,23 @@ data:
     ###########
     # OUTPUTS #
     ###########
+    # Output systemd to Elasticsearch
+    <match host.*>
+      @type           elasticsearch
+      host            elasticsearch.logging
+      port            9200
+      logstash_format true
+      logstash_prefix logstash-systemd
+      default_elasticsearch_version 7
+    </match>
+
     # Output kubernetes to Elasticsearch
     <match kube.*>
       @type           elasticsearch
       host            elasticsearch.logging
       port            9200
       logstash_format true
-      logstash_prefix logstash
+      logstash_prefix logstash-kube
       default_elasticsearch_version 7
     </match>
 
