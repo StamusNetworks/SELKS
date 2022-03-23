@@ -28,8 +28,13 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: CPU_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: suricata
+                  resource: limits.cpu
             - name: SURICATA_OPTIONS
-              value: "-i eth0 -vvv --set sensor-name=suricata --set outputs.7.pcap-log.filename=log.$(NODE_NAME).%n.%t.pcap"
+              value: "-i eth0 -vvv --set sensor-name=suricata --set af-packet.1.threads=$(CPU_LIMIT) --set outputs.7.pcap-log.filename=log.$(NODE_NAME).%n.%t.pcap --set outputs.1.eve-log.filename=$(NODE_NAME)-eve.json"
           command: ["/etc/suricata/new_entrypoint.sh"]
 
           resources:
