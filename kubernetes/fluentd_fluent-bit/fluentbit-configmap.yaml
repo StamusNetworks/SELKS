@@ -41,7 +41,7 @@ data:
     [INPUT]
         Name              tail
         Tag               eve_json
-        Path              /var/log/suricata/eve.json
+        Path              /var/log/suricata/*.json
         Parser            suricata
         Db                /var/log/flb_suricata.db
         Db.sync           full
