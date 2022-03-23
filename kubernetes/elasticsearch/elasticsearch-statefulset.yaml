@@ -108,7 +108,7 @@ spec:
           value: "-Xms512m -Xmx512m -XX:HeapDumpPath=/data/$(node.name)/data -XX:ErrorFile=/data/$(node.name)/logs/hs_err_pid%p.log -Xlog:gc*,gc+age=trace,safepoint:file=/data/$(node.name)/logs/@loggc@:utctime,pid,tags:filecount=32,filesize=64m"
 
         - name: action.auto_create_index
-          value: ".watches,.triggered_watches,.watcher-history-*,logstash-*"
+          value: ".watches,.triggered_watches,.watcher-history-*,logstash-*,logstash-kube-*,logstash-systemd-*"
 
         - name: path.data
           value: "/data/$(node.name)/data"
