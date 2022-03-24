@@ -29,6 +29,12 @@ sed -i -e 's|Name\=Install Debian sid|Name\=Install SELKS|'  /usr/share/applicat
 # First time setup
 
 cat >> /etc/skel/Desktop/FirstTimeSetup.txt <<EOF
+
+It is always recommended to follow the latest docs:        
+https://github.com/StamusNetworks/SELKS/wiki
+
+Please got to the end of the brief bellow for production setup considerations.
+
 First time setup:   
 
 Non interactive, airgapped mode.
@@ -36,13 +42,13 @@ The bellow command will setup the selks instillation:
 - in non-interractive mode
 - install all containers (elasticsearch/suricata/ngingx/logstash/kibana/scirius/evebox/portainer) without pulling anything from the internet
 - use the interface tppdummy0 as sniffing interface
-- use 4GB of RAM for Elasticsearch
+- use 8GB of RAM for Elasticsearch
 - start up the installation (docker compose)
 
 Examples:   
 
 cd /opt/selksd/SELKS/docker/ && \
-./easy-setup.sh  --non-interactive --no-pull-containers -i tppdummy0 --iA  --es-memory 4G && \
+./easy-setup.sh  --non-interactive --no-pull-containers -i tppdummy0 --iA  --es-memory 8G && \
 docker-compose up -d 
 
 
@@ -58,7 +64,7 @@ Example:
 cd /opt/selksd/SELKS/docker/
 docker-compose down
 git pull
-./easy-setup.sh --iA --es-memory 6G 
+./easy-setup.sh --iA --es-memory 8G 
 docker-compose pull
 docker-compose up -d --force-recreate
 
@@ -70,6 +76,9 @@ Example:
 ip link add tppdummy0 type dummy && \
 ip link set tppdummy0 up && \
 ifconfig tppdummy0 mtu 1572
+
+Production setup considerations:
+https://github.com/StamusNetworks/SELKS/wiki/Docker#production-setup
 EOF
 
 # copy for root to
@@ -112,6 +121,8 @@ uname -a && whoami && echo $UID
 
 mkdir -p /opt/selksd/SELKS/docker/tar_images
 
+apt update && apt-get install -y python3-requests
+
 mkdir -p /opt/selksd/pull/
 cd /opt/selksd/pull/ && \
 git clone https://github.com/NotGlop/docker-drag.git && \
@@ -125,11 +136,11 @@ python3 docker-drag/docker_pull.py elastic/kibana:7.16.1 && \
 python3 docker-drag/docker_pull.py elastic/logstash:7.16.1 && \
 python3 docker-drag/docker_pull.py jasonish/suricata:master-amd64 && \
 python3 docker-drag/docker_pull.py ghcr.io/stamusnetworks/scirius:master && \
-python3 docker-drag/docker_pull.py jasonish/evebox:master
+python3 docker-drag/docker_pull.py jasonish/evebox:master && \
+python3 docker-drag/docker_pull.py ghcr.io/stamusnetworks/arkimeviewer:master 
 
 mv /opt/selksd/pull/*.tar /opt/selksd/SELKS/docker/tar_images
 rm -rf /opt/selksd/pull/ 
-
 
 apt-get autoremove -y
 apt-get clean && \
