@@ -235,13 +235,10 @@ mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/data/moloch/etc/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
-mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
-mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
-mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/var/backups/
@@ -331,28 +328,17 @@ tcpflow dsniff mc python3-daemon wget curl vim bootlogd lsof libpolkit-agent-1-0
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  #echo "lxde fonts-lyx wireshark terminator conky" \
-  #>> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "task-xfce-desktop xfce4-goodies fonts-lyx wireshark terminator" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "wireshark terminator open-vm-tools open-vm-tools-desktop lxpolkit" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
-  #echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
-  # Copy conky conf file
-  #cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   # Copy the menu shortcuts for Kibana and Scirius
   # this is for the lxde menu widgets - not the desktop shortcuts
   cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 
   # For Evebox to.
   cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
-  # For setting up Suricata IDS interface.
-  #cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
-  # First time setup/init.
-  #cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 fi
 
 # If -p (add packages) option is used - add those packages to the build
@@ -401,6 +387,4 @@ d-i passwd/root-password-again password StamusNetworks
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
-#cd Stamus-Live-Build && ( lb build &> build.log )
-#mv binary.hybrid.iso SELKS.iso
 mv live-image-amd64.hybrid.iso SELKS.iso
