@@ -26,6 +26,7 @@ data:
         Name systemd
         Tag host.*
         Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+        Systemd_Filter _SYSTEMD_UNIT=k3s.service
         Read_From_Tail On
 
     [INPUT]
@@ -45,6 +46,7 @@ data:
         Parser            suricata
         Db                /var/log/flb_suricata.db
         Db.sync           full
+        Buffer_Max_Size   128k
         Refresh_Interval  10
 
   output.conf: |
