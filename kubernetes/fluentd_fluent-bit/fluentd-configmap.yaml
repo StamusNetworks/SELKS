@@ -70,7 +70,7 @@ data:
     # OUTPUTS #
     ###########
     # Output systemd to Elasticsearch
-    <match host.*>
+    <match systemd.*>
       @type           elasticsearch
       host            elasticsearch.logging
       port            9200
