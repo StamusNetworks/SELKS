@@ -72,7 +72,7 @@ spec:
       serviceAccountName: fluent-bit
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:1.8.13
+        image: fluent/fluent-bit:1.9.1
 
         ports:
           - name: http

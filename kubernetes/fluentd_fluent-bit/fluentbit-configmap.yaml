@@ -23,11 +23,16 @@ data:
 
   input.conf: |
     [INPUT]
-        Name systemd
-        Tag host.*
-        Systemd_Filter _SYSTEMD_UNIT=kubelet.service
-        Systemd_Filter _SYSTEMD_UNIT=k3s.service
-        Read_From_Tail On
+        Name              systemd
+        Tag               systemd.*
+        Systemd_Filter    _SYSTEMD_UNIT=kubelet.service
+        Systemd_Filter    _SYSTEMD_UNIT=k3s.service
+        Systemd_Filter    _SYSTEMD_UNIT=sshd.service
+        Systemd_Filter    _SYSTEMD_UNIT=containerd.service
+        Systemd_Filter    _SYSTEMD_UNIT=docker.service
+        Read_From_Tail    On
+        Strip_Underscores On
+        Lowercase         On
 
     [INPUT]
         Name              tail
@@ -52,21 +57,19 @@ data:
   output.conf: |
     # Systemd to Fluentd
     [OUTPUT]
-        Name            es
-        Match           host.*
-        Host            elasticsearch.logging
-        Port            9200
-        Logstash_Format On
-        Retry_Limit     False
+        Name            forward
+        Match           systemd.*
+        Host            fluentd.logging
+        Port            24224
+        Tag             systemd.*
 
     # Kubernetes to Fluentd
     [OUTPUT]
-        Name            es
+        Name            forward
         Match           kube.*
-        Host            elasticsearch.logging
-        Port            9200
-        Logstash_Format On
-        Retry_Limit     False
+        Host            fluentd.logging
+        Port            24224
+        Tag             kube.*
 
     # Suricata to Fluentd
     [OUTPUT]
@@ -88,10 +91,9 @@ data:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Kube_Tag_Prefix     kube.var.log.containers.
         Merge_Log           On
-        Keep_Log            Off
         Merge_Log_Key       log_processed
         K8S-Logging.Parser  On
-        K8S-Logging.Exclude On
+        K8S-Logging.Exclude Off
 
   filter-suricata.conf: |
     [FILTER]
@@ -240,13 +242,6 @@ data:
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
         Time_Keep   On
-
-    [PARSER]
-        Name docker_no_time
-        Format json
-        Time_Keep Off
-        Time_Key time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
 
     [PARSER]
         # http://rubular.com/r/tjUt3Awgg4
