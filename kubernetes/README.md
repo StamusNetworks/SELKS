@@ -41,7 +41,7 @@ chown -R 1000:1000 /data/arkime
 
 # Create NGINX TLS keys and create secret template
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout ./tls.key -out tls.crt -extensions v3_ca
-kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run -o yaml > nginx/nginx-secret.yaml
+kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run=client -o yaml > nginx/nginx-secret.yaml
 
 chmod +x install.sh
 ./install.sh
