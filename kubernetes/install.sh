@@ -9,6 +9,12 @@ kubectl create --save-config -f elasticsearch/elasticsearch-pvc.yaml
 kubectl create --save-config -f elasticsearch/elasticsearch-statefulset.yaml
 kubectl create --save-config -f elasticsearch/elasticsearch-service.yaml
 
+kubectl create --save-config -f suricata/suricata-pv.yaml
+kubectl create --save-config -f suricata/suricata-pvc.yaml
+kubectl create --save-config -f suricata/suricata-configmap.yaml
+kubectl create --save-config -f suricata/suricata-daemonset.yaml
+kubectl create --save-config -f suricata/suricata-cronjob.yaml
+
 # If you'd like to use Logstash with Filebeat (mutually exclusive with Fluentd with Fuent-bit)
 kubectl create --save-config -f logstash_filebeat/logstash-configmap.yaml
 kubectl create --save-config -f logstash_filebeat/logstash-statefulset.yaml
@@ -35,12 +41,6 @@ kubectl create --save-config -f scirius/scirius-pvc.yaml
 kubectl create --save-config -f scirius/scirius-secret.yaml
 kubectl create --save-config -f scirius/scirius-deployment.yaml
 kubectl create --save-config -f scirius/scirius-service.yaml
-
-kubectl create --save-config -f suricata/suricata-pv.yaml
-kubectl create --save-config -f suricata/suricata-pvc.yaml
-kubectl create --save-config -f suricata/suricata-configmap.yaml
-kubectl create --save-config -f suricata/suricata-daemonset.yaml
-kubectl create --save-config -f suricata/suricata-cronjob.yaml
 
 kubectl create --save-config -f arkime/arkime-pv.yaml
 kubectl create --save-config -f arkime/arkime-pvc.yaml
