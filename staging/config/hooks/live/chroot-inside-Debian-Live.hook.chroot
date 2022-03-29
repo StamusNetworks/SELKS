@@ -48,7 +48,7 @@ The bellow command will setup the selks instillation:
 Examples:   
 
 cd /opt/selksd/SELKS/docker/ && \
-./easy-setup.sh  --non-interactive --no-pull-containers -i tppdummy0 --iA  --es-memory 8G && \
+./easy-setup.sh --non-interactive --no-pull-containers -i tppdummy0 --iA --restart-mode always --es-memory 8G && \
 docker-compose up -d 
 
 
