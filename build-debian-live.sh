@@ -41,15 +41,15 @@ OPTIONS:
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 4.10 
-   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 4.10
+   ./build-debian-live.sh -k 5.10 
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 5.10
    
-   ./build-debian-live.sh -k 3.18.11 -p one-package
-   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.18.11
+   ./build-debian-live.sh -k 4.18.11 -p one-package
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 4.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p one-package
-   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
+   ./build-debian-live.sh -k 4.18.11 -g no-desktop -p one-package
+   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 4.18.11
    and add the extra package named  "one-package" to the build.
    
    ./build-debian-live.sh -k 4.16 -g no-desktop -p "package1 package2 package3"
@@ -255,24 +255,11 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 # to point to the latest README version located on SELKS github
 # The same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
-# some README adjustments - in order to add a http link
-# to point to the latest README version located on SELKS github
-echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS/tree/master \n\n" > TMP.rst
-cat README.rst >> TMP.rst
-
-cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
-# same as above but for root
-cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
-rm TMP.rst 
 
 # cp Scirius desktop shortcuts
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-
-
-# Iceweasel bookmarks
-cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
 
 # Logrotate config for eve.json
 cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
