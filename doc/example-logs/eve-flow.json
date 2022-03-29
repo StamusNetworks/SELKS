@@ -1,0 +1,67 @@
+{
+  "in_iface": "tppdummy0",
+  "timestamp": "2021-10-08T12:43:23.016383+0300",
+  "dest_ip": "82.118.21.221",
+  "src_port": 49900,
+  "tcp": {
+    "state": "closed",
+    "psh": true,
+    "tcp_flags_tc": "1b",
+    "fin": true,
+    "ack": true,
+    "syn": true,
+    "tcp_flags": "1b",
+    "tcp_flags_ts": "1b"
+  },
+  "@timestamp": "2021-10-08T09:43:23.016Z",
+  "flow_id": 1357003807701027,
+  "metadata": {
+    "flowbits": [
+      "http.dottedquadhost.dll",
+      "ET.http.binary"
+    ]
+  },
+  "event_type": "flow",
+  "host": "SELKS",
+  "path": "/var/log/suricata/eve.json",
+  "geoip": {
+    "city_name": "Gdansk",
+    "latitude": 54.3601,
+    "country_name": "Poland",
+    "postal_code": "80-860",
+    "timezone": "Europe/Warsaw",
+    "country_code3": "PL",
+    "ip": "82.118.21.221",
+    "country_code2": "PL",
+    "region_code": "22",
+    "continent_code": "EU",
+    "location": {
+      "lon": 18.664,
+      "lat": 54.3601
+    },
+    "longitude": 18.664,
+    "region_name": "Pomerania"
+  },
+  "app_proto": "http",
+  "tags": [
+    "_geoip_lookup_failure"
+  ],
+  "community_id": "1:oQpfk+DMURhDz3k1FILE0ZFmIvc=",
+  "flow": {
+    "age": 19,
+    "reason": "unknown",
+    "state": "closed",
+    "alerted": true,
+    "pkts_toserver": 46,
+    "pkts_toclient": 140,
+    "start": "2021-10-08T12:39:54.899107+0300",
+    "end": "2021-10-08T12:40:13.032461+0300",
+    "bytes_toserver": 2593,
+    "bytes_toclient": 194216
+  },
+  "type": "SELKS",
+  "@version": "1",
+  "proto": "TCP",
+  "src_ip": "172.16.1.101",
+  "dest_port": 80
+}

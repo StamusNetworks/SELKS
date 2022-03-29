@@ -1,0 +1,225 @@
+{
+  "_index": "logstash-anomaly-2021.10.08",
+  "_type": "_doc",
+  "_id": "CmJJX3wBJJ91CIEeBZcp",
+  "_score": 1,
+  "_source": {
+    "in_iface": "tppdummy0",
+    "timestamp": "2021-10-08T12:43:12.368145+0300",
+    "anomaly": {
+      "event": "APPLAYER_WRONG_DIRECTION_FIRST_DATA",
+      "type": "applayer",
+      "layer": "proto_detect"
+    },
+    "dest_ip": "172.16.1.101",
+    "src_port": 443,
+    "@timestamp": "2021-10-08T09:43:12.368Z",
+    "flow_id": 225073769458405,
+    "host": "SELKS",
+    "event_type": "anomaly",
+    "path": "/var/log/suricata/eve.json",
+    "geoip": {
+      "city_name": "Sofia",
+      "latitude": 42.6951,
+      "country_name": "Bulgaria",
+      "postal_code": "1000",
+      "timezone": "Europe/Sofia",
+      "country_code3": "BG",
+      "ip": "88.80.148.177",
+      "country_code2": "BG",
+      "region_code": "22",
+      "continent_code": "EU",
+      "location": {
+        "lon": 23.325,
+        "lat": 42.6951
+      },
+      "longitude": 23.325,
+      "region_name": "Sofia-Capital"
+    },
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "community_id": "1:OLl/QygtCj1zuydnzQrXdjhRwsU=",
+    "type": "SELKS",
+    "@version": "1",
+    "proto": "TCP",
+    "src_ip": "88.80.148.177",
+    "dest_port": 49935
+  },
+  "fields": {
+    "geoip.timezone": [
+      "Europe/Sofia"
+    ],
+    "anomaly.event": [
+      "APPLAYER_WRONG_DIRECTION_FIRST_DATA"
+    ],
+    "geoip.region_name.keyword": [
+      "Sofia-Capital"
+    ],
+    "geoip.country_code2.keyword": [
+      "BG"
+    ],
+    "geoip.country_name.keyword": [
+      "Bulgaria"
+    ],
+    "type": [
+      "SELKS"
+    ],
+    "path": [
+      "/var/log/suricata/eve.json"
+    ],
+    "event_type": [
+      "anomaly"
+    ],
+    "geoip.region_code.keyword": [
+      "22"
+    ],
+    "proto.keyword": [
+      "TCP"
+    ],
+    "flow_id": [
+      225073769458405
+    ],
+    "type.keyword": [
+      "SELKS"
+    ],
+    "host": [
+      "SELKS"
+    ],
+    "geoip.city_name.keyword": [
+      "Sofia"
+    ],
+    "EveBox": [
+      225073769458405
+    ],
+    "geoip.longitude": [
+      23.328125
+    ],
+    "host.keyword": [
+      "SELKS"
+    ],
+    "dest_port": [
+      49935
+    ],
+    "anomaly.layer.keyword": [
+      "proto_detect"
+    ],
+    "geoip.region_name": [
+      "Sofia-Capital"
+    ],
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "geoip.continent_code.keyword": [
+      "EU"
+    ],
+    "dest_ip.keyword": [
+      "172.16.1.101"
+    ],
+    "anomaly.type.keyword": [
+      "applayer"
+    ],
+    "dest_ip": [
+      "172.16.1.101"
+    ],
+    "proto": [
+      "TCP"
+    ],
+    "FPC": [
+      "ip == 88.80.148.177 && port == 443 && ip == 172.16.1.101 && port == 49935 && protocols == tcp"
+    ],
+    "geoip.latitude": [
+      42.6875
+    ],
+    "geoip.continent_code": [
+      "EU"
+    ],
+    "geoip.postal_code.keyword": [
+      "1000"
+    ],
+    "geoip.region_code": [
+      "22"
+    ],
+    "tags.keyword": [
+      "_geoip_lookup_failure"
+    ],
+    "geoip.country_code3.keyword": [
+      "BG"
+    ],
+    "event_type.keyword": [
+      "anomaly"
+    ],
+    "geoip.ip": [
+      "88.80.148.177"
+    ],
+    "in_iface.keyword": [
+      "tppdummy0"
+    ],
+    "src_ip": [
+      "88.80.148.177"
+    ],
+    "community_id": [
+      "1:OLl/QygtCj1zuydnzQrXdjhRwsU="
+    ],
+    "geoip.country_code3": [
+      "BG"
+    ],
+    "geoip.location": [
+      {
+        "coordinates": [
+          23.325,
+          42.6951
+        ],
+        "type": "Point"
+      }
+    ],
+    "geoip.country_code2": [
+      "BG"
+    ],
+    "anomaly.event.keyword": [
+      "APPLAYER_WRONG_DIRECTION_FIRST_DATA"
+    ],
+    "@version": [
+      "1"
+    ],
+    "geoip.country_name": [
+      "Bulgaria"
+    ],
+    "src_ip.keyword": [
+      "88.80.148.177"
+    ],
+    "timestamp": [
+      "2021-10-08T09:43:12.368Z"
+    ],
+    "anomaly.layer": [
+      "proto_detect"
+    ],
+    "community_id.keyword": [
+      "1:OLl/QygtCj1zuydnzQrXdjhRwsU="
+    ],
+    "geoip.city_name": [
+      "Sofia"
+    ],
+    "in_iface": [
+      "tppdummy0"
+    ],
+    "geoip.postal_code": [
+      "1000"
+    ],
+    "src_port": [
+      443
+    ],
+    "@timestamp": [
+      "2021-10-08T09:43:12.368Z"
+    ],
+    "geoip.timezone.keyword": [
+      "Europe/Sofia"
+    ],
+    "anomaly.type": [
+      "applayer"
+    ],
+    "path.keyword": [
+      "/var/log/suricata/eve.json"
+    ]
+  }
+}

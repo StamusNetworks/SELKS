@@ -1,0 +1,60 @@
+{
+  "in_iface": "tppdummy0",
+  "timestamp": "2021-10-08T12:44:32.732441+0300",
+  "dest_ip": "181.114.215.239",
+  "src_port": 50229,
+  "@timestamp": "2021-10-08T09:44:32.732Z",
+  "flow_id": 712904760397913,
+  "metadata": {
+    "flowbits": [
+      "ET.meterpreter.ja3"
+    ]
+  },
+  "event_type": "tls",
+  "host": "SELKS",
+  "path": "/var/log/suricata/eve.json",
+  "geoip": {
+    "city_name": "Intendente Alvear",
+    "latitude": -35.2357,
+    "country_name": "Argentina",
+    "postal_code": "6221",
+    "timezone": "America/Argentina/Salta",
+    "country_code3": "AR",
+    "ip": "181.114.215.239",
+    "country_code2": "AR",
+    "region_code": "L",
+    "continent_code": "SA",
+    "location": {
+      "lon": -63.5904,
+      "lat": -35.2357
+    },
+    "longitude": -63.5904,
+    "region_name": "La Pampa"
+  },
+  "tags": [
+    "_geoip_lookup_failure"
+  ],
+  "community_id": "1:k1oYipjAZggIhOaUV+okxGffO+4=",
+  "tls": {
+    "fingerprint": "e7:74:3f:c4:a4:88:dd:9b:b2:4f:fc:38:1d:ae:a9:a5:4b:c7:d1:da",
+    "ja3s": {
+      "hash": "0eec924176fb005dfa419c80ab72d27c",
+      "string": "769,49172,65281-11-35-23"
+    },
+    "notafter": "2022-06-21T19:10:50",
+    "ja3": {
+      "hash": "72a589da586844d7f0818ce684948eea",
+      "string": "771,49196-49195-49200-49199-49188-49187-49192-49191-49162-49161-49172-49171-157-156-61-60-53-47-10,5-10-11-13-35-23-65281,29-23-24,0"
+    },
+    "version": "TLSv1",
+    "subject": "C=AU, ST=Some-State, O=Internet Widgits Pty Ltd",
+    "serial": "00:CF:1D:44:E8:2D:24:88:04",
+    "issuerdn": "C=AU, ST=Some-State, O=Internet Widgits Pty Ltd",
+    "notbefore": "2021-06-21T19:10:50"
+  },
+  "type": "SELKS",
+  "@version": "1",
+  "proto": "TCP",
+  "src_ip": "172.16.1.101",
+  "dest_port": 443
+}
