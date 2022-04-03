@@ -23,13 +23,48 @@ data:
     . /opt/modsecurity/activate-rules.sh
 
     exec "$@"
-  # request-900-exclusion-rules-before-crs.conf: |
-  # response-999-exclusion-rules-after-crs.conf: |
+
+  request-900-exclusion-rules-before-crs.conf: |
+    # The purpose of this file is to hold LOCAL exceptions for your site.  The
+    # types of rules that would go into this file are one where you want to
+    # short-circuit inspection and allow certain transactions to pass through
+    # inspection or if you want to alter rules that are applied.
+
+    # As a general rule:
+    # ctl:ruleEngine            -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveById        -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveByMsg       -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveByTag       -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveTargetById  -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveTargetByMsg -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    # ctl:ruleRemoveTargetByTag -> place in REQUEST-900-EXCLUSION-RULES-BEFORE-CRS
+    #
+    # SecRuleRemoveById         -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleRemoveByMsg        -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleRemoveByTag        -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleUpdateActionById   -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleUpdateTargetById   -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleUpdateTargetByMsg  -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+    # SecRuleUpdateTargetByTag  -> place in RESPONSE-999-EXCLUSION-RULES-AFTER-CRS
+
+    SecRule REMOTE_ADDR "@ipMatch 10.42.0.0/16" \
+      "id:'1000',\
+      phase:1,\
+      pass,\
+      nolog,\
+      ctl:ruleEngine=off"
+
+  response-999-exclusion-rules-after-crs.conf: |
+    # The purpose of this file is to hold LOCAL exceptions for your site.  The
+    # types of rules that would go into this file are one where you want
+    # to unconditionally disable rules or modify their actions during startup.
+
   nginx.conf: |
     load_module modules/ngx_http_modsecurity_module.so;
 
     user nginx;
     worker_processes 1;
+    # pid /tmp/nginx.pid;
     pid /var/run/nginx.pid;
     include /etc/nginx/modules-enabled/*.conf;
 
@@ -80,17 +115,29 @@ data:
     	# gzip_http_version 1.1;
     	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
+      ##
+      # Setup rootless
+      ##
+
+      # client_body_temp_path /tmp/client_temp;
+      # proxy_temp_path       /tmp/proxy_temp_path;
+      # fastcgi_temp_path     /tmp/fastcgi_temp;
+      # uwsgi_temp_path       /tmp/uwsgi_temp;
+      # scgi_temp_path        /tmp/scgi_temp;
+
     	##
     	# Virtual Host Configs
     	##
 
     	include /etc/nginx/conf.d/*.conf;
     }
+
   default.conf: |
     map $http_upgrade $connection_upgrade {
         default upgrade;
         '' close;
     }
+
   selks6.conf: |
     server {
 
