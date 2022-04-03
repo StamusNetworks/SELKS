@@ -16,6 +16,7 @@ spec:
   template:
     metadata:
       annotations:
+        fluentbit.io/exclude: "true"
       labels:
         app: kibana
     spec:
@@ -26,12 +27,16 @@ spec:
           image: "docker.elastic.co/kibana/kibana:7.16.3"
 
           env:
+          - name: SERVER_PUBLICBASEURL
+            value: "http://localhost:5601"
           - name: ELASTICSEARCH_HOSTS
             value: "http://elasticsearch:9200"
           - name: SERVER_HOST
             value: "0.0.0.0"
           - name: NODE_OPTIONS
             value: --max-old-space-size=1800
+          - name: LOGGING_ROOT_LEVEL
+            value: "warn"
 
           ports:
             - containerPort: 5601
