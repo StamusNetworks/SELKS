@@ -51,7 +51,7 @@ data:
         Parser            suricata
         Db                /var/log/flb_suricata.db
         Db.sync           full
-        Buffer_Max_Size   128k
+        Buffer_Max_Size   5MB
         Refresh_Interval  10
 
   output.conf: |
