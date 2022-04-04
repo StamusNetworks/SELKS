@@ -7,7 +7,7 @@ SELKS
 Intro
 =====
 
-SELKS is a free and open source Debian based IDS/IPS/Network Security Monitoring platform 
+SELKS is a free and open source Debian-based IDS/IPS/Network Security Monitoring platform 
 released under GPLv3 from Stamus Networks (https://www.stamus-networks.com/). 
 
 The SELKS ISO is both Live and Installable ISO in one. SELKS can also be installed via docker compose on any Linux OS. Once installed it is 
@@ -51,7 +51,7 @@ SELKS is a showcase of what Suricata IDS/IPS/NSM can do and the network protocol
 Threat Hunting
 --------------
 
-This is further enhanced by open source Scirius - Stamus' own developed and specifically enhanced for Suricata threat hunting interface. It includes predefined hunting filters and enhanced contextual views:
+This is further enhanced by open source Scirius - Stamus' developed and threat hunting interface specifically enhanced for Suricata. It includes predefined hunting filters and enhanced contextual views:
 
 .. image:: doc/images/Hunt-context-1.png
     :alt: Stamus
@@ -126,7 +126,7 @@ Docker
 
 You can spin up SELKS on any Linux OS in minutes via docker compose - `please read more here <https://github.com/StamusNetworks/SELKS/blob/master/docker/README.md>`_.
     
-Howto run SELKS
+How to run SELKS
 ===============
 
 Prerequisites
@@ -240,5 +240,45 @@ You can get more information on SELKS wiki: https://github.com/StamusNetworks/SE
 You can get help about SELKS on in our mailing list: http://groups.google.com/d/forum/selks or feel free to drop in for a live discussion in our Discord channel https://discord.gg/h5mEdCewvn
 
 If you encounter a problem, you can open a ticket on https://github.com/StamusNetworks/SELKS/issues
+
+Enterprise scale Deployments
+============================
+
+While SELKS is a great system to test out the power of Suricata for intrusion detection and threat hunting, it was never designed to be deployed in an enterprise setting. For enterprise applications, please review our commercial solution, Stamus Security Platform (SSP).
+
+Stamus Security Platform (Commercial Solution)
+==============================================
+Stamus Security Platform (SSP) is the commercial network-based threat detection and response solution from Stamus Networks. While it retains much of the same look and feel as SELKS, SSP is a completely different system and requires a new software installation.
+
+Available in two license tiers, SSP delivers:
+
+Broad-Spectrum Threat Detection
+-------------------------------
+* Multiple detection mechanisms from machine learning, anomaly detection, and signatures
+* High-fidelity “Declarations of Compromise” with multi-stage attack timeline
+* Weekly threat intelligence updates from Stamus Labs
+
+Guided Threat Hunting and Incident Investigation
+------------------------------------------------
+* Advanced guided threat hunting filters
+* Host insights tracks over 60 security-related attributes
+* Easily convert hunt results into custom detection logic
+* Explainable and transparent results with evidence
+
+Enterprise Scale Management and Integration
+-------------------------------------------
+* Automated classification and alert triage
+* Management of multiple probes from single console
+* Seamless integration with SOAR, SEIM, XDR, EDR, IR
+* Multi-tenant operation
+* Configuration backup and restoration 
+
+
+More Information about SSP
+==========================
+
+Visit `this page to request a demo of SSP <https://www.stamus-networks.com/demo>`_
+
+To learn more about the differences between SELKS and our commercial solutions, please read through "*Understanding SELKS and Stamus Commercial Platforms*" `Download the white paper here. <https://www.stamus-networks.com/hubfs/Library/Documents%20(PDFs)/StamusNetworks-WP-SELKS-SSP-092021-1.pdf>`_
 
 
