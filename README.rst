@@ -244,7 +244,7 @@ If you encounter a problem, you can open a ticket on https://github.com/StamusNe
 Enterprise scale Deployments
 ============================
 
-While SELKS is a great system to test out the power of Suricata for intrusion detection and threat hunting, it was never designed to be deployed in an enterprise setting. For enterprise applications, please review our commercial solution, Stamus Security Platform (SSP).
+While SELKS is suitable as a production network security solution in small to medium sized organizations and is a great system to test out the power of Suricata for intrusion detection and threat hunting, it was never designed to be deployed in an enterprise setting. For enterprise applications, please review our commercial solution, Stamus Security Platform (SSP).
 
 Stamus Security Platform (Commercial Solution)
 ==============================================
