@@ -78,7 +78,7 @@ SELKS has by default over 28 default dashboards, more than 400 visualizations an
 
 Here is an extract of the dashboards list: SN-ALERTS, SN-ALL, SN-ANOMALY, SN-DHCP, SN-DNS, SN-DNP3, SN-FILE-Transactions, SN-FLOW, SN-HTTP, SN-HUNT-1, SN-IDS, SN-IKEv2, SN-KRB5, SN-MQTT, SN-NFS, SN-OVERVIEW, SN-RDP, SN-RFB, SN-SANS-MTA-Training, SN-SIP, SN-SMB, SN-SMTP, SN-SNMP, SN-SSH, SN-STATS, SN-TLS, SN-VLAN, SN-TFTP, SN-TrafficID
 
-in addition to the ``Events viewer`` (EveBox)
+Additional visualizations and dashboards are also available in the ``Events viewer`` (EveBox).
 
 A link to the Kibana dashboards can also be found by clicking on the switcher app on the top right of corner of
 Scirius, the ruleset and hunting management interface.
