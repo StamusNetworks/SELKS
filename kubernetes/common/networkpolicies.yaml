@@ -1,0 +1,476 @@
+---
+# Default deny everything
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: logging
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Default deny everything
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: suricata
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Elasticsearch policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: elasticsearch
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      service: elasticsearch
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: fluentd
+      ports:
+      - protocol: TCP
+        port: 9200
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: logstash
+      ports:
+      - protocol: TCP
+        port: 9200
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: kibana
+      ports:
+      - protocol: TCP
+        port: 9200
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: evebox
+      ports:
+      - protocol: TCP
+        port: 9200
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: scirius
+      ports:
+      - protocol: TCP
+        port: 9200
+  egress: {}
+
+---
+# Fluentd policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: fluentd
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      app: fluentd
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: fluent-bit
+      ports:
+      - protocol: TCP
+        port: 24224
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          service: elasticsearch
+      ports:
+      - protocol: TCP
+        port: 9200
+
+---
+# Logstash policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: logstash
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      app: logstash
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: filebeat
+      ports:
+      - protocol: TCP
+        port: 5044
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          service: elasticsearch
+      ports:
+      - protocol: TCP
+        port: 9200
+
+---
+# Fluent-bit policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: fluent-bit
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: fluent-bit
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress: {}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: fluentd
+      ports:
+      - protocol: TCP
+        port: 24224
+
+---
+# Filebeat policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: filebeat
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: filebeat
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress: {}
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: logstash
+      ports:
+      - protocol: TCP
+        port: 5044
+
+---
+# Kibana policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      app: kibana
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx
+      ports:
+        - port: 5601
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx-owasp
+      ports:
+        - port: 5601
+          protocol: TCP
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          service: elasticsearch
+      ports:
+      - protocol: TCP
+        port: 9200
+
+---
+# Evebox policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: evebox
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      app: evebox
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx
+      ports:
+        - port: 5636
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx-owasp
+      ports:
+        - port: 5636
+          protocol: TCP
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          service: elasticsearch
+      ports:
+      - protocol: TCP
+        port: 9200
+
+---
+# Scirius policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: scirius
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: scirius
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx
+      ports:
+        - port: 80
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx-owasp
+      ports:
+        - port: 80
+          protocol: TCP
+  egress: {}
+
+---
+# Arkime policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: arkime
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: arkime
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx
+      ports:
+        - port: 80
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: nginx-owasp
+      ports:
+        - port: 80
+          protocol: TCP
+  egress: {}
+
+---
+# NGINX policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nginx
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 443
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: scirius
+      ports:
+        - port: 80
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: evebox
+      ports:
+        - port: 5636
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: kibana
+      ports:
+        - port: 5601
+          protocol: TCP
+
+---
+# NGINX OWASP policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nginx-owasp
+  namespace: suricata
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-owasp
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 443
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: suricata
+      podSelector:
+        matchLabels:
+          app: scirius
+      ports:
+        - port: 80
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: evebox
+      ports:
+        - port: 5636
+          protocol: TCP
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: logging
+      podSelector:
+        matchLabels:
+          app: kibana
+      ports:
+        - port: 5601
+          protocol: TCP
