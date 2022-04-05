@@ -33,13 +33,13 @@ cat >> /etc/skel/Desktop/FirstTimeSetup.txt <<EOF
 It is always recommended to follow the latest docs:        
 https://github.com/StamusNetworks/SELKS/wiki
 
-Please got to the end of the brief bellow for production setup considerations.
+Please go to the end of the brief below for production setup considerations.
 
 First time setup:   
 
 Non interactive, airgapped mode.
-The bellow command will setup the selks instillation:
-- in non-interractive mode
+The below command will setup the selks installation:
+- in non-interactive mode
 - install all containers (elasticsearch/suricata/ngingx/logstash/kibana/scirius/evebox/portainer) without pulling anything from the internet
 - use the interface tppdummy0 as sniffing interface
 - use 8GB of RAM for Elasticsearch
@@ -47,8 +47,10 @@ The bellow command will setup the selks instillation:
 
 Examples:   
 
+
 cd /opt/selksd/SELKS/docker/ && \
-./easy-setup.sh --non-interactive --no-pull-containers -i tppdummy0 --iA --restart-mode always --es-memory 8G && \
+./easy-setup.sh --non-interactive --no-pull-containers -i tppdummy0 \
+--iA --restart-mode always --es-memory 8G && \
 docker-compose up -d 
 
 
@@ -56,7 +58,7 @@ Interactive with latest updated containers and software:
 
 - update/pull and install all containers (elasticsearch/suricata/ngingx/logstash/kibana/scirius/evebox/portainer)
 - use the interface tppdummy0 as sniffing interface
-- use 6GB of RAM for Elasticsearch, 1GB
+- use 8GB of RAM for Elasticsearch, 1GB
 - start up the installation (docker compose)
 
 Example:  
@@ -67,6 +69,7 @@ git pull
 ./easy-setup.sh --iA --es-memory 8G 
 docker-compose pull
 docker-compose up -d --force-recreate
+
 
 Setting up dummy interface       
 If you would not want to sniff on specific system interface and want to set up a dummy interface for sniffing to replay for example specific pcap cases:
@@ -79,6 +82,7 @@ ifconfig tppdummy0 mtu 1572
 
 Production setup considerations:
 https://github.com/StamusNetworks/SELKS/wiki/Docker#production-setup
+
 EOF
 
 # copy for root to
