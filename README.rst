@@ -74,37 +74,9 @@ If you are a new to Suricata, you can read a series of articles we wrote about `
 Dashboards
 ----------
 
-SELKS has by default over 28 default dashboards, more than 400 visualizations and 24 predefined searches available:   
+SELKS has by default over 28 default dashboards, more than 400 visualizations and 24 predefined searches available.
 
-* SN-ALERTS
-* SN-ALL
-* SN-ANOMALY
-* SN-DHCP
-* SN-DNS
-* SN-DNP3
-* SN-FILE-Transactions
-* SN-FLOW
-* SN-HTTP
-* SN-HUNT-1
-* SN-IDS
-* SN-IKEv2
-* SN-KRB5
-* SN-MQTT
-* SN-NFS
-* SN-OVERVIEW
-* SN-RDP
-* SN-RFB
-* SN-SANS-MTA-Training
-* SN-SIP
-* SN-SMB
-* SN-SMTP
-* SN-SNMP
-* SN-SSH
-* SN-STATS
-* SN-TLS
-* SN-VLAN
-* SN-TFTP
-* SN-TrafficID
+Here is an extract of the dashboards list: SN-ALERTS, SN-ALL, SN-ANOMALY, SN-DHCP, SN-DNS, SN-DNP3, SN-FILE-Transactions, SN-FLOW, SN-HTTP, SN-HUNT-1, SN-IDS, SN-IKEv2, SN-KRB5, SN-MQTT, SN-NFS, SN-OVERVIEW, SN-RDP, SN-RFB, SN-SANS-MTA-Training, SN-SIP, SN-SMB, SN-SMTP, SN-SNMP, SN-SSH, SN-STATS, SN-TLS, SN-VLAN, SN-TFTP, SN-TrafficID
 
 in addition to the ``Events viewer`` (EveBox)
 
