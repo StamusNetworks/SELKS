@@ -80,10 +80,6 @@ Here is an extract of the dashboards list: SN-ALERTS, SN-ALL, SN-ANOMALY, SN-DHC
 
 Additional visualizations and dashboards are also available in the ``Events viewer`` (EveBox).
 
-A link to the Kibana dashboards can also be found by clicking on the switcher app on the top right of corner of
-Scirius, the ruleset and hunting management interface.
-
-
 Getting SELKS
 =============
 
