@@ -90,8 +90,6 @@ Prerequisites
 The minimal configuration for production usage is 2 cores and 9 Gb of memory. As Suricata
 and Elastisearch are multithreaded, the more cores you have the better it is.
 Regarding memory, the more traffic to monitor you have, the more getting some extra memory will be interesting.
-See `Running SELKS in production <https://github.com/StamusNetworks/SELKS/wiki/Running-SELKS-in-production>`_ page
-for more info.
 
 Docker
 ------
