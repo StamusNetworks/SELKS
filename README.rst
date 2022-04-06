@@ -106,7 +106,6 @@ Usage and logon credentials
 
 You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user`` (including through the Dashboards or Scirius desktop icons).
 You can change credentials and user settings by using the top left menu in Scirius.  
-More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
 
 For the ISO users
 -----------------
@@ -168,7 +167,7 @@ Enterprise Scale Management and Integration
 -------------------------------------------
 * Automated classification and alert triage
 * Management of multiple probes from single console
-* Seamless integration with SOAR, SEIM, XDR, EDR, IR
+* Seamless integration with SOAR, SIEM, XDR, EDR, IR
 * Multi-tenant operation
 * Configuration backup and restoration 
 
