@@ -84,19 +84,6 @@ Additional visualizations and dashboards are also available in the ``Events view
 Getting SELKS
 =============
 
-Docker
-------
-
-You can spin up SELKS on any Linux or Windows OSes in minutes via docker compose. See `Docker Installation <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_.
-
-ISO
----
-
-For air gapped environement or full OS installation, see `SELKS ISO Setup <https://github.com/StamusNetworks/SELKS/wiki/Docker-ISO-setup>`_.
-    
-How to run SELKS
-===============
-
 Prerequisites
 -------------
 
@@ -106,29 +93,25 @@ Regarding memory, the more traffic to monitor you have, the more getting some ex
 See `Running SELKS in production <https://github.com/StamusNetworks/SELKS/wiki/Running-SELKS-in-production>`_ page
 for more info.
 
-Running on a virtual machine
-----------------------------
+Docker
+------
 
-You need to create or reuse a virtual machine.
+You can spin up SELKS on any Linux or Windows OSes in minutes via docker compose. See `Docker Installation <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_.
 
-For VirtualBox, the recommended network setup is to use a ``Bridged adapter`` and to allow
-``Promiscuous mode`` on the interface. This way, SELKS will be able to analyse the traffic from the physical host.
+ISO
+---
 
-To run SELKS, you need to add declare that the ISO image of SELKS is in the CDROM. You can then
-reboot the virtual machine. If all goes well, you should see SELKS boot menu. Pressing enter will
-lead you to the graphical interface.
-
-Running on a physical box
--------------------------
-
-To run SELKS, you need to burn the ISO image of SELKS on a DVD. After inserting
-the DVD into the host drive, you can reboot.
-
-If all goes well, you should see SELKS boot menu. Pressing enter will
-lead you to the graphical interface.
-
+For air gapped environement or full OS installation, see `SELKS ISO Setup <https://github.com/StamusNetworks/SELKS/wiki/Docker-ISO-setup>`_.
+ 
 Usage and logon credentials
 ===========================
+
+You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user`` (including through the Dashboards or Scirius desktop icons).
+You can change credentials and user settings by using the top left menu in Scirius.  
+More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
+
+For the ISO users
+-----------------
 
 Default OS user:
 
@@ -137,40 +120,8 @@ Default OS user:
 
 The default root password is ``StamusNetworks``
 
-You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user`` (including through the Dashboards or Scirius desktop icons).
-You can change credentials and user settings by using the top left menu in Scirius.  
-More info about the user roles and set up - https://github.com/StamusNetworks/scirius#usage
-
-Elasticsearch, Logstash and Suricata are build in and can be used as standard services, ex ::
-
- systemctl restart suricata
- systemctl stop logstash 
-
-To restart Scirius: ::
-
- /usr/bin/supervisorctl restart scirius
-
-Suricata ruleset is updated and Suricata is restarted every days at 2:00AM.
-
-Building or customizing SELKS
-=============================
-
-If you would like to build an installable SELKS ISO from scratch and add extra packages of your choice to it - 
-extended information on how to build and customize SELKS ISO can be found on  
-
-* `Building SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Building-SELKS>`_
-* `Customizing SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/Customizing-SELKS>`_
-
-Tuning SELKS
-==============
-You can find information about tuning and other considerations on
-`SELKS wiki page <https://github.com/StamusNetworks/SELKS/wiki/>`_.
-
 HTTPS access
 ============
-
-Scirius and EveBox have desktop icons and could be used 
-directly with just a double click once logged in the SELKS desktop.
 
 If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
@@ -182,30 +133,12 @@ same as for local access: ``selks-user/selks-user``. Don't forget to change cred
 login. You can do that by going to ``Account settings`` in the top left dropdown menu of
 Scirius.
 
-
-Note
-----
-
-Remote access to the web interfaces is currently only httpS protected. It can be 
-further protected with firewall rules and/or authentication or simply by using 
-``/bin/systemctl start/stop nginx``
-
-Firewall rules
---------------
- 
-By default there are no firewall rules implemented.
-
-SSH
-----
-
-SSH is enabled and the ``selks-user`` can ssh to the box by default.
-
 Getting help
 ============
 
 You can get more information on SELKS wiki: https://github.com/StamusNetworks/SELKS/wiki
 
-You can get help about SELKS on in our mailing list: http://groups.google.com/d/forum/selks or feel free to drop in for a live discussion in our Discord channel https://discord.gg/h5mEdCewvn
+You can get help about SELKS on our Discord channel https://discord.gg/h5mEdCewvn
 
 If you encounter a problem, you can open a ticket on https://github.com/StamusNetworks/SELKS/issues
 
