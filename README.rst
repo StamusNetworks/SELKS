@@ -1,5 +1,3 @@
-| ℹ This README concerns the standard debian-based SELKS distribution. For instructions concerning the new implementation on Docker, please see `SELKS on docker <docker/README.md>`_ 
-
 =====
 SELKS
 =====
