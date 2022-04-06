@@ -84,16 +84,15 @@ Additional visualizations and dashboards are also available in the ``Events view
 Getting SELKS
 =============
 
-ISO
----
-
-You can download ready to use images from the `SELKS download page <https://www.stamus-networks.com/selks>`_.         
-You can find here the `first time setup guide <https://github.com/StamusNetworks/SELKS/wiki/First-time-setup>`_.
-
 Docker
 ------
 
-You can spin up SELKS on any Linux OS in minutes via docker compose - `please read more here <https://github.com/StamusNetworks/SELKS/blob/master/docker/README.md>`_.
+You can spin up SELKS on any Linux or Windows OSes in minutes via docker compose. See `Docker Installation <https://github.com/StamusNetworks/SELKS/wiki/Docker>`_.
+
+ISO
+---
+
+For air gapped environement or full OS installation, see `SELKS ISO Setup <https://github.com/StamusNetworks/SELKS/wiki/Docker-ISO-setup>`_.
     
 How to run SELKS
 ===============
