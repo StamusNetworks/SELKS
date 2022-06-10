@@ -25,6 +25,56 @@ spec:
   - Egress
 
 ---
+# Allow all access to DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: all-pods-egress-allow-dns
+  namespace: nextcloud
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - protocol: UDP
+        port: 53
+      - protocol: TCP
+        port: 53
+
+---
+# Allow all access to DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: all-pods-egress-allow-dns
+  namespace: logging
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - protocol: UDP
+        port: 53
+      - protocol: TCP
+        port: 53
+
+---
 # Elasticsearch policy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -40,51 +90,39 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: fluentd
-      ports:
-      - protocol: TCP
-        port: 9200
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: logstash
-      ports:
-      - protocol: TCP
-        port: 9200
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: kibana
-      ports:
-      - protocol: TCP
-        port: 9200
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: evebox
-      ports:
-      - protocol: TCP
-        port: 9200
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: scirius
-      ports:
-      - protocol: TCP
-        port: 9200
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: fluentd
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: logstash
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: kibana
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: evebox
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: scirius
+    ports:
+    - protocol: TCP
+      port: 9200
   egress: {}
 
 ---
@@ -103,26 +141,26 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: fluent-bit
-      ports:
-      - protocol: TCP
-        port: 24224
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: fluent-bit
+    ports:
+    - protocol: TCP
+      port: 24224
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          service: elasticsearch
-      ports:
-      - protocol: TCP
-        port: 9200
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            service: elasticsearch
+    ports:
+    - protocol: TCP
+      port: 9200
 
 ---
 # Logstash policy
@@ -140,26 +178,26 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: filebeat
-      ports:
-      - protocol: TCP
-        port: 5044
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: filebeat
+    ports:
+    - protocol: TCP
+      port: 5044
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          service: elasticsearch
-      ports:
-      - protocol: TCP
-        port: 9200
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            service: elasticsearch
+    ports:
+    - protocol: TCP
+      port: 9200
 
 ---
 # Fluent-bit policy
@@ -178,15 +216,15 @@ spec:
   ingress: {}
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: fluentd
-      ports:
-      - protocol: TCP
-        port: 24224
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: fluentd
+    ports:
+    - protocol: TCP
+      port: 24224
 
 ---
 # Filebeat policy
@@ -205,15 +243,15 @@ spec:
   ingress: {}
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: logstash
-      ports:
-      - protocol: TCP
-        port: 5044
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: logstash
+    ports:
+    - protocol: TCP
+      port: 5044
 
 ---
 # Kibana policy
@@ -231,35 +269,32 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx
-      ports:
-        - port: 5601
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx-owasp
-      ports:
-        - port: 5601
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx-owasp
+    ports:
+      - port: 5601
+        protocol: TCP
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          service: elasticsearch
-      ports:
-      - protocol: TCP
-        port: 9200
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            service: elasticsearch
+    ports:
+    - protocol: TCP
+      port: 9200
 
 ---
 # Evebox policy
@@ -277,35 +312,32 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx
-      ports:
-        - port: 5636
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx-owasp
-      ports:
-        - port: 5636
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx-owasp
+    ports:
+      - port: 5636
+        protocol: TCP
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          service: elasticsearch
-      ports:
-      - protocol: TCP
-        port: 9200
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            service: elasticsearch
+    ports:
+    - protocol: TCP
+      port: 9200
 
 ---
 # Scirius policy
@@ -323,24 +355,37 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx
-      ports:
-        - port: 80
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx-owasp
-      ports:
-        - port: 80
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            service: elasticsearch
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: kibana
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx-owasp
+    ports:
+      - port: 80
+        protocol: TCP
+      - port: 5601
+        protocol: TCP
+      - port: 9200
+        protocol: TCP
   egress: {}
 
 ---
@@ -359,24 +404,21 @@ spec:
   - Egress
   ingress:
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx
-      ports:
-        - port: 80
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: nginx-owasp
-      ports:
-        - port: 80
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: nginx-owasp
+    ports:
+      - port: 80
+        protocol: TCP
   egress: {}
 
 ---
@@ -399,33 +441,31 @@ spec:
       port: 443
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: scirius
-      ports:
-        - port: 80
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: evebox
-      ports:
-        - port: 5636
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: kibana
-      ports:
-        - port: 5601
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: scirius
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: evebox
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: kibana
+    ports:
+      - port: 80
+        protocol: TCP
+      - port: 5601
+        protocol: TCP
+      - port: 5636
+        protocol: TCP
 
 ---
 # NGINX OWASP policy
@@ -447,30 +487,28 @@ spec:
       port: 443
   egress:
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: suricata
-      podSelector:
-        matchLabels:
-          app: scirius
-      ports:
-        - port: 80
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: evebox
-      ports:
-        - port: 5636
-          protocol: TCP
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: logging
-      podSelector:
-        matchLabels:
-          app: kibana
-      ports:
-        - port: 5601
-          protocol: TCP
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: suricata
+        podSelector:
+          matchLabels:
+            app: scirius
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: evebox
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: logging
+        podSelector:
+          matchLabels:
+            app: kibana
+    ports:
+      - port: 80
+        protocol: TCP
+      - port: 5601
+        protocol: TCP
+      - port: 5636
+        protocol: TCP
