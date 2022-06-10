@@ -17,6 +17,8 @@ spec:
       labels:
         app: nginx
     spec:
+      automountServiceAccountToken: false
+
       containers:
         - name: nginx
           command: ["nginx"]
@@ -57,10 +59,12 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
-          #   capabilities:
-          #     drop:
-          #     - ALL
-          #   runAsNonRoot: true
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
 
           volumeMounts:
             - mountPath: /static

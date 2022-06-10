@@ -17,6 +17,8 @@ spec:
       labels:
         app: evebox
     spec:
+      automountServiceAccountToken: false
+
       containers:
         - args:
             - -e
@@ -60,6 +62,7 @@ spec:
               drop:
               - ALL
             allowPrivilegeEscalation: false
-            # runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
 
       restartPolicy: Always

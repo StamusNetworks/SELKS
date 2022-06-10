@@ -22,9 +22,19 @@ spec:
       labels:
         app: logstash
     spec:
+      automountServiceAccountToken: false
+
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
+        allowPrivilegeEscalation: false
+        privileged: false
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
 
       containers:
         - name: logstash

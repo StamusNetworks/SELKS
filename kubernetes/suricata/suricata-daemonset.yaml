@@ -18,6 +18,8 @@ spec:
       labels:
         service: suricata
     spec:
+      automountServiceAccountToken: false
+
       hostNetwork: true
 
       containers:
@@ -73,6 +75,9 @@ spec:
 
       securityContext:
         fsGroup: 995
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
 
       volumes:
         - name: suricata-log

@@ -17,6 +17,8 @@ spec:
       labels:
         app: nginx-owasp
     spec:
+      automountServiceAccountToken: false
+
       containers:
         - name: nginx
           image: owasp/modsecurity-crs:3.3.2-nginx-alpine
@@ -46,10 +48,11 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
-          #   capabilities:
-          #     drop:
-          #     - ALL
-          #   runAsNonRoot: true
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+            seccompProfile:
+              type: RuntimeDefault
 
           volumeMounts:
             - mountPath: /static
