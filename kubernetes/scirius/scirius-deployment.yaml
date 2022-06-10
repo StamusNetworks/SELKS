@@ -19,8 +19,14 @@ spec:
       labels:
         app: scirius
     spec:
+      automountServiceAccountToken: false
+
       securityContext:
         fsGroup: 995
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
+
       containers:
         - name: scirius
           image: ghcr.io/stamusnetworks/scirius:master

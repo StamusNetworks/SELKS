@@ -40,6 +40,7 @@ spec:
         service: elasticsearch
         serviceName: es
     spec:
+      automountServiceAccountToken: false
       terminationGracePeriodSeconds: 120
 
       initContainers:
@@ -207,6 +208,8 @@ spec:
 
       securityContext:
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
 
       nodeSelector:
         kubernetes.io/os: linux

@@ -20,6 +20,8 @@ spec:
       labels:
         app: kibana
     spec:
+      automountServiceAccountToken: false
+
       securityContext:
         fsGroup: 1000
       containers:
@@ -120,9 +122,13 @@ spec:
               memory: 500Mi
 
           securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
             capabilities:
               drop:
-              - ALL
-            runAsNonRoot: true
+                - ALL
             runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault
       restartPolicy: Always
