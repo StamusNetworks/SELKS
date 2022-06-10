@@ -1,0 +1,80 @@
+{
+  "in_iface": "tppdummy0",
+  "timestamp": "2021-10-08T12:40:00.965786+0300",
+  "fileinfo": {
+    "sid": [],
+    "stored": false,
+    "magic": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+    "state": "CLOSED",
+    "size": 186336,
+    "type": "PE32+ executable (DLL) (GUI) x86-64",
+    "filename": "/177v2.dll",
+    "tx_id": 0,
+    "sha1": "173e0de913fa275e3ef31f394b9479a0a1eabaee",
+    "sha256": "2bfe11c06ffe157399432080f6de6190e1062c99b4a55ec31974b5a37ee8dd3c",
+    "md5": "41c9aa93d70b7a5238a262f6e3971415",
+    "gaps": false
+  },
+  "dest_ip": "172.16.1.101",
+  "src_port": 80,
+  "http": {
+    "http_content_type": "application/x-msdos-program",
+    "http_method": "GET",
+    "protocol": "HTTP/1.1",
+    "length": 186336,
+    "hostname": "82.118.21.221",
+    "url": "/177v2.dll",
+    "http_user_agent": "curl/7.74.0",
+    "status": 200,
+    "user_agent": {
+      "device": "Other",
+      "os_name": "Other",
+      "os": "Other",
+      "version": "7.74.0",
+      "minor": "74",
+      "patch": "0",
+      "os_full": "Other",
+      "major": "7",
+      "name": "curl"
+    }
+  },
+  "@timestamp": "2021-10-08T09:40:00.965Z",
+  "flow_id": 1357003807701027,
+  "metadata": {
+    "flowbits": [
+      "http.dottedquadhost.dll",
+      "ET.http.binary"
+    ]
+  },
+  "event_type": "fileinfo",
+  "host": "SELKS",
+  "path": "/var/log/suricata/eve.json",
+  "geoip": {
+    "city_name": "Gdansk",
+    "latitude": 54.3601,
+    "country_name": "Poland",
+    "postal_code": "80-860",
+    "timezone": "Europe/Warsaw",
+    "country_code3": "PL",
+    "ip": "82.118.21.221",
+    "country_code2": "PL",
+    "region_code": "22",
+    "continent_code": "EU",
+    "location": {
+      "lon": 18.664,
+      "lat": 54.3601
+    },
+    "longitude": 18.664,
+    "region_name": "Pomerania"
+  },
+  "app_proto": "http",
+  "tags": [
+    "_geoip_lookup_failure"
+  ],
+  "community_id": "1:oQpfk+DMURhDz3k1FILE0ZFmIvc=",
+  "type": "SELKS",
+  "@version": "1",
+  "proto": "TCP",
+  "src_ip": "82.118.21.221",
+  "dest_port": 49900
+}

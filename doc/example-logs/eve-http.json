@@ -1,0 +1,124 @@
+{
+  "in_iface": "tppdummy0",
+  "timestamp": "2021-10-08T12:40:00.965786+0300",
+  "dest_ip": "82.118.21.221",
+  "src_port": 49900,
+  "http": {
+    "server": "Apache/2.4.25 (Debian)",
+    "connection": "Keep-Alive",
+    "length": 186336,
+    "response_headers": [
+      {
+        "value": "Thu, 15 Jul 2021 17:35:16 GMT",
+        "name": "Date"
+      },
+      {
+        "value": "Apache/2.4.25 (Debian)",
+        "name": "Server"
+      },
+      {
+        "value": "Thu, 15 Jul 2021 17:23:21 GMT",
+        "name": "Last-Modified"
+      },
+      {
+        "value": "\"2d7e0-5c72cba5015f9\"",
+        "name": "ETag"
+      },
+      {
+        "value": "bytes",
+        "name": "Accept-Ranges"
+      },
+      {
+        "value": "186336",
+        "name": "Content-Length"
+      },
+      {
+        "value": "timeout=5, max=100",
+        "name": "Keep-Alive"
+      },
+      {
+        "value": "Keep-Alive",
+        "name": "Connection"
+      },
+      {
+        "value": "application/x-msdos-program",
+        "name": "Content-Type"
+      }
+    ],
+    "status": 200,
+    "http_user_agent": "curl/7.74.0",
+    "user_agent": {
+      "device": "Other",
+      "os_name": "Other",
+      "os": "Other",
+      "version": "7.74.0",
+      "minor": "74",
+      "patch": "0",
+      "os_full": "Other",
+      "major": "7",
+      "name": "curl"
+    },
+    "date": "Thu, 15 Jul 2021 17:35:16 GMT",
+    "last_modified": "Thu, 15 Jul 2021 17:23:21 GMT",
+    "http_content_type": "application/x-msdos-program",
+    "http_method": "GET",
+    "protocol": "HTTP/1.1",
+    "content_type": "application/x-msdos-program",
+    "hostname": "82.118.21.221",
+    "url": "/177v2.dll",
+    "request_headers": [
+      {
+        "value": "Keep-Alive",
+        "name": "Connection"
+      },
+      {
+        "value": "curl/7.74.0",
+        "name": "User-Agent"
+      },
+      {
+        "value": "82.118.21.221",
+        "name": "Host"
+      }
+    ],
+    "content_length": "186336"
+  },
+  "@timestamp": "2021-10-08T09:40:00.965Z",
+  "flow_id": 1357003807701027,
+  "metadata": {
+    "flowbits": [
+      "http.dottedquadhost.dll",
+      "ET.http.binary"
+    ]
+  },
+  "event_type": "http",
+  "host": "SELKS",
+  "path": "/var/log/suricata/eve.json",
+  "geoip": {
+    "city_name": "Gdansk",
+    "latitude": 54.3601,
+    "country_name": "Poland",
+    "postal_code": "80-860",
+    "timezone": "Europe/Warsaw",
+    "country_code3": "PL",
+    "ip": "82.118.21.221",
+    "country_code2": "PL",
+    "region_code": "22",
+    "continent_code": "EU",
+    "location": {
+      "lon": 18.664,
+      "lat": 54.3601
+    },
+    "longitude": 18.664,
+    "region_name": "Pomerania"
+  },
+  "tags": [
+    "_geoip_lookup_failure"
+  ],
+  "community_id": "1:oQpfk+DMURhDz3k1FILE0ZFmIvc=",
+  "type": "SELKS",
+  "tx_id": 0,
+  "proto": "TCP",
+  "src_ip": "172.16.1.101",
+  "dest_port": 80,
+  "@version": "1"
+}

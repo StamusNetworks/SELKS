@@ -1,0 +1,154 @@
+{
+  "_index": "logstash-krb5-2021.10.08",
+  "_type": "_doc",
+  "_id": "DWJBX3wBJJ91CIEeFpGR",
+  "_score": 1,
+  "_source": {
+    "in_iface": "tppdummy0",
+    "timestamp": "2021-10-08T12:34:33.365773+0300",
+    "dest_ip": "172.16.1.6",
+    "src_port": 49712,
+    "@timestamp": "2021-10-08T09:34:33.365Z",
+    "flow_id": 489587896581810,
+    "host": "SELKS",
+    "event_type": "krb5",
+    "path": "/var/log/suricata/eve.json",
+    "geoip": {},
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "community_id": "1:++UEkFDHjpG/jMRZZelNxleEZ7Q=",
+    "type": "SELKS",
+    "krb5": {
+      "cname": "DEKSTOP-D9UMVWL$",
+      "msg_type": "KRB_TGS_REP",
+      "sname": "dekstop-d9umvwl$",
+      "encryption": "aes256-cts-hmac-sha1-96",
+      "realm": "SIMONSAYSGO.NET",
+      "weak_encryption": false
+    },
+    "proto": "TCP",
+    "src_ip": "172.16.1.101",
+    "dest_port": 88,
+    "@version": "1"
+  },
+  "fields": {
+    "krb5.sname.keyword": [
+      "dekstop-d9umvwl$"
+    ],
+    "krb5.msg_type": [
+      "KRB_TGS_REP"
+    ],
+    "tags.keyword": [
+      "_geoip_lookup_failure"
+    ],
+    "krb5.realm.keyword": [
+      "SIMONSAYSGO.NET"
+    ],
+    "event_type.keyword": [
+      "krb5"
+    ],
+    "type": [
+      "SELKS"
+    ],
+    "krb5.encryption.keyword": [
+      "aes256-cts-hmac-sha1-96"
+    ],
+    "in_iface.keyword": [
+      "tppdummy0"
+    ],
+    "src_ip": [
+      "172.16.1.101"
+    ],
+    "path": [
+      "/var/log/suricata/eve.json"
+    ],
+    "community_id": [
+      "1:++UEkFDHjpG/jMRZZelNxleEZ7Q="
+    ],
+    "event_type": [
+      "krb5"
+    ],
+    "krb5.cname": [
+      "DEKSTOP-D9UMVWL$"
+    ],
+    "proto.keyword": [
+      "TCP"
+    ],
+    "flow_id": [
+      489587896581810
+    ],
+    "type.keyword": [
+      "SELKS"
+    ],
+    "host": [
+      "SELKS"
+    ],
+    "@version": [
+      "1"
+    ],
+    "krb5.sname": [
+      "dekstop-d9umvwl$"
+    ],
+    "EveBox": [
+      489587896581810
+    ],
+    "src_ip.keyword": [
+      "172.16.1.101"
+    ],
+    "host.keyword": [
+      "SELKS"
+    ],
+    "dest_port": [
+      88
+    ],
+    "timestamp": [
+      "2021-10-08T09:34:33.365Z"
+    ],
+    "krb5.weak_encryption": [
+      false
+    ],
+    "krb5.cname.keyword": [
+      "DEKSTOP-D9UMVWL$"
+    ],
+    "krb5.realm": [
+      "SIMONSAYSGO.NET"
+    ],
+    "community_id.keyword": [
+      "1:++UEkFDHjpG/jMRZZelNxleEZ7Q="
+    ],
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "krb5.encryption": [
+      "aes256-cts-hmac-sha1-96"
+    ],
+    "in_iface": [
+      "tppdummy0"
+    ],
+    "src_port": [
+      49712
+    ],
+    "@timestamp": [
+      "2021-10-08T09:34:33.365Z"
+    ],
+    "dest_ip.keyword": [
+      "172.16.1.6"
+    ],
+    "dest_ip": [
+      "172.16.1.6"
+    ],
+    "proto": [
+      "TCP"
+    ],
+    "FPC": [
+      "ip == 172.16.1.101 && port == 49712 && ip == 172.16.1.6 && port == 88 && protocols == tcp"
+    ],
+    "krb5.msg_type.keyword": [
+      "KRB_TGS_REP"
+    ],
+    "path.keyword": [
+      "/var/log/suricata/eve.json"
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "_index": "logstash-smb-2021.10.08",
+  "_type": "_doc",
+  "_id": "8mJJX3wBJJ91CIEeAZY1",
+  "_score": 1,
+  "_source": {
+    "in_iface": "tppdummy0",
+    "timestamp": "2021-10-08T12:43:11.765772+0300",
+    "dest_ip": "172.16.1.6",
+    "src_port": 50143,
+    "@timestamp": "2021-10-08T09:43:11.765Z",
+    "flow_id": 2065241780228204,
+    "host": "SELKS",
+    "event_type": "smb",
+    "path": "/var/log/suricata/eve.json",
+    "geoip": {},
+    "smb": {
+      "status_code": "0x0",
+      "dialect": "3.11",
+      "share_type": "FILE",
+      "tree_id": 1,
+      "id": 4,
+      "command": "SMB2_COMMAND_TREE_CONNECT",
+      "status": "STATUS_SUCCESS",
+      "share": "\\\\SimonSaysGo-DC.simonsaysgo.net\\sysvol",
+      "session_id": 255087100297233
+    },
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "community_id": "1:LPRuBxoltIaeqqgwde6ktefkpmU=",
+    "type": "SELKS",
+    "@version": "1",
+    "proto": "TCP",
+    "src_ip": "172.16.1.101",
+    "dest_port": 445
+  },
+  "fields": {
+    "tags.keyword": [
+      "_geoip_lookup_failure"
+    ],
+    "event_type.keyword": [
+      "smb"
+    ],
+    "type": [
+      "SELKS"
+    ],
+    "smb.dialect.keyword": [
+      "3.11"
+    ],
+    "in_iface.keyword": [
+      "tppdummy0"
+    ],
+    "smb.dialect": [
+      "3.11"
+    ],
+    "src_ip": [
+      "172.16.1.101"
+    ],
+    "path": [
+      "/var/log/suricata/eve.json"
+    ],
+    "smb.command.keyword": [
+      "SMB2_COMMAND_TREE_CONNECT"
+    ],
+    "community_id": [
+      "1:LPRuBxoltIaeqqgwde6ktefkpmU="
+    ],
+    "event_type": [
+      "smb"
+    ],
+    "proto.keyword": [
+      "TCP"
+    ],
+    "flow_id": [
+      2065241780228204
+    ],
+    "type.keyword": [
+      "SELKS"
+    ],
+    "smb.status.keyword": [
+      "STATUS_SUCCESS"
+    ],
+    "smb.session_id": [
+      255087100297233
+    ],
+    "host": [
+      "SELKS"
+    ],
+    "smb.status": [
+      "STATUS_SUCCESS"
+    ],
+    "@version": [
+      "1"
+    ],
+    "smb.status_code": [
+      "0x0"
+    ],
+    "smb.status_code.keyword": [
+      "0x0"
+    ],
+    "EveBox": [
+      2065241780228204
+    ],
+    "src_ip.keyword": [
+      "172.16.1.101"
+    ],
+    "host.keyword": [
+      "SELKS"
+    ],
+    "dest_port": [
+      445
+    ],
+    "timestamp": [
+      "2021-10-08T09:43:11.765Z"
+    ],
+    "smb.share.keyword": [
+      "\\\\SimonSaysGo-DC.simonsaysgo.net\\sysvol"
+    ],
+    "community_id.keyword": [
+      "1:LPRuBxoltIaeqqgwde6ktefkpmU="
+    ],
+    "smb.command": [
+      "SMB2_COMMAND_TREE_CONNECT"
+    ],
+    "smb.id": [
+      4
+    ],
+    "tags": [
+      "_geoip_lookup_failure"
+    ],
+    "in_iface": [
+      "tppdummy0"
+    ],
+    "src_port": [
+      50143
+    ],
+    "smb.share_type": [
+      "FILE"
+    ],
+    "@timestamp": [
+      "2021-10-08T09:43:11.765Z"
+    ],
+    "dest_ip.keyword": [
+      "172.16.1.6"
+    ],
+    "smb.tree_id": [
+      1
+    ],
+    "smb.share_type.keyword": [
+      "FILE"
+    ],
+    "dest_ip": [
+      "172.16.1.6"
+    ],
+    "proto": [
+      "TCP"
+    ],
+    "FPC": [
+      "ip == 172.16.1.101 && port == 50143 && ip == 172.16.1.6 && port == 445 && protocols == tcp"
+    ],
+    "smb.share": [
+      "\\\\SimonSaysGo-DC.simonsaysgo.net\\sysvol"
+    ],
+    "path.keyword": [
+      "/var/log/suricata/eve.json"
+    ]
+  }
+}

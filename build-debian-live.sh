@@ -4,7 +4,7 @@
 # All rights reserved
 # Debian Live/Install ISO script - oss@stamus-networks.com
 #
-# Please RUN ON Debian Buster only !!!
+# Please RUN ON Debian Bullseye only !!!
 
 set -e
 
@@ -15,7 +15,7 @@ cat << EOF
 usage: $0 options
 
 ###################################
-#!!! RUN on Debian Buster ONLY !!!#
+#!!! RUN on Debian Bullseye ONLY !!!#
 ###################################
 
 SELKS build your own ISO options
@@ -41,15 +41,15 @@ OPTIONS:
    
    EXAMPLE (customizations): 
    
-   ./build-debian-live.sh -k 4.10 
-   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 4.10
+   ./build-debian-live.sh -k 5.10 
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 5.10
    
-   ./build-debian-live.sh -k 3.18.11 -p one-package
-   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 3.18.11
+   ./build-debian-live.sh -k 4.18.11 -p one-package
+   The example above will build a SELKS Debian Stretch 64 bit distro with kernel ver 4.18.11
    and add the extra package named  "one-package" to the build.
    
-   ./build-debian-live.sh -k 3.18.11 -g no-desktop -p one-package
-   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 3.18.11
+   ./build-debian-live.sh -k 4.18.11 -g no-desktop -p one-package
+   The example above will build a SELKS Debian Stretch 64 bit distro, no desktop with kernel ver 4.18.11
    and add the extra package named  "one-package" to the build.
    
    ./build-debian-live.sh -k 4.16 -g no-desktop -p "package1 package2 package3"
@@ -135,6 +135,9 @@ then
   elif [[ ${KERNEL_VER} == 5* ]];
   then
      wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-${KERNEL_VER}.tar.xz
+  elif [[ ${KERNEL_VER} == 6* ]];
+  then
+     wget https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VER}.tar.xz
   else
     echo "Unsupported kernel version! Only kernel >3.0 are supported"
     exit 1;
@@ -181,7 +184,7 @@ then
   ### END Kernel Version choice ### 
   
   lb config \
-  -a amd64 -d buster  \
+  -a amd64 -d bullseye  \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --bootloader syslinux \
@@ -199,7 +202,7 @@ then
 else
 
   cd Stamus-Live-Build && lb config \
-  -a amd64 -d buster \
+  -a amd64 -d bullseye \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \
@@ -232,13 +235,10 @@ mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/data/moloch/etc/
 mkdir -p config/includes.chroot/etc/init.d/
 mkdir -p config/includes.binary/isolinux/
-mkdir -p config/includes.chroot/var/log/suricata/StatsByDate/
 mkdir -p config/includes.chroot/usr/share/images/desktop-base/
-mkdir -p config/includes.chroot/etc/suricata/rules/
 mkdir -p config/includes.chroot/etc/profile.d/
 mkdir -p config/includes.chroot/root/Desktop/
 mkdir -p config/includes.chroot/etc/iceweasel/profile/
-mkdir -p config/includes.chroot/etc/conky/
 mkdir -p config/includes.chroot/etc/alternatives/
 mkdir -p config/includes.chroot/etc/systemd/system/
 mkdir -p config/includes.chroot/var/backups/
@@ -255,31 +255,11 @@ cp LICENSE Stamus-Live-Build/config/includes.chroot/etc/skel/
 # to point to the latest README version located on SELKS github
 # The same as above but for root
 cp LICENSE Stamus-Live-Build/config/includes.chroot/root/Desktop/
-# some README adjustments - in order to add a http link
-# to point to the latest README version located on SELKS github
-echo -e "\nPlease make sure you have the latest README copy -> https://github.com/StamusNetworks/SELKS/tree/master \n\n" > TMP.rst
-cat README.rst >> TMP.rst
-cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/README.html
-# same as above but for root
-cat TMP.rst | sed -e 's/https:\/\/your.selks.IP.here/http:\/\/selks/' | rst2html > Stamus-Live-Build/config/includes.chroot/root/Desktop/README.html
-rm TMP.rst 
 
 # cp Scirius desktop shortcuts
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
 # Same as above but for root
 cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-
-# Logstash and Elasticsearch 7 template
-cp staging/etc/logstash/conf.d/logstash.conf Stamus-Live-Build/config/includes.chroot/etc/logstash/conf.d/ 
-cp staging/etc/logstash/elasticsearch7-template.json Stamus-Live-Build/config/includes.chroot/etc/logstash/
-
-# Moloch for SELKS set up
-#cp staging/etc/systemd/system/molochpcapread-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/ 
-#cp staging/etc/systemd/system/molochviewer-selks.service Stamus-Live-Build/config/includes.chroot/etc/systemd/system/
-#cp staging/data/moloch/etc/molochpcapread-selks-config.ini Stamus-Live-Build/config/includes.chroot/data/moloch/etc/
-
-# Iceweasel bookmarks
-cp staging/etc/iceweasel/profile/bookmarks.html Stamus-Live-Build/config/includes.chroot/etc/iceweasel/profile/
 
 # Logrotate config for eve.json
 cp staging/etc/logrotate.d/suricata Stamus-Live-Build/config/includes.chroot/etc/logrotate.d/
@@ -304,27 +284,6 @@ cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includ
 # Same as above but for root
 cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
 
-# Copy set up IDS interface desktop shortcut.
-cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/Setup-IDS-Interface.desktop
-
-# Same as above but for root
-#cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-
-# Copy first time set up desktop shortcut.
-cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/FirstTime-Setup.desktop
-
-# Same as above but for root
-#cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-
-# Copy upgrade SELKS desktop shortcut.
-cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/
-chmod +x Stamus-Live-Build/config/includes.chroot/etc/skel/Desktop/Upgrade-SELKS.desktop
-
-# Same as above but for root
-#cp staging/usr/share/applications/Upgrade-SELKS.desktop Stamus-Live-Build/config/includes.chroot/root/Desktop/
-
 # copy polkit policies for selks-user to be able to execute as root 
 # first time setup scripts
 cp staging/usr/share/polkit-1/actions/org.stamusnetworks.firsttimesetup.policy Stamus-Live-Build/config/includes.chroot/usr/share/polkit-1/actions/
@@ -341,43 +300,32 @@ libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libcap-ng-dev libcap-ng0
 make flex bison git git-core libmagic-dev libnuma-dev pkg-config
 libnetfilter-queue-dev libnetfilter-queue1 libnfnetlink-dev libnfnetlink0 
 libjansson-dev libjansson4 libnss3-dev libnspr4-dev libgeoip1 libgeoip-dev 
-rsync mc python-daemon libnss3-tools curl net-tools
-python-crypto libgmp10 libyaml-0-2 python-simplejson python-pygments
-python-yaml ssh sudo tcpdump nginx openssl jq patch  
-python-pip debian-installer-launcher live-build apt-transport-https 
+rsync mc python3-daemon libnss3-tools curl net-tools
+python3-cryptography libgmp10 libyaml-0-2 python3-simplejson python3-pygments
+python3-yaml ssh sudo tcpdump nginx openssl jq patch  
+python3-pip debian-installer-launcher live-build apt-transport-https 
  " \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-CoreSystem.list.chroot
 
 # Add system tools packages to be installed
 echo "
 ethtool bwm-ng iptraf htop rsync tcpreplay sysstat hping3 screen ngrep 
-tcpflow dsniff mc python-daemon wget curl vim bootlogd lsof libpolkit-agent-1-0 libpolkit-backend-1-0 libpolkit-gobject-1-0 policykit-1 policykit-1-gnome" \
+tcpflow dsniff mc python3-daemon wget curl vim bootlogd lsof libpolkit-agent-1-0  libpolkit-gobject-1-0 policykit-1 policykit-1-gnome" \
 >> Stamus-Live-Build/config/package-lists/StamusNetworks-Tools.list.chroot
 
 # Unless otherwise specified the ISO will be with a Desktop Environment
 if [[ -z "$GUI" ]]; then 
-  #echo "lxde fonts-lyx wireshark terminator conky" \
-  #>> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "task-xfce-desktop xfce4-goodies fonts-lyx wireshark terminator" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   echo "wireshark terminator open-vm-tools open-vm-tools-desktop lxpolkit" \
   >> Stamus-Live-Build/config/package-lists/StamusNetworks-Gui.list.chroot
   
-  #echo "task-xfce-desktop" >> Stamus-Live-Build/config/package-lists/desktop.list.chroot
-  # Copy conky conf file
-  cp staging/etc/conky/conky.conf Stamus-Live-Build/config/includes.chroot/etc/conky/
   # Copy the menu shortcuts for Kibana and Scirius
   # this is for the lxde menu widgets - not the desktop shortcuts
   cp staging/usr/share/applications/Scirius.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 
   # For Evebox to.
   cp staging/usr/share/applications/Evebox.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
-  # For setting up Suricata IDS interface.
-  cp staging/usr/share/applications/Setup-IDS-Interface.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
-  
-  # First time setup/init.
-  cp staging/usr/share/applications/FirstTime-Setup.desktop Stamus-Live-Build/config/includes.chroot/usr/share/applications/
 fi
 
 # If -p (add packages) option is used - add those packages to the build
@@ -426,6 +374,4 @@ d-i passwd/root-password-again password StamusNetworks
 
 # Build the ISO
 cd Stamus-Live-Build && ( lb build 2>&1 | tee build.log )
-#cd Stamus-Live-Build && ( lb build &> build.log )
-#mv binary.hybrid.iso SELKS.iso
 mv live-image-amd64.hybrid.iso SELKS.iso
