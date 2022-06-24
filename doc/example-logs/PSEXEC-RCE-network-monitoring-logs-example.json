@@ -1,0 +1,2186 @@
+{
+  "timestamp": "2022-05-04T18:50:28.636938+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 155,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 1,
+    "dialect": "2.??",
+    "command": "SMB1_COMMAND_NEGOTIATE_PROTOCOL",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 0,
+    "tree_id": 0,
+    "client_dialects": [
+      "NT LM 0.12",
+      "SMB 2.002",
+      "SMB 2.???"
+    ],
+    "server_guid": "d6b3e54b-e83b-4f94-9a9b-f330a0d71c72",
+    "max_read_size": 8388608,
+    "max_write_size": 8388608
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.704809+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 157,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 2,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_NEGOTIATE_PROTOCOL",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 0,
+    "tree_id": 0,
+    "client_dialects": [
+      "2.02",
+      "2.10",
+      "3.00",
+      "3.02",
+      "3.11"
+    ],
+    "client_guid": "a553ebd0-cb65-11ec-36ae-94be89d09844",
+    "server_guid": "d6b3e54b-e83b-4f94-9a9b-f330a0d71c72",
+    "max_read_size": 8388608,
+    "max_write_size": 8388608
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.811947+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 160,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 3,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766209,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.832249+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 162,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 4,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "Administrator",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.833673+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 164,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 5,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "FILE"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.842331+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 166,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 6,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_IOCTL",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "function": "FSCTL_QUERY_NETWORK_INTERFACE_INFO"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.844067+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 168,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 7,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CREATE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "<share_root>",
+    "disposition": "FILE_OPEN",
+    "access": "normal",
+    "created": 1620461211,
+    "accessed": 1651014813,
+    "modified": 1651014813,
+    "changed": 1651014813,
+    "size": 16384,
+    "fuid": "00000294-000c-0000-0001-00000000000c"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.845885+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 170,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025701,
+    "rev": 2,
+    "signature": "ET POLICY SMB2 NT Create AndX Request For an Executable File",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Perimeter"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 12,
+    "pkts_toclient": 9,
+    "bytes_toserver": 2614,
+    "bytes_toclient": 2403,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.845885+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 170,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "smb": {
+    "id": 8,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CLOSE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.853472+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 173,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025699,
+    "rev": 2,
+    "signature": "ET POLICY SMB Executable File Transfer",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Internal"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 13,
+    "pkts_toclient": 10,
+    "bytes_toserver": 4128,
+    "bytes_toclient": 2813,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.853472+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 173,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 9,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CREATE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "PSEXESVC.exe",
+    "disposition": "FILE_OVERWRITE_IF",
+    "access": "normal",
+    "created": 1651679428,
+    "accessed": 1651679428,
+    "modified": 1651679428,
+    "changed": 1651679428,
+    "size": 0,
+    "fuid": "00000295-000c-0000-0005-00000000000c"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.853759+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 176,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025699,
+    "rev": 2,
+    "signature": "ET POLICY SMB Executable File Transfer",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Internal"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 15,
+    "pkts_toclient": 11,
+    "bytes_toserver": 7156,
+    "bytes_toclient": 2867,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.853759+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 176,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2010781,
+    "rev": 3,
+    "signature": "ET POLICY PsExec service created",
+    "category": "A suspicious filename was detected",
+    "severity": 2,
+    "metadata": {
+      "created_at": [
+        "2010_07_30"
+      ],
+      "updated_at": [
+        "2010_07_30"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 15,
+    "pkts_toclient": 11,
+    "bytes_toserver": 7156,
+    "bytes_toclient": 2867,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.915799+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 546,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2010781,
+    "rev": 3,
+    "signature": "ET POLICY PsExec service created",
+    "category": "A suspicious filename was detected",
+    "severity": 2,
+    "metadata": {
+      "created_at": [
+        "2010_07_30"
+      ],
+      "updated_at": [
+        "2010_07_30"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 274,
+    "pkts_toclient": 122,
+    "bytes_toserver": 399266,
+    "bytes_toclient": 8945,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:28.939978+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 554,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 10,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_WRITE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "PSEXESVC.exe",
+    "share": "",
+    "fuid": "00000295-000c-0000-0005-00000000000c"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.182948+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 559,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 11,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CLOSE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.182948+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 559,
+  "event_type": "fileinfo",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 10,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_WRITE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "PSEXESVC.exe",
+    "share": "",
+    "fuid": "00000295-000c-0000-0005-00000000000c"
+  },
+  "app_proto": "smb",
+  "fileinfo": {
+    "filename": "PSEXESVC.exe",
+    "sid": [],
+    "gaps": false,
+    "state": "CLOSED",
+    "stored": false,
+    "size": 383872,
+    "tx_id": 9
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.861967+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 568,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 12,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766225,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.866159+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 571,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 13,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766225,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.867675+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 573,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 14,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766225,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.869035+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 575,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025701,
+    "rev": 2,
+    "signature": "ET POLICY SMB2 NT Create AndX Request For an Executable File",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Perimeter"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 284,
+    "pkts_toclient": 131,
+    "bytes_toserver": 402802,
+    "bytes_toclient": 10303,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.869035+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 575,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 15,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766225,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.870918+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 577,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 16,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CREATE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "PSEXESVC.exe",
+    "disposition": "FILE_OPEN",
+    "access": "normal",
+    "created": 1651679428,
+    "accessed": 1651679428,
+    "modified": 1651679428,
+    "changed": 1651679428,
+    "size": 383872,
+    "fuid": "00000296-000c-0000-0009-00000000000c"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.918904+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 581,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 17,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CLOSE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.939034+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 584,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 18,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766229,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.943164+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 586,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 19,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766229,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.944640+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 588,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 20,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766229,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.945868+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 590,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2010781,
+    "rev": 3,
+    "signature": "ET POLICY PsExec service created",
+    "category": "A suspicious filename was detected",
+    "severity": 2,
+    "metadata": {
+      "created_at": [
+        "2010_07_30"
+      ],
+      "updated_at": [
+        "2010_07_30"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 292,
+    "pkts_toclient": 138,
+    "bytes_toserver": 404630,
+    "bytes_toclient": 11765,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.945868+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 590,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025701,
+    "rev": 2,
+    "signature": "ET POLICY SMB2 NT Create AndX Request For an Executable File",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Perimeter"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 292,
+    "pkts_toclient": 138,
+    "bytes_toserver": 404630,
+    "bytes_toclient": 11765,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.945868+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 590,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 21,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766229,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.947542+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 592,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 22,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CREATE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "filename": "PSEXESVC.exe",
+    "disposition": "FILE_OPEN",
+    "access": "normal",
+    "created": 1651679428,
+    "accessed": 1651679428,
+    "modified": 1651679428,
+    "changed": 1651679428,
+    "size": 383872,
+    "fuid": "00000297-000c-0000-000d-00000000000c"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.961568+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 596,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 23,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_CLOSE",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.963520+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 598,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 24,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766233,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.966753+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 600,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 25,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766233,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "ivan.bakalov",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.967994+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 602,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 26,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766233,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.975982+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 604,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 27,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766233,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.979064+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 606,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 28,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766237,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.982059+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 611,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 30,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766241,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.982556+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 612,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 29,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766237,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "ivan.bakalov",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.983748+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 615,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2010781,
+    "rev": 3,
+    "signature": "ET POLICY PsExec service created",
+    "category": "A suspicious filename was detected",
+    "severity": 2,
+    "metadata": {
+      "created_at": [
+        "2010_07_30"
+      ],
+      "updated_at": [
+        "2010_07_30"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 304,
+    "pkts_toclient": 151,
+    "bytes_toserver": 407992,
+    "bytes_toclient": 14311,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.983748+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 615,
+  "event_type": "alert",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2025701,
+    "rev": 2,
+    "signature": "ET POLICY SMB2 NT Create AndX Request For an Executable File",
+    "category": "Potentially Bad Traffic",
+    "severity": 2,
+    "metadata": {
+      "affected_product": [
+        "Windows_XP_Vista_7_8_10_Server_32_64_Bit"
+      ],
+      "attack_target": [
+        "SMB_Client"
+      ],
+      "created_at": [
+        "2018_07_16"
+      ],
+      "deployment": [
+        "Perimeter"
+      ],
+      "former_category": [
+        "POLICY"
+      ],
+      "signature_severity": [
+        "Minor"
+      ],
+      "updated_at": [
+        "2018_07_16"
+      ]
+    }
+  },
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 304,
+    "pkts_toclient": 151,
+    "bytes_toserver": 407992,
+    "bytes_toclient": 14311,
+    "start": "2022-05-04T18:50:28.624127+0300"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.983748+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 615,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 32,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766237,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.985616+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 618,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 31,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766241,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.985616+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 618,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 33,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766237,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.986949+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 621,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 34,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766241,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.990152+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 625,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 35,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766241,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.990152+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 625,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 36,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766245,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.994333+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 628,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 37,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766245,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.995622+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 630,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 38,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766245,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:29.999788+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 632,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 39,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766245,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.001850+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 634,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 40,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766249,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.006200+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 636,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 41,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766249,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.007531+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 638,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 42,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766249,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.010398+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 642,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 43,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766249,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.010398+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 642,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 44,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766253,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.014391+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 645,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 45,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766253,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.015755+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 647,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 46,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766253,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.058103+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 649,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 47,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766253,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.508876+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 653,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 48,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766257,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.512396+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 655,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 49,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766257,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.513704+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 657,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 50,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766257,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.561738+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 659,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 51,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766257,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.661464+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 662,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 52,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_MORE_PROCESSING_REQUIRED",
+    "status_code": "0xc0000016",
+    "session_id": 52777564766261,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.664761+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 664,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 53,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_SETUP",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766261,
+    "tree_id": 0,
+    "ntlmssp": {
+      "domain": "STCONSULT",
+      "user": "PC1$",
+      "host": "PC1"
+    }
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.666031+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 666,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 54,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_CONNECT",
+    "status": "STATUS_ACCESS_DENIED",
+    "status_code": "0xc0000022",
+    "session_id": 52777564766261,
+    "tree_id": 0,
+    "share": "\\\\10.136.0.64\\ADMIN$",
+    "share_type": "UNKNOWN"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:30.725095+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 668,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 55,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766261,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:43.572946+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 674,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 56,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_IOCTL",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1,
+    "function": "FSCTL_QUERY_NETWORK_INTERFACE_INFO"
+  }
+}
+{
+  "timestamp": "2022-05-04T18:50:44.767126+0300",
+  "flow_id": 1251951304279551,
+  "pcap_cnt": 689,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "wire/pcap",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 57,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_TREE_DISCONNECT",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 1
+  }
+}
+{
+  "timestamp": "2022-05-04T18:48:39.281987+0300",
+  "flow_id": 1251951304279551,
+  "event_type": "smb",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "pkt_src": "stream (flow timeout)",
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "smb": {
+    "id": 58,
+    "dialect": "3.11",
+    "command": "SMB2_COMMAND_SESSION_LOGOFF",
+    "status": "STATUS_SUCCESS",
+    "status_code": "0x0",
+    "session_id": 52777564766209,
+    "tree_id": 0
+  }
+}
+{
+  "timestamp": "2022-05-04T18:48:39.281987+0300",
+  "flow_id": 1251951304279551,
+  "event_type": "flow",
+  "src_ip": "10.136.0.69",
+  "src_port": 49619,
+  "dest_ip": "10.136.0.64",
+  "dest_port": 445,
+  "proto": "TCP",
+  "app_proto": "smb",
+  "flow": {
+    "pkts_toserver": 337,
+    "pkts_toclient": 178,
+    "bytes_toserver": 414728,
+    "bytes_toclient": 19269,
+    "start": "2022-05-04T18:50:28.624127+0300",
+    "end": "2022-05-04T18:50:44.768342+0300",
+    "age": 16,
+    "state": "closed",
+    "reason": "shutdown",
+    "alerted": true
+  },
+  "metadata": {
+    "flowbits": [
+      "ET.smb.binary"
+    ]
+  },
+  "tcp": {
+    "tcp_flags": "1e",
+    "tcp_flags_ts": "1e",
+    "tcp_flags_tc": "1a",
+    "syn": true,
+    "rst": true,
+    "psh": true,
+    "ack": true,
+    "state": "closed"
+  }
+}
