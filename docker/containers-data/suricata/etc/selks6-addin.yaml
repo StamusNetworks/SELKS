@@ -514,15 +514,14 @@ outputs:
   #
   - pcap-log:
       enabled: yes
-      filename: log.%n.%t.pcap
-      #filename: log.pcap
+      filename: log-%t-%n.pcap
 
       # File size limit.  Can be specified in kb, mb, gb.  Just a number
       # is parsed as bytes.
-      limit: 10mb
+      limit: 200mb
 
       # If set to a value will enable ring buffer mode. Will keep Maximum of "max-files" of size "limit"
-      max-files: 20
+      max-files: 2000
 
       mode: multi # normal, multi or sguil.
 
@@ -533,6 +532,7 @@ outputs:
       #ts-format: usec # sec or usec second format (default) is filename.sec usec is filename.sec.usec
       use-stream-depth: no #If set to "yes" packets seen after reaching stream inspection depth are ignored. "no" logs all packets
       honor-pass-rules: no # If set to "yes", flows in which a pass rule matched will stopped being logged.
+      conditional: alerts
 
   # a full alerts log containing much information for signature writers
   # or for investigating suspected false positives.
