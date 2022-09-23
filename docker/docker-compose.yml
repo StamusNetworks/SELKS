@@ -124,7 +124,7 @@ services:
     
   scirius:
     container_name: scirius
-    image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-master}
+    image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-selks}
     restart: ${RESTART_MODE:-unless-stopped}
     environment:
       - SECRET_KEY=${SCIRIUS_SECRET_KEY}
