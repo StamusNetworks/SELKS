@@ -743,8 +743,19 @@ echo "COMPOSE_PROJECT_NAME=SELKS" > ${BASEDIR}/.env
 function getInterfaces {
   echo -e " Network interfaces detected:"
   intfnum=0
-  for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
+  isMacOS=false
+  if [[ $OSTYPE == darwin* ]]; then # OSTYPE is a Bash Built-in OS detector. darwin=OSX/macOS
+    isMacOS=true;
+  fi
   
+  if $isMacOS; then
+    ifaceSource=$(networksetup -listallhardwareports | grep Device | awk '{ print $2}')
+  else
+    ifaceSource=$(ls /sys/class/net)
+  fi
+
+  for interface in $ifaceSource; do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
+
   echo -e "Please type in interface or space delimited interfaces below and hit \"Enter\"."
   echo -e "Choose the interface(s) that is (are) one the network(s) you want to monitor"
   echo -e "Example: eth1"
@@ -768,10 +779,15 @@ function getInterfaces {
     INTERFACE_EXISTS="NO"
     exit 1
   fi
-  
   for interface in ${interfaces}
   do
-    if ! cat /sys/class/net/${interface}/operstate > /dev/null 2>&1 ; then
+    interfaceCheck=$(cat /sys/class/net/${interface}/operstate > /dev/null 2>&1)
+
+    if $isMacOS; then
+      interfaceCheck=$(ipconfig getifaddr ${interface} > /dev/null 2>&1)
+    fi
+
+    if ! $interfaceCheck ; then
         echo -e "\nUSAGE: `basename $0` -> the script requires at least 1 argument - a network interface!"
         echo -e "#######################################"
         echo -e "Interface: ${interface} is NOT existing."
@@ -779,7 +795,6 @@ function getInterfaces {
         echo -e "Please supply a correct/existing network interface or check your spelling.\n"
         INTERFACE_EXISTS="NO"
     fi
-    
   done
 }
 
@@ -854,10 +869,15 @@ echo
 ######################
 
 docker_root_dir=$(docker system info |grep "Docker Root Dir")
-docker_root_dir=${docker_root_dir/'Docker Root Dir: '/''}
+docker_root_dir=$(echo $docker_root_dir | awk -F': ' '{print $2}')
+if $isMacOS; then
+  docker_vol_df=$(docker run -it --rm --privileged --pid=host debian nsenter -t 1 -m -u -n -i bash -c "df -h /var/lib/docker/" | sed '1d' | awk '{print $(NF-2)}')
+else
+  docker_vol_df=$(df --output=avail -h ${docker_root_dir} | tail -n 1 )
+fi
 
 echo ""
-echo -e "By default, elasticsearch database is stored in a docker volume in ${docker_root_dir} (free space: $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
+echo -e "By default, elasticsearch database is stored in a docker volume in ${docker_root_dir} (free space: $docker_vol_df"
 echo -e "With SELKS running, database can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Alternatively, You can specify a path where you want the data to be saved, or hit enter for default."
@@ -976,7 +996,11 @@ fi
 ######################
 # Starting           #
 ######################
-echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+if $isMacOS; then
+  echo -e "\n\n${green}To start SELKS, run 'docker-compose up -d'${reset}\n"
+else
+  echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+fi
 
 if [[ "$PORTAINER_INSTALLED" == "true" ]]; then
   echo -e "${red}IMPORTANT:${reset} You chose to install Portainer, visit https://localhost:9443 to set your portainer admin password"
