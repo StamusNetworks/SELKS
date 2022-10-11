@@ -393,7 +393,7 @@ function is_docker_installed(){
 }
 function is_compose_installed(){
   composeV=$(docker-compose --version 2>/dev/null)
-  if [[ $composeV == *"docker-compose version"* ]]; then
+  if [[ $composeV == *"ompose version"* ]]; then
     echo "yes"
   else
     echo "no"
