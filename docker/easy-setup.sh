@@ -410,7 +410,7 @@ function is_docker_availabale_for_user(){
 function test_docker(){
   hello=$(docker run --rm hello-world) || \
   echo "${red}-${reset} Docker test failed"
-  
+
   if [[ $hello == *"Hello from Docker"* ]]; then
     echo -e "${green}+${reset} Docker seems to be installed properly"
   else
@@ -591,10 +591,10 @@ echo -e "\n"
 load_docker_images_from_tar ${BASEDIR}/tar_images
 
 if [[ "${_arg_skip_checks}" == "off" ]] ; then
-  
+
   #############################
   #          DOCKER           #
-  #############################  
+  #############################
 
   if [[ $(is_docker_installed) == "yes" ]]; then
     echo -e "${green}+${reset} Docker installation found: $(docker -v)"
@@ -654,7 +654,7 @@ if [[ "${_arg_skip_checks}" == "off" ]] ; then
   #############################
   #         PORTAINER         #
   #############################
-  
+
   if $(docker ps | grep -q 'portainer'); then
     echo -e "  Found existing portainer installation, skipping...\n"
   else
@@ -679,7 +679,7 @@ if [[ "${_arg_skip_checks}" == "off" ]] ; then
         esac
     done
   fi
-  
+
 fi
 
 #############################
@@ -691,12 +691,12 @@ function check_scirius_key_cert(){
   # usage : check_scirius_key_cert [path_to_files] [filename_without_extension]
   # example : check_scirius_key_cert [path_to_files] [filename_without_extension]
   output=$(docker run --rm -it -v ${1}:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
-  
+
   SAVEIFS=$IFS   # Save current IFS
   IFS=$'\n'      # Change IFS to new line
   output=($output) # split to array $names
   IFS=$SAVEIFS   # Restore IFS
-  
+
   if [[ ${output[0]}==${output[1]} ]]; then
     echo -e "${green}+${reset} Certificate match private key"
     return 0
@@ -747,7 +747,7 @@ function getInterfaces {
   if [[ $OSTYPE == darwin* ]]; then # OSTYPE is a Bash Built-in OS detector. darwin=OSX/macOS
     isMacOS=true;
   fi
-  
+
   if $isMacOS; then
     ifaceSource=$(networksetup -listallhardwareports | grep Device | awk '{ print $2}')
   else
@@ -762,14 +762,14 @@ function getInterfaces {
   echo -e "OR"
   echo -e "Example: eth1 eth2 eth3"
   echo -e "\nConfigure threat detection for INTERFACE(S): "
-  
+
   if [[ "${INTERFACES}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
     read interfaces
   else
     echo "${INTERFACES}"
     interfaces=${INTERFACES}
   fi
-    
+
   echo -e "\nThe supplied network interface(s):  ${interfaces}"
   echo "";
   INTERFACE_EXISTS="YES"
@@ -891,7 +891,7 @@ fi
 
 if ! [ -z "${elastic_data_path}" ]; then
 
-  while ! [ -w "${elastic_data_path}" ]; do 
+  while ! [ -w "${elastic_data_path}" ]; do
     echo -e "\nYou don't seem to own write access to this directory\n"
     echo -e "You can specify a path where you want the data to be saved, or hit ENTER to use a [docker volume]."
     if [[ "${INTERACTIVE}" == "true" ]]; then
