@@ -470,17 +470,17 @@ function check_docker_version(){
   dockerV=$(docker version --format '{{.Server.Version}}')
 
   if Version $dockerV '<' "${MINIMAL_DOCKER_VERSION}"; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_DOCKER_VERSION} minimum"
+    echo -e "${red}-${reset} Docker version ($dockerV) is too old, please upgrade it to ${MINIMAL_DOCKER_VERSION} minimum"
     exit
   fi
 }
 function check_compose_version(){
   composeV=$(docker-compose --version)
   composeV=( $composeV )
-  composeV=$( echo ${composeV[2]} |tr ',' ' ')
+  composeV=$( echo ${composeV[ $((${#composeV[@]} - 1)) ]} |tr ',' ' ' )
 
   if Version $composeV '<' "${MINIMAL_COMPOSE_VERSION}"; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
+    echo -e "${red}-${reset} Docker-compose version ($composeV) is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
     exit
   fi
 }
