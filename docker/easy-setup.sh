@@ -393,7 +393,7 @@ function is_docker_installed(){
 }
 function is_compose_installed(){
   composeV=$(docker-compose --version 2>/dev/null)
-  if [[ $composeV == *"docker-compose version"* ]]; then
+  if [[ $composeV == *"ompose version"* ]]; then
     echo "yes"
   else
     echo "no"
@@ -410,7 +410,7 @@ function is_docker_availabale_for_user(){
 function test_docker(){
   hello=$(docker run --rm hello-world) || \
   echo "${red}-${reset} Docker test failed"
-  
+
   if [[ $hello == *"Hello from Docker"* ]]; then
     echo -e "${green}+${reset} Docker seems to be installed properly"
   else
@@ -470,17 +470,17 @@ function check_docker_version(){
   dockerV=$(docker version --format '{{.Server.Version}}')
 
   if Version $dockerV '<' "${MINIMAL_DOCKER_VERSION}"; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_DOCKER_VERSION} minimum"
+    echo -e "${red}-${reset} Docker version ($dockerV) is too old, please upgrade it to ${MINIMAL_DOCKER_VERSION} minimum"
     exit
   fi
 }
 function check_compose_version(){
   composeV=$(docker-compose --version)
   composeV=( $composeV )
-  composeV=$( echo ${composeV[2]} |tr ',' ' ')
+  composeV=$( echo ${composeV[ $((${#composeV[@]} - 1)) ]} |tr ',' ' ' )
 
   if Version $composeV '<' "${MINIMAL_COMPOSE_VERSION}"; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
+    echo -e "${red}-${reset} Docker-compose version ($composeV) is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
     exit
   fi
 }
@@ -591,10 +591,10 @@ echo -e "\n"
 load_docker_images_from_tar ${BASEDIR}/tar_images
 
 if [[ "${_arg_skip_checks}" == "off" ]] ; then
-  
+
   #############################
   #          DOCKER           #
-  #############################  
+  #############################
 
   if [[ $(is_docker_installed) == "yes" ]]; then
     echo -e "${green}+${reset} Docker installation found: $(docker -v)"
@@ -654,7 +654,7 @@ if [[ "${_arg_skip_checks}" == "off" ]] ; then
   #############################
   #         PORTAINER         #
   #############################
-  
+
   if $(docker ps | grep -q 'portainer'); then
     echo -e "  Found existing portainer installation, skipping...\n"
   else
@@ -679,7 +679,7 @@ if [[ "${_arg_skip_checks}" == "off" ]] ; then
         esac
     done
   fi
-  
+
 fi
 
 #############################
@@ -691,12 +691,12 @@ function check_scirius_key_cert(){
   # usage : check_scirius_key_cert [path_to_files] [filename_without_extension]
   # example : check_scirius_key_cert [path_to_files] [filename_without_extension]
   output=$(docker run --rm -it -v ${1}:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
-  
+
   SAVEIFS=$IFS   # Save current IFS
   IFS=$'\n'      # Change IFS to new line
   output=($output) # split to array $names
   IFS=$SAVEIFS   # Restore IFS
-  
+
   if [[ ${output[0]}==${output[1]} ]]; then
     echo -e "${green}+${reset} Certificate match private key"
     return 0
@@ -743,22 +743,33 @@ echo "COMPOSE_PROJECT_NAME=SELKS" > ${BASEDIR}/.env
 function getInterfaces {
   echo -e " Network interfaces detected:"
   intfnum=0
-  for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
-  
+  isMacOS=false
+  if [[ $OSTYPE == darwin* ]]; then # OSTYPE is a Bash Built-in OS detector. darwin=OSX/macOS
+    isMacOS=true;
+  fi
+
+  if $isMacOS; then
+    ifaceSource=$(networksetup -listallhardwareports | grep Device | awk '{ print $2}')
+  else
+    ifaceSource=$(ls /sys/class/net)
+  fi
+
+  for interface in $ifaceSource; do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
+
   echo -e "Please type in interface or space delimited interfaces below and hit \"Enter\"."
   echo -e "Choose the interface(s) that is (are) one the network(s) you want to monitor"
   echo -e "Example: eth1"
   echo -e "OR"
   echo -e "Example: eth1 eth2 eth3"
   echo -e "\nConfigure threat detection for INTERFACE(S): "
-  
+
   if [[ "${INTERFACES}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
     read interfaces
   else
     echo "${INTERFACES}"
     interfaces=${INTERFACES}
   fi
-    
+
   echo -e "\nThe supplied network interface(s):  ${interfaces}"
   echo "";
   INTERFACE_EXISTS="YES"
@@ -768,10 +779,15 @@ function getInterfaces {
     INTERFACE_EXISTS="NO"
     exit 1
   fi
-  
   for interface in ${interfaces}
   do
-    if ! cat /sys/class/net/${interface}/operstate > /dev/null 2>&1 ; then
+    interfaceCheck=$(cat /sys/class/net/${interface}/operstate > /dev/null 2>&1)
+
+    if $isMacOS; then
+      interfaceCheck=$(ipconfig getifaddr ${interface} > /dev/null 2>&1)
+    fi
+
+    if ! $interfaceCheck ; then
         echo -e "\nUSAGE: `basename $0` -> the script requires at least 1 argument - a network interface!"
         echo -e "#######################################"
         echo -e "Interface: ${interface} is NOT existing."
@@ -779,7 +795,6 @@ function getInterfaces {
         echo -e "Please supply a correct/existing network interface or check your spelling.\n"
         INTERFACE_EXISTS="NO"
     fi
-    
   done
 }
 
@@ -854,10 +869,15 @@ echo
 ######################
 
 docker_root_dir=$(docker system info |grep "Docker Root Dir")
-docker_root_dir=${docker_root_dir/'Docker Root Dir: '/''}
+docker_root_dir=$(echo $docker_root_dir | awk -F': ' '{print $2}')
+if $isMacOS; then
+  docker_vol_df=$(docker run -it --rm --privileged --pid=host debian nsenter -t 1 -m -u -n -i bash -c "df -h /var/lib/docker/" | sed '1d' | awk '{print $(NF-2)}')
+else
+  docker_vol_df=$(df --output=avail -h ${docker_root_dir} | tail -n 1 )
+fi
 
 echo ""
-echo -e "By default, elasticsearch database is stored in a docker volume in ${docker_root_dir} (free space: $(df --output=avail -h ${docker_root_dir} | tail -n 1 )"
+echo -e "By default, elasticsearch database is stored in a docker volume in ${docker_root_dir} (free space: $docker_vol_df"
 echo -e "With SELKS running, database can take up a lot of disk space"
 echo -e "You might want to save them on an other disk/partition"
 echo -e "Alternatively, You can specify a path where you want the data to be saved, or hit enter for default."
@@ -871,7 +891,7 @@ fi
 
 if ! [ -z "${elastic_data_path}" ]; then
 
-  while ! [ -w "${elastic_data_path}" ]; do 
+  while ! [ -w "${elastic_data_path}" ]; do
     echo -e "\nYou don't seem to own write access to this directory\n"
     echo -e "You can specify a path where you want the data to be saved, or hit ENTER to use a [docker volume]."
     if [[ "${INTERACTIVE}" == "true" ]]; then
@@ -976,7 +996,11 @@ fi
 ######################
 # Starting           #
 ######################
-echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+if $isMacOS; then
+  echo -e "\n\n${green}To start SELKS, run 'docker-compose up -d'${reset}\n"
+else
+  echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+fi
 
 if [[ "$PORTAINER_INSTALLED" == "true" ]]; then
   echo -e "${red}IMPORTANT:${reset} You chose to install Portainer, visit https://localhost:9443 to set your portainer admin password"

@@ -24,7 +24,7 @@ RUN apt-get update && \
     mkdir -p /suricata-logs && \
     cd /data && \
     wget -q "https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-"$UBUNTU_VERSION"/"$ARKIME_DEB_PACKAGE && \
-    apt-get install -y ./$ARKIME_DEB_PACKAGE && \
+    apt-get install -y ${PWD}/$ARKIME_DEB_PACKAGE && \
     mv $ARKIMEDIR/etc /data/config && \
     ln -s /data/config $ARKIMEDIR/etc && \
     ln -s /data/logs $ARKIMEDIR/logs && \

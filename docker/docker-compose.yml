@@ -32,7 +32,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./containers-data/suricata/logrotate
+      device: ${PWD}/containers-data/suricata/logrotate
   logstash-sincedb: #where logstash stores it's state so it doesn't re-ingest
   arkime-logs:
   arkime-pcap:
@@ -95,9 +95,9 @@ services:
     mem_limit: ${LOGSTASH_MEMORY:-2G}
     volumes:
       - logstash-sincedb:/since.db
-      - ./containers-data/suricata/logs:/var/log/suricata:ro
-      - ./containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
+      - ${PWD}/containers-data/suricata/logs:/var/log/suricata:ro
+      - ${PWD}/containers-data/logstash/conf.d/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ${PWD}/containers-data/logstash/templates/elasticsearch7-template.json:/usr/share/logstash/config/elasticsearch7-template.json
     networks:
       network:
           
@@ -116,11 +116,11 @@ services:
       - SYS_NICE
     network_mode: host
     volumes:
-       - ./containers-data/suricata/logs:/var/log/suricata
+       - ${PWD}/containers-data/suricata/logs:/var/log/suricata
        - suricata-rules:/etc/suricata/rules
        - suricata-run:/var/run/suricata/
-       - ./containers-data/suricata/etc:/etc/suricata
-       - suricata-logrotate:/etc/logrotate.d/
+       - ${PWD}/containers-data/suricata/etc:/etc/suricata
+       - ${PWD}/containers-data/suricata/logrotate:/etc/logrotate.d/
     
   scirius:
     container_name: scirius
@@ -147,7 +147,7 @@ services:
     volumes:
       - scirius-static:/static/
       - scirius-data:/data/
-      - ./containers-data/scirius/logs/:/logs/
+      - ${PWD}/containers-data/scirius/logs/:/logs/
       - suricata-rules:/rules
       - suricata-run:/var/run/suricata
       
@@ -169,9 +169,9 @@ services:
     restart: ${RESTART_MODE:-unless-stopped}
     volumes:
       - scirius-static:/static/:ro
-      - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
-      - ./containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./containers-data/nginx/ssl:/etc/nginx/ssl:ro
+      - ${PWD}/containers-data/nginx/conf.d/selks6.conf:/etc/nginx/conf.d/selks6.conf:ro
+      - ${PWD}/containers-data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${PWD}/containers-data/nginx/ssl:/etc/nginx/ssl:ro
     ports:
       - 443:443
     networks:
@@ -188,12 +188,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock # This bind-mout allows using the hosts docker deamon instead of created one inside the container
 
       # Those volumes will contain the cron jobs
-      - ./containers-data/cron-jobs/1min:/etc/periodic/1min/:ro
-      - ./containers-data/cron-jobs/15min:/etc/periodic/15min/:ro
-      - ./containers-data/cron-jobs/daily:/etc/periodic/daily/:ro
-      - ./containers-data/cron-jobs/hourly:/etc/periodic/hourly/:ro
-      - ./containers-data/cron-jobs/monthly:/etc/periodic/monthly/:ro
-      - ./containers-data/cron-jobs/weekly:/etc/periodic/weekly/:ro
+      - ${PWD}/containers-data/cron-jobs/1min:/etc/periodic/1min/:ro
+      - ${PWD}/containers-data/cron-jobs/15min:/etc/periodic/15min/:ro
+      - ${PWD}/containers-data/cron-jobs/daily:/etc/periodic/daily/:ro
+      - ${PWD}/containers-data/cron-jobs/hourly:/etc/periodic/hourly/:ro
+      - ${PWD}/containers-data/cron-jobs/monthly:/etc/periodic/monthly/:ro
+      - ${PWD}/containers-data/cron-jobs/weekly:/etc/periodic/weekly/:ro
 
 
   arkime:
@@ -201,7 +201,7 @@ services:
     image: ghcr.io/stamusnetworks/arkimeviewer:${ARKIMEVIEWER_VERSION:-master} ## Repo will need to be changed to stamusnetwork once image built
     restart: ${RESTART_MODE:-no}
     volumes:
-      - ./containers-data/suricata/logs:/suricata-logs:ro
+      - ${PWD}/containers-data/suricata/logs:/suricata-logs:ro
       - arkime-config:/data/config
       - arkime-pcap:/data/pcap
       - arkime-logs:/data/logs
