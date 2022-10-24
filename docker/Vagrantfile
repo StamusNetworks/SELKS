@@ -1,0 +1,34 @@
+$provision = <<-SCRIPT
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get udpate
+  apt-get install -y curl
+
+  ip link add tppdummy0 type dummy && ip link set tppdummy0 up && ip link set dev tppdummy0 mtu 9000
+
+  cd /selks
+  time ./easy-setup.sh  --non-interactive -i tppdummy0 --iA --es-memory 2G --ls-memory 1G
+  time docker-compose up -d
+SCRIPT
+
+NAME = 'selks'.freeze
+CPU = 4
+MEM = 8196
+
+Vagrant.configure(2) do |config|
+  config.vm.define NAME do |box|
+    box.vm.box = 'debian/bullseye64'
+    box.vm.hostname = NAME
+    box.vm.network :private_network, ip: '192.168.56.10'
+    box.vm.synced_folder '.', '/selks', type: 'rsync', rsync__exclude: '.git/'
+    box.vm.provider :virtualbox do |vb|
+      vb.customize ['modifyvm', :id, '--memory', MEM]
+      vb.customize ['modifyvm', :id, '--cpus', CPU]
+    end
+    box.vm.provider 'libvirt' do |v, _|
+      v.cpus = CPU
+      v.memory = MEM
+    end
+    box.vm.provision 'shell', inline: $provision
+  end
+end
