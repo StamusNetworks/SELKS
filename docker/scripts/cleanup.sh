@@ -7,26 +7,8 @@
 #
 # GPLv3 <http://www.gnu.org/licenses/>.
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
-
-function Help(){
-  # Display Help
-  { echo "***  cleanup.sh help  ***"
-    echo
-    echo "Use this script to remove all data from elasticsearch and suricata"
-    echo "Containers must be running for the data to be removed"
-    echo
-    echo -e " Syntax: cleanup.sh"
-    echo
-    echo
-
-  } | fmt
-}
-
-if [ $# -gt 0 ]; then
-    Help
-    exit -1
-fi
+#BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+BASEDIR="/opt/selksd/SELKS/docker/"
 
 
 ## TEMPORARY FIX WHILE PERMISSION ISSUE
