@@ -289,7 +289,7 @@ if [[ "${test}" == *"Error"* ]]; then
   exit 1
 fi
 
-IMAGE="jasonish/suricata:master-amd64"
+IMAGE="jasonish/suricata:master"
 OPTIONSTRING=""
 
 if [[ -n "${_arg_set_rulefile}" ]]; then
@@ -302,7 +302,7 @@ if [[ -n "${_arg_set_rulefile}" ]]; then
   fi
   OPTIONSTRING="${OPTIONSTRING} -s /rules/${RULE_FILENAME}"
   RULE_MOUNT="-v ${RULE_HOST_PATH}:/rules/${RULE_FILENAME}"
-  IMAGE="jasonish/suricata:master-amd64-profiling"
+  IMAGE="jasonish/suricata:master-profiling"
 
 elif [[ -n "${_arg_set_rulefile_exclusive}" ]]; then
   echo ${_arg_set_rulefile_exclusive}
@@ -314,7 +314,7 @@ elif [[ -n "${_arg_set_rulefile_exclusive}" ]]; then
   fi
   OPTIONSTRING="${OPTIONSTRING} -S /rules/${RULE_FILENAME}"
   RULE_MOUNT="-v ${RULE_HOST_PATH}:/rules/${RULE_FILENAME}"
-  IMAGE="jasonish/suricata:master-amd64-profiling"
+  IMAGE="jasonish/suricata:master-profiling"
 fi
 
 if [[ -n "${_arg_set_rulefile}" && -n "${_arg_set_rulefile_exclusive}" ]]; then
@@ -322,7 +322,7 @@ if [[ -n "${_arg_set_rulefile}" && -n "${_arg_set_rulefile_exclusive}" ]]; then
   exit 1
 fi
 
-
+touch ${BASEDIR}/containers-data/suricata/logs/eve.json && chmod 777 ${BASEDIR}/containers-data/suricata/logs/eve.json
 
 docker run --name suricata-replay --rm -it \
 --cap-add=net_admin --cap-add=sys_nice \

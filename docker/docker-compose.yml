@@ -103,7 +103,7 @@ services:
           
   suricata:
     container_name: suricata
-    image: jasonish/suricata:master-amd64
+    image: jasonish/suricata:master
     entrypoint: /etc/suricata/new_entrypoint.sh
     restart: ${RESTART_MODE:-unless-stopped}
     depends_on:
@@ -111,6 +111,7 @@ services:
         condition: service_healthy
     environment:
       - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
+      - CREATE_DUMMY_INTERFACE=${CREATE_DUMMY_INTERFACE:-false}
     cap_add:
       - NET_ADMIN
       - SYS_NICE

@@ -395,6 +395,8 @@ function is_compose_installed(){
   composeV=$(docker-compose --version 2>/dev/null)
   if [[ $composeV == *"docker-compose version"* ]]; then
     echo "yes"
+  elif [[ $composeV == *"Docker Compose version"* ]]; then
+    echo "yes"
   else
     echo "no"
   fi
@@ -477,10 +479,10 @@ function check_docker_version(){
 function check_compose_version(){
   composeV=$(docker-compose --version)
   composeV=( $composeV )
-  composeV=$( echo ${composeV[2]} |tr ',' ' ')
+  composeV=$( echo ${composeV[${#composeV[@]}-1]} |tr ',' ' ')
 
   if Version $composeV '<' "${MINIMAL_COMPOSE_VERSION}"; then
-    echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
+    echo -e "${red}-${reset} Docker-compose version is too old, found ${composeV}, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
     exit
   fi
 }
@@ -741,6 +743,17 @@ echo "COMPOSE_PROJECT_NAME=SELKS" > ${BASEDIR}/.env
 #############
 
 function getInterfaces {
+  if [[ $OSTYPE == 'darwin'* ]]; then
+    echo "You are running macOS, this doesn't support promiscous mode, only dummy-interfaces is available. We will create dummy0 inside docker."
+    if [[ "${INTERACTIVE}" == "true" ]] ; then
+      echo "Press any key to continue or ^c to exit"
+      read
+    fi
+    echo "CREATE_DUMMY_INTERFACE=true" >> ${BASEDIR}/.env
+    interfaces="dummy0"
+    return
+  fi
+
   echo -e " Network interfaces detected:"
   intfnum=0
   for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
