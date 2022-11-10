@@ -28,4 +28,9 @@ done
 mkdir -p /var/log/suricata/fpc/
 cat /etc/suricata/suricata.yaml | grep "include: selks6-addin.yaml" || echo "include: selks6-addin.yaml" >> /etc/suricata/suricata.yaml && echo 'suricata.yaml edited'
 
+if [[ "${CREATE_DUMMY_INTERFACE}" ]]; then
+    echo "Creating dummy interface"
+    ip link add dummy0 type dummy && ip link set dummy0 up
+fi
+
 exec /docker-entrypoint.sh $@

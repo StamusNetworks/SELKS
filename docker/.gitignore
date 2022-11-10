@@ -1,0 +1,10 @@
+# Do not ignore entrypoint
+!containers-data/suricata/etc/new_entrypoint.sh
+# Ignore logs and other dynamic data
+containers-data/suricata/etc/*
+containers-data/suricata/logs/*
+containers-data/scirius/logs/*
+containers-data/nginx/ssl/*
+
+# Ignore the environment secrets
+.env
