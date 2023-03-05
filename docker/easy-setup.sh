@@ -393,9 +393,13 @@ function is_docker_installed(){
 }
 function is_compose_installed(){
   composeV=$(docker-compose --version 2>/dev/null)
+  composeV2=$(docker compose version 2>/dev/null)
   if [[ $composeV == *"docker-compose version"* ]]; then
     echo "yes"
-  else
+  elif [[ $composeV2 == *"Docker Compose version v2."* ]]; then
+    composeV=( $composeV2 )
+    echo "yes"
+  else 
     echo "no"
   fi
 }
@@ -427,7 +431,8 @@ function install_docker(){
   systemctl start docker
 }
 function install_docker_compose(){
-  curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  #curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+  curl -L https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && \
   chmod +x /usr/local/bin/docker-compose && \
   echo "${green}+${reset} docker-compose installation succeeded" || \
   { echo "${red}-${reset} docker-compose installation failed" && exit ; }
@@ -475,9 +480,16 @@ function check_docker_version(){
   fi
 }
 function check_compose_version(){
-  composeV=$(docker-compose --version)
-  composeV=( $composeV )
-  composeV=$( echo ${composeV[2]} |tr ',' ' ')
+  composeV2=$(docker compose version 2>/dev/null)
+  if [[ $composeV2 == *"Docker Compose version v2."* ]]; then
+    composeV=$(docker compose version)
+    composeV=( $composeV )
+    composeV=$( echo ${composeV[3]} |tr 'v' ' ')
+  else
+    composeV=$(docker-compose --version)
+    composeV=( $composeV )
+    composeV=$( echo ${composeV[2]} |tr ',' ' ')
+  fi
 
   if Version $composeV '<' "${MINIMAL_COMPOSE_VERSION}"; then
     echo -e "${red}-${reset} Docker version is too old, please upgrade it to ${MINIMAL_COMPOSE_VERSION} minimum"
@@ -957,6 +969,11 @@ fi
 mkdir -p ${BASEDIR}/containers-data/cron-jobs/{1min,15min,hourly,daily,weekly,monthly}
 mkdir -p ${BASEDIR}/containers-data/suricata/{logs,logrotate}
 
+####################
+# ENABLE FULL PATH #
+####################
+
+echo "PWD=\$\{PWD\}" >> ${BASEDIR}/.env
 
 ######################
 # PULLING           #
@@ -968,7 +985,12 @@ if [[ "${_arg_pull_containers}" == "on" ]]; then
   echo "#######################"
   echo -e "\n"
 
-  docker-compose pull || exit
+  if Version $composeV '<' "2.0.0"; then
+    docker-compose pull || exit
+  else
+    docker compose pull || exit
+  fi
+  
 
 fi
 
@@ -976,7 +998,11 @@ fi
 ######################
 # Starting           #
 ######################
-echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+if Version $composeV '<' "2.0.0"; then
+    echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+  else
+    echo -e "\n\n${green}To start SELKS, run 'sudo docker compose up -d'${reset}\n"
+  fi
 
 if [[ "$PORTAINER_INSTALLED" == "true" ]]; then
   echo -e "${red}IMPORTANT:${reset} You chose to install Portainer, visit https://localhost:9443 to set your portainer admin password"
