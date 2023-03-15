@@ -45,6 +45,7 @@ spec:
             value: "-Xms512m -Xmx512m"
 
           securityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
               - ALL

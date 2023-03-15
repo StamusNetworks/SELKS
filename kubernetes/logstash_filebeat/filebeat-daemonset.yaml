@@ -118,8 +118,13 @@ spec:
             memory: 100Mi
 
         securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+              drop:
+              - ALL
           privileged: false
-          runAsUser: 0
+          runAsUser: 10000
+          runAsGroup: 0
 
         volumeMounts:
         - name: filebeat-config
