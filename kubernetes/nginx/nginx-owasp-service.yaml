@@ -10,10 +10,10 @@ spec:
   ports:
     - name: "https"
       port: 443
-      targetPort: 443
+      targetPort: 8443
     - name: "http"
       port: 80
-      targetPort: 80
+      targetPort: 8080
   selector:
     app: nginx-owasp
   sessionAffinity: None

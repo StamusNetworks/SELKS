@@ -21,17 +21,13 @@ spec:
 
       containers:
         - name: nginx
-          command: ["nginx"]
-          args:
-            - -g
-            - daemon off;
-          image: nginx
+          image: cgr.dev/chainguard/nginx:1.23.3
 
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
             - name: https
-              containerPort: 443
+              containerPort: 8443
 
           resources:
             requests:
@@ -59,10 +55,10 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
+            privileged: false
             capabilities:
-              add:
-                - NET_BIND_SERVICE
-            allowPrivilegeEscalation: false
+              drop:
+                - ALL
             seccompProfile:
               type: RuntimeDefault
 

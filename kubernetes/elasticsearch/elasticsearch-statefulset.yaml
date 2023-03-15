@@ -123,6 +123,7 @@ spec:
           name: transport
 
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL

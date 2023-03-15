@@ -141,8 +141,8 @@ data:
   selks6.conf: |
     server {
 
-      listen 80;
-      listen 443 ssl;
+      listen 8080;
+      listen 8443 ssl;
       ssl_certificate /etc/nginx/ssl/tls.crt;
       ssl_certificate_key /etc/nginx/ssl/tls.key;
 
