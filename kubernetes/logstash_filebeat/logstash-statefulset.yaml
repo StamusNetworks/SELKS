@@ -29,7 +29,7 @@ spec:
 
       containers:
         - name: logstash
-          image: "docker.elastic.co/logstash/logstash:7.16.3"
+          image: "docker.elastic.co/logstash/logstash:7.17.9"
 
           env:
           - name: LS_JAVA_OPTS
