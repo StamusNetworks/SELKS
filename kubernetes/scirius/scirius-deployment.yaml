@@ -23,7 +23,6 @@ spec:
 
       securityContext:
         fsGroup: 995
-        allowPrivilegeEscalation: false
         seccompProfile:
           type: RuntimeDefault
 
@@ -78,6 +77,15 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
+          
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
 
           livenessProbe:
             failureThreshold: 5
