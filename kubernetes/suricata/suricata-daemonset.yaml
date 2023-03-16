@@ -46,13 +46,28 @@ spec:
             limits:
               cpu: 2
               memory: 4Gi
-
+          
           securityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               add:
-                - NET_ADMIN
-                - NET_RAW
-                - SYS_NICE
+              - CHOWN
+              - DAC_OVERRIDE
+              - FSETID
+              - NET_ADMIN
+              - NET_RAW
+              - SETGID
+              - SETPCAP
+              - SETUID
+              - SYS_NICE
+              drop:
+                - ALL
+            privileged: false
+            runAsGroup: 995
+            runAsNonRoot: true
+            runAsUser: 0
+            seccompProfile:
+              type: RuntimeDefault
 
           volumeMounts:
             - mountPath: /var/log/suricata
@@ -75,7 +90,6 @@ spec:
 
       securityContext:
         fsGroup: 995
-        allowPrivilegeEscalation: false
         seccompProfile:
           type: RuntimeDefault
 
