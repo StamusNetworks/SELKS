@@ -120,14 +120,15 @@ spec:
             requests:
               cpu: 100m
               memory: 500Mi
-
+          
           securityContext:
             allowPrivilegeEscalation: false
-            privileged: false
-            runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
+            privileged: false
+            runAsGroup: 1000
+            runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
               type: RuntimeDefault

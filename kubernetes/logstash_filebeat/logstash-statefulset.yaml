@@ -26,15 +26,6 @@ spec:
 
       securityContext:
         fsGroup: 1000
-        runAsUser: 1000
-        allowPrivilegeEscalation: false
-        privileged: false
-        runAsNonRoot: true
-        capabilities:
-          drop:
-            - ALL
-        seccompProfile:
-          type: RuntimeDefault
 
       containers:
         - name: logstash
@@ -48,9 +39,13 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
+            privileged: false
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault
 
           livenessProbe:
             failureThreshold: 3
