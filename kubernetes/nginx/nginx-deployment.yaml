@@ -52,13 +52,14 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 3
-
+          
           securityContext:
             allowPrivilegeEscalation: false
-            privileged: false
             capabilities:
               drop:
                 - ALL
+            privileged: false
+            runAsNonRoot: true
             seccompProfile:
               type: RuntimeDefault
 

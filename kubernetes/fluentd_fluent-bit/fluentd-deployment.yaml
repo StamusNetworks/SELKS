@@ -84,7 +84,7 @@ spec:
           privileged: false
           readOnlyRootFilesystem: false
           seccompProfile:
-              type: RuntimeDefault
+            type: RuntimeDefault
 
         volumeMounts:
         - name: fluentd-config

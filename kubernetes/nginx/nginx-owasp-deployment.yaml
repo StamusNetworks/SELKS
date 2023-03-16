@@ -48,9 +48,10 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
+            privileged: false
             capabilities:
-              add:
-                - NET_BIND_SERVICE
+              drop:
+                - ALL
             seccompProfile:
               type: RuntimeDefault
 

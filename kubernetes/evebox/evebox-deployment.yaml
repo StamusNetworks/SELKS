@@ -58,10 +58,14 @@ spec:
               port: web
 
           securityContext:
+            allowPrivilegeEscalation: false
             capabilities:
               drop:
               - ALL
-            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 10000
+            runAsNonRoot: true
+            runAsUser: 10000
             seccompProfile:
               type: RuntimeDefault
 
