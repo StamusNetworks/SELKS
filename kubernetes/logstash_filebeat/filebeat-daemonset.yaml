@@ -9,41 +9,6 @@ metadata:
     app: filebeat
 
 ---
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: filebeat
-  labels:
-    app: filebeat
-rules:
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-      - pods
-    verbs:
-      - get
-      - list
-      - watch
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: filebeat
-  labels:
-    app: filebeat
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: filebeat
-subjects:
-  - kind: ServiceAccount
-    name: filebeat
-    namespace: suricata
-
----
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -139,27 +104,19 @@ spec:
           name: suricata-log
           readOnly: True
 
-        - name: var-log-containers
-          mountPath: /var/log/containers
-          readOnly: true
-
       nodeSelector:
         kubernetes.io/os: linux
 
       volumes:
       - name: filebeat-config
         configMap:
-          defaultMode: 0600
+          defaultMode: 0644
           name: filebeat-config
 
       - name: suricata-log
         persistentVolumeClaim:
           claimName: suricata-log
           readOnly: true
-
-      - name: var-log-containers
-        hostPath:
-          path: /var/log/containers
 
       - name: data
         hostPath:
