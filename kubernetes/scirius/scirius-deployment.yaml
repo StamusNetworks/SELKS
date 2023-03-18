@@ -84,6 +84,7 @@ spec:
               drop:
                 - ALL
             privileged: false
+            runAsGroup: 995
             seccompProfile:
               type: RuntimeDefault
 
