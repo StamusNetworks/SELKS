@@ -20,7 +20,7 @@ Minimum Requirements
 Install process
 ---------------
 ### Basic installation
-Clone the Git repository from SELKS
+Clone the Git repository from SELKS:
 
 ```bash
 git clone https://github.com/StamusNetworks/SELKS.git
@@ -28,6 +28,13 @@ cd SELKS/kubernetes/
 ```
 
 Update the PV's and storage class according to your own needs. Replace username and password in the secret definitions.
+
+Navigate to `suricata/suricata-daemonset.yaml` and ajust the interface name to your needs:
+```yaml
+- name: SURICATA_OPTIONS
+  value: "-i eth0 -vvv --set sensor-name=suricata [...]
+             ^^^^
+```
 
 Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M), but you need to build your own container image with certain plugins and push to a (Private) Docker Registry in order to use all of the features available by default via Logstash.
 
@@ -50,12 +57,14 @@ chmod +x install.sh
 # To load the Kibana dashboards, once Kibana is up and running
 kubectl create --save-config -f kibana/kibana-dashboards-job.yaml
 ```
+
 Once the services have been applied, you can get the NodePort using the following command:
-```
+```bash
 kubectl get svc -n suricata nginx
 ```
+
 In the example below, 31584 is the NodePort to connect to.
-```
+```bash
 NAME    TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
 nginx   NodePort   10.43.233.61   <none>        443:31584/TCP,80:30831/TCP   27h
 ```
