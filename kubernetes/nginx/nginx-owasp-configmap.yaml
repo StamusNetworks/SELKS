@@ -179,8 +179,8 @@ data:
           proxy_redirect off;
       }
 
-      location /mnt/tank/crypt/k8sset/ {
-          proxy_pass http://kibana.logging:5601/mnt/tank/crypt/k8sset/;
+      location /dataset/ {
+          proxy_pass http://kibana.logging:5601/dataset/;
           proxy_redirect off;
       }
 

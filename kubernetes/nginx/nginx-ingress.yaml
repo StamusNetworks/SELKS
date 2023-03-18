@@ -11,7 +11,7 @@ spec:
   - host: localhost
     http:
       paths:
-      - path:: /
+      - path: /
         pathType: ImplementationSpecific
         backend:
           service:
