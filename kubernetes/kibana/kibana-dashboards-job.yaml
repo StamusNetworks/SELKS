@@ -31,7 +31,6 @@ spec:
               - ALL
           privileged: false
           runAsGroup: 1000
-          runAsNonRoot: true
-          runAsUser: 1000
+          runAsUser: 0
           seccompProfile:
             type: RuntimeDefault
