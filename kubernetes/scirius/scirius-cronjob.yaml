@@ -2,20 +2,20 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   namespace: suricata
   labels:
-    k8s-app: suricata-logrotate
+    k8s-app: scirius-rules-refresh
 
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   namespace: suricata
   labels:
-    k8s-app: suricata-logrotate
+    k8s-app: scirius-rules-refresh
 rules:
 - apiGroups:
   - ""
@@ -30,15 +30,15 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   namespace: suricata
 roleRef:
   kind: Role
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   apiGroup: ""
 subjects:
 - kind: ServiceAccount
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   namespace: suricata
 
 ---
@@ -46,13 +46,13 @@ subjects:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: suricata-logrotate
+  name: scirius-rules-refresh
   namespace: suricata
   labels:
-    k8s-app: suricata-logrotate
+    k8s-app: scirius-rules-refresh
 spec:
-  # Run every day at 13:14
-  schedule: "14 13 * * *"
+  # Run every day at 13:13
+  schedule: "13 13 * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
@@ -60,16 +60,16 @@ spec:
     spec:
       template:
         spec:
-          serviceAccountName: suricata-logrotate
+          serviceAccountName: scirius-rules-refresh
           containers:
-          - name: suricata-logrotate
+          - name: scirius-rules-refresh
             image: "bitnami/kubectl:latest"
             imagePullPolicy: Always
             command: ["bash","-c"]
             args:
             - |
-              echo "Rotating Suricata logs"
-              kubectl exec -n suricata $(kubectl get pod -n suricata -l service=suricata -o custom-columns=Name:.metadata.name --no-headers) -- logrotate -v /etc/logrotate.d/suricata $@ && echo "done." || (echo "ERROR" && exit 1)
+              echo "Updating Suricata rules from Scirius"
+              kubectl exec -n suricata $(kubectl get pod -n suricata -l app=scirius -o custom-columns=Name:.metadata.name --no-headers) -- python /opt/scirius/manage.py updatesuricata && echo "done." || (echo "ERROR" && exit 1)
 
             resources:
               requests:
