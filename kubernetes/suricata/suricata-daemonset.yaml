@@ -22,6 +22,32 @@ spec:
 
       hostNetwork: true
 
+      initContainers:
+        - name: cleanlog
+          image: busybox:1.36.0
+          imagePullPolicy: "IfNotPresent"
+          command: ["sh", "-c"]
+          args:
+            - |
+              > /var/log/suricata/suricata.log
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 995
+            runAsNonRoot: true
+            runAsUser: 998
+            seccompProfile:
+              type: RuntimeDefault
+
+          volumeMounts:
+            - mountPath: /var/log/suricata
+              name: suricata-log
+
       containers:
         - name: suricata
           image: jasonish/suricata:6.0.4-amd64
@@ -39,6 +65,33 @@ spec:
               value: "-i eth0 -vvv --set sensor-name=suricata --set af-packet.1.threads=$(CPU_LIMIT) --set outputs.7.pcap-log.filename=log.$(NODE_NAME).%n.%t.pcap --set outputs.1.eve-log.filename=$(NODE_NAME)-eve.json"
           command: ["/etc/suricata/new_entrypoint.sh"]
 
+          livenessProbe:
+            exec:
+              command:
+              # Check if file has changed in the last 30 seconds.
+              - bash
+              - -c
+              - |
+                set -e
+                find /var/log/suricata/ -mmin 0.5 | grep ${NODE_NAME}-eve.json
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - |
+                set -e
+                grep "All AFP capture threads are running." /var/log/suricata/suricata.log
+          startupProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - |
+                set -e
+                grep "All AFP capture threads are running." /var/log/suricata/suricata.log
+            failureThreshold: 30
+
           resources:
             requests:
               memory: 1Gi
@@ -46,7 +99,7 @@ spec:
             limits:
               cpu: 2
               memory: 4Gi
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
