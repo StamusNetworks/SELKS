@@ -14,8 +14,8 @@ Minimum Requirements
 - 8 GB of free RAM
 - 10 GB of free disk space (actual disk occupation will mainly depend of the number of rules and the amount of traffic on the network). 200GB+ SSD grade is recommended.
 - ``git``, ``curl``
-- ``Kubernetes`` >= 1.21 (tested on k3s 1.22)
-- ``docker or containerd``
+- ``Kubernetes`` >= 1.21 (tested on k3s 1.22 to 1.25)
+- ``containerd`` (Docker not supported from Kubernetes 1.24)
 
 Install process
 ---------------
@@ -29,7 +29,7 @@ cd SELKS/kubernetes/
 
 Update the PV's and storage class according to your own needs. Replace username and password in the secret definitions.
 
-Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M), but you need to build your own container image with certain plugins and push to a (self-hosted) Private Docker Registry in order to use all of the features available by default via Logstash. We've included some basic Kubernetes logging in the Fluentd/Fluent-bit configuration.
+Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M), but you need to build your own container image with certain plugins and push to a (Private) Docker Registry in order to use all of the features available by default via Logstash.
 
 ```bash
 # Setup storage
@@ -40,6 +40,7 @@ chown -R 1000:1000 /data/elasticsearch
 chown -R 1000:1000 /data/arkime
 
 # Create NGINX TLS keys and create secret template
+# You can skip this step when using cert-manager, be sure to set the annotation on the ingress
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout ./tls.key -out tls.crt -extensions v3_ca
 kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run=client -o yaml > nginx/nginx-secret.yaml
 
@@ -47,7 +48,7 @@ chmod +x install.sh
 ./install.sh
 
 # To load the Kibana dashboards, once Kibana is up and running
-kubectl create --save-config -f kibana/alpine.yaml
+kubectl create --save-config -f kibana/kibana-dashboards-job.yaml
 ```
 Once the services have been applied, you can get the NodePort using the following command:
 ```

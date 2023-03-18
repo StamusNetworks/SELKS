@@ -2,8 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
-    app: alpine
-  name: alpine
+    app: kibana-dashboards-job
+  name: kibana-dashboards-job
   namespace: logging
 spec:
   template:
@@ -11,7 +11,7 @@ spec:
       restartPolicy: Never
       containers:
       - image: alpine
-        name: alpine
+        name: kibana-dashboards-job
         command: ["sh","-c"]
         args:
           - |
