@@ -77,9 +77,17 @@ spec:
                 cpu: 5m
 
             securityContext:
-              runAsUser: 1001
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
               runAsGroup: 1001
-
+              runAsNonRoot: true
+              runAsUser: 1001
+              seccompProfile:
+                type: RuntimeDefault
           securityContext:
             fsGroup: 1001
 
