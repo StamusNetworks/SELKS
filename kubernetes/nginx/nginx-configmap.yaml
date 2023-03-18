@@ -7,7 +7,8 @@ data:
   nginx.conf: |
     user nginx;
     worker_processes 1;
-    pid /var/run/nginx.pid;
+    # pid /var/run/nginx.pid;
+    pid /run/nginx/nginx.pid;
     include /etc/nginx/modules-enabled/*.conf;
 
     events {
