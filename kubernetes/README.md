@@ -27,34 +27,51 @@ git clone https://github.com/StamusNetworks/SELKS.git
 cd SELKS/kubernetes/
 ```
 
-Update the PV's and storage class according to your own needs. Replace username and password in the secret definitions.
+The default installation comes with Filebeat and Logstash, however there is the option of switching to Fluent-bit and Fluentd. The biggest advantage is in terms of memory usage, the Fluent stack uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M. Filebeat uses 100M, Fluent-bit uses 10). The disadvantage is that in order to be able to use the full functionality that the default Elastic stack provides you are required to build and use your own container image with certain plugins. An example Docker file is provided for ease of use, however this doesn't include the GeoIP database and plugin. If you want to switch to the Fluent stack, edit the `install.sh` file to your needs. Please note the use of the Fluent stack is not officially supported by us!
 
-Navigate to `suricata/suricata-daemonset.yaml` and ajust the interface name to your needs:
+
+First create the directories to be used by SELKS. You can of course deviate from the provided example of `/data`, but be sure to update the PV's for all components.
+
+```bash
+mkdir -p /data/arkime/{pcap,logs} /data/suricata/{logrotate,rules,run,logs/fpc} /data/scirius/{data,logs,static} /data/elasticsearch
+chown -R 997:995 /data/suricata
+chown -R 1000:995 /data/scirius
+chown -R 1000:1000 /data/elasticsearch
+chown -R 1000:1000 /data/arkime
+```
+
+Next, you have to update the PV's according to your own needs. The default PV's provided in this repository have been tested against k3s, which uses nodeAffinity with hostnames to bind the PV to the host. At minimum, you'll need to update the hostnames. The command below replaces the hostname in all of the PV's, and also the ingress and Arkime ConfigMap.
+```bash
+find . -type f -name "*.yaml" -exec sed -i 's/HOSTNAME/yourHostname/g' '{}' \;
+```
+
+To change the default username and password used by Scirius, navigate to scirius/scirius-secret.yaml and update the values. You can generate new values with the following command:
+```bash
+echo -n "yourBeautifulPassword" | base64
+```
+
+Navigate to `suricata/suricata-daemonset.yaml` and ajust the interface name to your needs. Currently only one interface name is supported, so make sure when using multiple nodes that all interface names are the same.
 ```yaml
 - name: SURICATA_OPTIONS
   value: "-i eth0 -vvv --set sensor-name=suricata [...]
              ^^^^
 ```
 
-Choose between Logstash with Filebeat, or Fluentd with Fluent-bit. Fluentd uses rather significantly less memory (Logstash uses 1G to 1,5G by default, Fluentd uses about 100M), but you need to build your own container image with certain plugins and push to a (Private) Docker Registry in order to use all of the features available by default via Logstash.
-
+When using TLS, you'll need to either generate a certificate for the ingress of use a tool like cert-manager to generate one for you
 ```bash
-# Setup storage
-mkdir -p /data/arkime/{pcap,logs} /data/suricata/{logrotate,rules,run,logs/fpc} /data/scirius/{data,logs,static} /data/elasticsearch
-chown -R 997:995 /data/suricata
-chown -R 1000:995 /data/scirius
-chown -R 1000:1000 /data/elasticsearch
-chown -R 1000:1000 /data/arkime
-
-# Create NGINX TLS keys and create secret template
-# You can skip this step when using cert-manager, be sure to set the annotation on the ingress
 openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout ./tls.key -out tls.crt -extensions v3_ca
 kubectl create secret tls nginx-tls --cert=tls.crt --key=tls.key --dry-run=client -o yaml > nginx/nginx-secret.yaml
+```
 
+Now you're ready for installation; set execute permission on the installation script and run it.
+```bash
 chmod +x install.sh
 ./install.sh
+```
 
-# To load the Kibana dashboards, once Kibana is up and running
+Once Kibana is up and running, you can use the provided Job to load the default SELKS dashboards.
+
+```bash
 kubectl create --save-config -f kibana/kibana-dashboards-job.yaml
 ```
 
@@ -75,7 +92,7 @@ Alternatively, you can alter and apply the nginx-ingress YAML definition and acc
 
 ### Credentials and log in
 
-In order to access scirius, you will need following credentials:
+In order to access scirius, you will need following credentials (unless you changed them):
 
 -   user: `selks-user`
 -   password: `selks-user`

@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: localhost
+  - host: HOSTNAME
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
               number: 80
   # tls:
   # - hosts:
-  #   - localhost
+  #   - HOSTNAME
   #   secretName: nginx-tls-key
