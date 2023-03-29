@@ -999,9 +999,9 @@ fi
 # Starting           #
 ######################
 if Version $composeV '<' "2.0.0"; then
-    echo -e "\n\n${green}To start SELKS, run 'sudo docker-compose up -d'${reset}\n"
+    echo -e "\n\n${green}To start SELKS, run 'sudo -E docker-compose up -d'${reset}\n"
   else
-    echo -e "\n\n${green}To start SELKS, run 'sudo docker compose up -d'${reset}\n"
+    echo -e "\n\n${green}To start SELKS, run 'sudo -E docker compose up -d'${reset}\n"
   fi
 
 if [[ "$PORTAINER_INSTALLED" == "true" ]]; then
