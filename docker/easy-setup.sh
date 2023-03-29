@@ -746,7 +746,7 @@ echo -e "\n"
 ######################
 # Setting Stack name #
 ######################
-echo "COMPOSE_PROJECT_NAME=SELKS" > ${BASEDIR}/.env
+echo "COMPOSE_PROJECT_NAME=selks" > ${BASEDIR}/.env
 
 #############
 # INTERFACE #
