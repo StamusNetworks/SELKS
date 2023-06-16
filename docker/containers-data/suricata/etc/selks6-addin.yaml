@@ -514,7 +514,7 @@ outputs:
   #
   - pcap-log:
       enabled: yes
-      filename: log.%n.%t.pcap
+      filename: log-%t-%n.pcap
       #filename: log.pcap
 
       # File size limit.  Can be specified in kb, mb, gb.  Just a number
