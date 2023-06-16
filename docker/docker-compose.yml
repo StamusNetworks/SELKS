@@ -150,6 +150,7 @@ services:
       - ${PWD}/containers-data/scirius/logs/:/logs/
       - suricata-rules:/rules
       - suricata-run:/var/run/suricata
+      - ${PWD}/containers-data/suricata/logs:/var/log/suricata:ro
       
     networks:
       network:
