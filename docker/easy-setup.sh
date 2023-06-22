@@ -396,7 +396,7 @@ function is_compose_installed(){
   composeV2=$(docker compose version 2>/dev/null)
   if [[ $composeV == *"docker-compose version"* ]]; then
     echo "yes"
-  elif [[ $composeV2 == *"Docker Compose version v2."* ]]; then
+  elif [[ $composeV2 == *"Docker Compose version v2."* || $composeV2 == *"Docker Compose version 2."*  ]]; then
     composeV=( $composeV2 )
     echo "yes"
   else 
@@ -481,7 +481,7 @@ function check_docker_version(){
 }
 function check_compose_version(){
   composeV2=$(docker compose version 2>/dev/null)
-  if [[ $composeV2 == *"Docker Compose version v2."* ]]; then
+  if [[ $composeV2 == *"Docker Compose version v2."* || $composeV2 == *"Docker Compose version 2."*  ]]; then
     composeV=$(docker compose version)
     composeV=( $composeV )
     composeV=$( echo ${composeV[3]} |tr 'v' ' ')
