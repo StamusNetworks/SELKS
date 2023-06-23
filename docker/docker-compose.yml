@@ -159,6 +159,9 @@ services:
     image: jasonish/evebox:master
     command: ["-e", "http://elasticsearch:9200"]
     restart: ${RESTART_MODE:-unless-stopped}
+    environment:
+      - EVEBOX_HTTP_TLS_ENABLED=false
+      - EVEBOX_AUTHENTICATION_REQUIRED=false
     networks:
       network:
         
