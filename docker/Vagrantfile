@@ -14,8 +14,8 @@ $provision = <<-SCRIPT
 SCRIPT
 
 NAME = 'selks'.freeze
-CPU = 4
-MEM = 8196
+CPU = 6
+MEM = 12288
 
 Vagrant.configure(2) do |config|
   config.vm.define NAME do |box|
