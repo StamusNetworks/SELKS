@@ -2,12 +2,14 @@ $provision = <<-SCRIPT
   export DEBIAN_FRONTEND=noninteractive
 
   apt-get udpate
-  apt-get install -y curl
+  apt-get install -y curl python3 python3-pip python3-venv
 
   ip link add tppdummy0 type dummy && ip link set tppdummy0 up && ip link set dev tppdummy0 mtu 9000
 
   cd /selks
-  time ./easy-setup.sh  --non-interactive -i tppdummy0 --iA --es-memory 2G --ls-memory 1G
+  python3 -m venv .venv
+  source .venv/bin/activate && pip install docker-compose
+  time ./easy-setup.sh  --non-interactive -i tppdummy0 --iA --es-memory 4G --ls-memory 2G
   time docker-compose up -d
 SCRIPT
 
