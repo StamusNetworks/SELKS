@@ -29,6 +29,7 @@ RUN apt-get update && \
     ln -s /data/config $ARKIMEDIR/etc && \
     ln -s /data/logs $ARKIMEDIR/logs && \
     ln -s /data/pcap $ARKIMEDIR/raw && \
+    wget -q -O /data/config/oui.txt "https://www.wireshark.org/download/automated/data/manuf"  && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/* && \
     rm /data/$ARKIME_DEB_PACKAGE && \
     $ARKIMEDIR/bin/arkime_update_geo.sh && \
