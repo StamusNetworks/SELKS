@@ -24,7 +24,7 @@ SELKS is comprised of the following major components:
 * E - Elasticsearch - https://www.elastic.co/products/elasticsearch
 * L - Logstash - https://www.elastic.co/products/logstash
 * K - Kibana - https://www.elastic.co/products/kibana
-* S - Scirius - https://github.com/StamusNetworks/scirius
+* S - Stamus Community Edition (formerly Scirius) - https://github.com/StamusNetworks/scirius
 * EveBox - https://evebox.org/
 * Arkime - https://arkime.com/
 * CyberChef - https://github.com/gchq/CyberChef
@@ -52,7 +52,7 @@ SELKS is a showcase of what Suricata IDS/IPS/NSM can do and the network protocol
 Threat Hunting
 --------------
 
-The usage of Suricata data is further enhanced by Stamus' developed Scirius, a threat hunting interface. The interface is specifically designed for Suricata events and combines a drill down approach to pivot for quick exploration of alerts and NSM events. It includes predefined hunting filters and enhanced contextual views:
+The usage of Suricata data is further enhanced by Stamus' developed Stamus Community Edition (Stamus CE), a threat hunting interface. The interface is specifically designed for Suricata events and combines a drill down approach to pivot for quick exploration of alerts and NSM events. It includes predefined hunting filters and enhanced contextual views:
 
 .. image:: doc/images/Hunt-context-1.png
     :alt: Stamus
@@ -104,8 +104,8 @@ For air gapped environement or full OS installation, see `SELKS ISO Setup <https
 Usage and logon credentials
 ===========================
 
-You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user`` (including through the Dashboards or Scirius desktop icons).
-You can change credentials and user settings by using the top left menu in Scirius.  
+You need to authenticate to access to the web interface(see the ``HTTPS access`` section below ). The default user/password is ``selks-user/selks-user`` (including through the Dashboards or Stamus CE desktop icons).
+You can change credentials and user settings by using the top left menu in Stamus CE.  
 
 For the ISO users
 -----------------
@@ -123,12 +123,12 @@ HTTPS access
 If you wish to remotely (from a different PC on your network) access the 
 dashboards you could do that as follows (in your browser):
 
-* https://your.selks.IP.here/ - Scirius ruleset management and a central point for all dashboards and EveBox
+* https://your.selks.IP.here/ - Stamus CE ruleset management and a central point for all dashboards and EveBox
 
 You need to authenticate to access to the web interface. The default user/password is the
 same as for local access: ``selks-user/selks-user``. Don't forget to change credentials at first
 login. You can do that by going to ``Account settings`` in the top left dropdown menu of
-Scirius.
+Stamus CE.
 
 Getting help
 ============
