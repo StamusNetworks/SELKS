@@ -702,7 +702,7 @@ SSLDIR="${BASEDIR}/containers-data/nginx/ssl"
 function check_scirius_key_cert(){
   # usage : check_scirius_key_cert [path_to_files] [filename_without_extension]
   # example : check_scirius_key_cert [path_to_files] [filename_without_extension]
-  output=$(docker run --rm -it -v ${1}:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
+  output=$(docker run --rm -v ${1}:/etc/nginx/ssl nginx /bin/bash -c "openssl x509 -in /etc/nginx/ssl/scirius.crt -pubkey -noout -outform pem | sha256sum; openssl pkey -in /etc/nginx/ssl/scirius.key -pubout -outform pem | sha256sum" || echo -e "${red}-${reset} Error while checking certificate against key")
   
   SAVEIFS=$IFS   # Save current IFS
   IFS=$'\n'      # Change IFS to new line
@@ -721,7 +721,7 @@ function check_scirius_key_cert(){
   fi
 }
 function generate_scirius_certificate(){
-  docker run --rm -it -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
+  docker run --rm -v ${1}:/etc/nginx/ssl nginx openssl req -new -nodes -x509 -subj "/C=FR/ST=IDF/L=Paris/O=Stamus/CN=SELKS" -days 3650 -keyout /etc/nginx/ssl/scirius.key -out /etc/nginx/ssl/scirius.crt -extensions v3_ca && echo -e "${green}+${reset} Certificate generated successfully" || echo -e "${red}-${reset} Error while generating certificate with openssl"
   check_scirius_key_cert ${1}
   return $?
 }
@@ -926,7 +926,7 @@ fi
 # Generate KEY FOR DJANGO #
 ###########################
 
-output=$(docker run --rm -it python:3.9.5-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
+output=$(docker run --rm python:3.9.5-slim-buster /bin/bash -c "python -c \"import secrets; print(secrets.token_urlsafe())\"")
 
 echo "SCIRIUS_SECRET_KEY=${output}" >> ${BASEDIR}/.env
 
