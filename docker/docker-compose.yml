@@ -23,12 +23,12 @@ networks:
 
 volumes:
   elastic-data:  #for ES data persistency
-  suricata-rules: #for suricata rules transfer between scirius and suricata and for persistency
+  #suricata-rules: #for suricata rules transfer between scirius and suricata and for persistency
   scirius-data: #for scirius data persistency
   scirius-static: #statics files to be served by nginx
-  suricata-run: #path where the suricata socket resides
-  suricata-logs:
-  suricata-logrotate:
+  #suricata-run: #path where the suricata socket resides
+  #suricata-logs:
+ # suricata-logrotate:
     driver_opts:
       type: none
       o: bind
@@ -101,27 +101,7 @@ services:
     networks:
       network:
           
-  suricata:
-    container_name: suricata
-    image: jasonish/suricata:master-amd64
-    entrypoint: /etc/suricata/new_entrypoint.sh
-    restart: ${RESTART_MODE:-unless-stopped}
-    depends_on:
-      scirius:
-        condition: service_healthy
-    environment:
-      - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
-    cap_add:
-      - NET_ADMIN
-      - SYS_NICE
-    network_mode: host
-    volumes:
-       - ${PWD}/containers-data/suricata/logs:/var/log/suricata
-       - suricata-rules:/etc/suricata/rules
-       - suricata-run:/var/run/suricata/
-       - ${PWD}/containers-data/suricata/etc:/etc/suricata
-       - suricata-logrotate:/etc/logrotate.d/
-    
+  
   scirius:
     container_name: scirius
     image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-selks}
@@ -137,10 +117,10 @@ services:
       - KIBANA_PROXY=True #Get kibana proxied by Scirius
       - ALLOWED_HOSTS=* #allow connexions from anywhere
       - KIBANA7_DASHBOARDS_PATH=/opt/selks/kibana7-dashboards #where to find kibana dashboards
-      - SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket #socket to control suricata
+      #- SURICATA_UNIX_SOCKET=/var/run/suricata/suricata-command.socket #socket to control suricata
       - USE_EVEBOX=True #gives access to evebox in the top menu
       - EVEBOX_ADDRESS=evebox:5636 #Default
-      - USE_SURICATA_STATS=True #display more informations on the suricata page
+     # - USE_SURICATA_STATS=True #display more informations on the suricata page
       - USE_MOLOCH=True
       - MOLOCH_URL=http://arkime:8005
       
