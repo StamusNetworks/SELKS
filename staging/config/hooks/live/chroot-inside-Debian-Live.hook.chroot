@@ -146,6 +146,40 @@ python3 docker-drag/docker_pull.py ghcr.io/stamusnetworks/arkimeviewer:master
 mv /opt/selksd/pull/*.tar /opt/selksd/SELKS/docker/tar_images
 rm -rf /opt/selksd/pull/ 
 
+
+NGINX_CONFIG="/etc/nginx/sites-available/default"
+
+# Backup the default Nginx config
+sudo cp "$NGINX_CONFIG" "$NGINX_CONFIG.bak"
+
+# Add HTTP to HTTPS redirect
+echo "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+
+    # Redirect to HTTPS
+    return 301 https://\$host\$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    
+    # SSL configurations go here
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    # Additional server block configurations go here
+}" | sudo tee "$NGINX_CONFIG" > /dev/null
+
+
 apt-get autoremove -y
 apt-get clean && \
 cat /dev/null > ~/.bash_history && history -c
