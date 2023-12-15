@@ -762,6 +762,7 @@ function getInterfaces {
   echo -e "Example: eth1"
   echo -e "OR"
   echo -e "Example: eth1 eth2 eth3"
+  echo -e "If desired interface is not there, it can be a docker configuration issue. Please check your \"docker --net=host behavior\""
   echo -e "\nConfigure threat detection for INTERFACE(S): "
 
   if [[ "${INTERFACES}" == "" ]] && [[ "${INTERACTIVE}" == "true" ]]; then
