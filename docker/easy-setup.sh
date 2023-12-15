@@ -755,7 +755,7 @@ echo "COMPOSE_PROJECT_NAME=selks" > ${BASEDIR}/.env
 function getInterfaces {
   echo -e " Network interfaces detected:"
   intfnum=0
-  for interface in $(ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
+  for interface in $(sudo docker run --net=host busybox ls /sys/class/net); do echo "${intfnum}: ${interface}"; ((intfnum++)) ; done
   
   echo -e "Please type in interface or space delimited interfaces below and hit \"Enter\"."
   echo -e "Choose the interface(s) that is (are) one the network(s) you want to monitor"
