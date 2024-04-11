@@ -141,6 +141,12 @@ services:
             - USE_SURICATA_STATS=True #display more informations on the suricata page
             - USE_MOLOCH=True
             - MOLOCH_URL=http://arkime:8005
+            - DATABASE_TYPE=pg
+            - DATABASE_NAME=selks
+            - DATABASE_USERNAME=selks
+            - DATABASE_PASSWORD=selks
+            - DATABASE_HOST=db
+            - DATABASE_PORT=5432
         volumes:
             - scirius-static:/static/
             - scirius-data:/data/
@@ -150,6 +156,9 @@ services:
             - ${PWD}/containers-data/suricata/logs:/var/log/suricata:ro
         networks:
             network:
+        depends_on:
+            db:
+                condition: service_healthy
 
     evebox:
         container_name: evebox
