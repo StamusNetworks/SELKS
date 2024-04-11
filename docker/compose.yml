@@ -36,6 +36,7 @@ volumes:
     arkime-logs:
     arkime-pcap:
     arkime-config:
+    db-data:
 
 services:
     elasticsearch:
@@ -211,3 +212,19 @@ services:
         networks:
             network:
 
+    db:
+        image: postgres
+        restart: always
+        shm_size: 128mb
+        environment:
+            POSTGRES_USER: selks
+            POSTGRES_PASSWORD: selks
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U selks']
+            interval: 5s
+            timeout: 1s
+            retries: 5
+        networks:
+            network:
