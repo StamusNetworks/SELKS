@@ -74,6 +74,9 @@ services:
             timeout: 5s
             retries: 3
             start_period: 30s
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
         networks:
             network:
 
@@ -104,9 +107,6 @@ services:
         image: jasonish/suricata:master-amd64
         entrypoint: /etc/suricata/new_entrypoint.sh
         restart: ${RESTART_MODE:-unless-stopped}
-        depends_on:
-            scirius:
-                condition: service_healthy
         environment:
             - SURICATA_OPTIONS=${INTERFACES} -vvv --set sensor-name=suricata
         cap_add:
@@ -164,7 +164,10 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-
+            elasticsearch:
+                condition: service_healthy
+            kibana:
+                condition: service_healthy
     evebox:
         container_name: evebox
         image: jasonish/evebox:master
@@ -186,6 +189,9 @@ services:
             interval: 10s
             timeout: 2s
             retries: 5
+        depends_on:
+            scirius: #we need to wait for scirius to populate the static files
+                condition: service_healthy
         volumes:
             - scirius-static:/static/:ro
             - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
