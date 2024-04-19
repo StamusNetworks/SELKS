@@ -124,6 +124,11 @@ services:
         container_name: scirius
         image: ghcr.io/stamusnetworks/scirius:${SCIRIUS_VERSION:-selks}
         restart: ${RESTART_MODE:-unless-stopped}
+        healthcheck:
+            interval: 10s
+            timeout: 1s
+            retries: 5
+            start_period: 5m
         environment:
             - SECRET_KEY=${SCIRIUS_SECRET_KEY}
             - DEBUG=${SCIRIUS_DEBUG:-False}
@@ -176,6 +181,11 @@ services:
         image: nginx
         command: ['${NGINX_EXEC:-nginx}', '-g', 'daemon off;']
         restart: ${RESTART_MODE:-unless-stopped}
+        healthcheck:
+            test: ['CMD', 'service', 'nginx', 'status']
+            interval: 10s
+            timeout: 2s
+            retries: 5
         volumes:
             - scirius-static:/static/:ro
             - ./containers-data/nginx/conf.d/:/etc/nginx/conf.d/:ro
@@ -191,6 +201,11 @@ services:
         # It is based on  `docker:latest` image, wich is an alpine image with docker binary
         container_name: cron
         image: docker:latest
+        healthcheck:
+            test: ['CMD', 'ps', '|', 'grep', 'crond']
+            interval: 1m
+            timeout: 1m
+            retries: 3
         command:
             [
                 sh,
@@ -213,6 +228,11 @@ services:
         container_name: arkime
         image: ghcr.io/stamusnetworks/arkimeviewer:${ARKIMEVIEWER_VERSION:-master} ## Repo will need to be changed to stamusnetwork once image built
         restart: ${RESTART_MODE:-no}
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://scirius:8000/moloch']
+            interval: 15s
+            timeout: 5s
+            retries: 3
         volumes:
             - ./containers-data/suricata/logs:/suricata-logs:ro
             - arkime-config:/data/config
