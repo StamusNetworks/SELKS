@@ -244,9 +244,8 @@ services:
             retries: 3
         volumes:
             - ./containers-data/suricata/logs:/suricata-logs:ro
-            - arkime-config:/data/config
-            - arkime-pcap:/data/pcap
-            - arkime-logs:/data/logs
+        ports:
+            - 8005:8005
         networks:
             network:
 
