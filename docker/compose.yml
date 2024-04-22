@@ -41,7 +41,7 @@ volumes:
 services:
     elasticsearch:
         container_name: elasticsearch
-        image: elastic/elasticsearch:${ELK_VERSION:-7.16.1}
+        image: elastic/elasticsearch:${ELK_VERSION:-7.17.20}
         restart: ${RESTART_MODE:-unless-stopped}
         healthcheck:
             test: ['CMD-SHELL', 'curl --silent --fail localhost:9200/_cluster/health || exit 1']
