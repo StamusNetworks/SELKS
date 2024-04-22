@@ -49,4 +49,5 @@ RUN chmod 755 /start-arkimeviewer.sh && \
 EXPOSE 8005
 WORKDIR $ARKIMEDIR
 
-ENTRYPOINT ["/start-arkimeviewer.sh"]
+ENTRYPOINT [ "bash", "-c" ]
+CMD ["/start-arkimeviewer.sh"]
