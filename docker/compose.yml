@@ -234,6 +234,9 @@ services:
         container_name: arkime
         image: ghcr.io/stamusnetworks/arkimeviewer:${ARKIMEVIEWER_VERSION:-master} ## Repo will need to be changed to stamusnetwork once image built
         restart: ${RESTART_MODE:-no}
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
         healthcheck:
             test: ['CMD', 'curl', '-f', 'http://scirius:8000/moloch']
             interval: 15s
