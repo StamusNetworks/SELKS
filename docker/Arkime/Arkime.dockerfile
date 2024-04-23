@@ -15,17 +15,20 @@ ENV ARKIMEDIR "/opt/arkime"
 
 
 # Install Arkime
-RUN apt-get update && apt-get install -y curl libmagic-dev wget logrotate
-RUN mkdir -p /data /suricata-logs
+RUN apt-get update && apt-get install -y curl wget logrotate
+RUN mkdir -p /tmp  /suricata-logs
 
-WORKDIR /data
+WORKDIR /tmp
 RUN wget -q "https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-"$UBUNTU_VERSION"/"$ARKIME_DEB_PACKAGE
 RUN apt-get install -y ./$ARKIME_DEB_PACKAGE
+
+RUN wget -q -O /opt/arkime/etc/oui.txt "https://www.wireshark.org/download/automated/data/manuf"
+RUN $ARKIMEDIR/bin/arkime_update_geo.sh
 
 
 # add config
 
-FROM debian:bookworm-slim as runner
+FROM debian:bullseye as runner
 
 # Declare args
 
@@ -36,9 +39,9 @@ ENV ARKIME_ADMIN_PASSWORD "selks-user"
 ENV ARKIME_HOSTNAME "arkime"
 ENV ARKIMEDIR "/opt/arkime"
 
-COPY --from=installer $ARKIMEDIR $ARKIMEDIR
+RUN apt-get update && apt-get install -y libpcre3 libyaml-0-2 libssl1.1 libmagic1
 
-RUN $ARKIMEDIR/bin/arkime_update_geo.sh
+COPY --from=installer $ARKIMEDIR $ARKIMEDIR
 
 COPY start-arkimeviewer.sh /start-arkimeviewer.sh
 COPY arkimepcapread-selks-config.ini /opt/arkime/etc/config.ini
