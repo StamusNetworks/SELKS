@@ -39,7 +39,7 @@ ENV ARKIME_ADMIN_PASSWORD "selks-user"
 ENV ARKIME_HOSTNAME "arkime"
 ENV ARKIMEDIR "/opt/arkime"
 
-RUN apt-get update && apt-get install -y libpcre3 libyaml-0-2 libssl1.1 libmagic1
+RUN apt-get update && apt-get install -y libpcre3 libyaml-0-2 libssl1.1 libmagic1 curl libwww-perl libjson-perl
 
 COPY --from=installer $ARKIMEDIR $ARKIMEDIR
 

@@ -1,4 +1,14 @@
 #!/bin/bash
+echo "Using ES_HOST: $ES_HOST and ES_PORT: $ES_PORT"
+echo "Giving ES time to start..."
+until curl -sS "http://$ES_HOST:$ES_PORT/_cluster/health"
+do
+    echo "Waiting for ES to start"
+    sleep 3
+done
+
+echo
+echo "ES started..."
 
 until [[ -d "/suricata-logs/fpc" ]] && [[ -f "/suricata-logs/eve.json" ]]
 do
@@ -9,16 +19,27 @@ done
 # set runtime environment variables
 export ARKIME_ELASTICSEARCH="http://"$ES_HOST":"$ES_PORT
 
-echo "Init ES database..."
-echo INIT | $ARKIMEDIR/db/db.pl $ARKIME_ELASTICSEARCH init
-echo "Upgrading ES database..."
-echo UPGRADE | $ARKIMEDIR/db/db.pl $ARKIME_ELASTICSEARCH upgrade
-echo "Creating user..."
-$ARKIMEDIR/bin/arkime_add_user.sh $ARKIME_ADMIN_USERNAME "SELKS Admin User" $ARKIME_ADMIN_PASSWORD --admin
-echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
-$ARKIMEDIR/bin/arkime_add_user.sh moloch moloch moloch --admin --webauth
-echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
-
+if [ ! -f $ARKIMEDIR/etc/.initialized ]; then
+    echo "Initializing ES database..."
+    echo INIT | $ARKIMEDIR/db/db.pl $ARKIME_ELASTICSEARCH init
+    $ARKIMEDIR/bin/arkime_add_user.sh $ARKIME_ADMIN_USERNAME "SELKS Admin User" $ARKIME_ADMIN_PASSWORD --admin
+    $ARKIMEDIR/bin/arkime_add_user.sh moloch moloch moloch --admin --webauth
+    echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
+    echo UPGRADE | $ARKIMEDIR/db/db.pl http://$ES_HOST:$ES_PORT upgrade
+else
+    echo "ES database already initialized..."
+    # possible update
+    read old_ver < $ARKIMEDIR/etc/.initialized
+    # detect the newer version
+    newer_ver=`echo -e "$old_ver\n$ARKIME_VERSION" | sort -rV | head -n 1`
+    # the old version should not be the same as the newer version
+    # otherwise -> upgrade
+    if [ "$old_ver" != "$newer_ver" ]; then
+        echo "Upgrading ES database..."
+        echo UPGRADE | $ARKIMEDIR/db/db.pl http://$ES_HOST:$ES_PORT upgrade
+        echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
+    fi
+fi
 
 echo "Starting Arkime capture in the background..."
 exec $ARKIMEDIR/bin/capture -m -s -R /suricata-logs/fpc/ >> $ARKIMEDIR/logs/capture.log 2>&1 &
@@ -32,4 +53,4 @@ echo "  password: $ARKIME_ADMIN_PASSWORD"
 
 echo "Launch viewer..."
 cd $ARKIMEDIR/viewer
-$ARKIMEDIR/bin/node $ARKIMEDIR/viewer/viewer.js
+$ARKIMEDIR/bin/node $ARKIMEDIR/viewer/viewer.js >> $ARKIMEDIR/logs/viewer.log 2>&1
