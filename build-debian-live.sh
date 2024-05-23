@@ -184,7 +184,7 @@ then
   ### END Kernel Version choice ### 
   
   lb config \
-  -a amd64 -d bullseye  \
+  -a amd64 -d bookworm  \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --bootloader syslinux \
@@ -202,7 +202,7 @@ then
 else
 
   cd Stamus-Live-Build && lb config \
-  -a amd64 -d bullseye \
+  -a amd64 -d bookworm \
   --archive-areas "main contrib" \
   --swap-file-size 2048 \
   --debian-installer live \

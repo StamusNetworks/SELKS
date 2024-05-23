@@ -92,7 +92,7 @@ cp /etc/skel/Desktop/FirstTimeSetup.txt /root/Desktop/
 apt-get -y remove bison  autoconf automake libc6-dev autotools-dev libpcap-dev libnet1-dev libcap-ng-dev \
 	libnetfilter-queue-dev  libnss3-dev libnspr4-dev \
 	xscreensaver xscreensaver-data manpages-dev libjansson-dev \
-	ghostscript xmms2-core x11proto-core-dev linux-libc-dev \
+	ghostscript x11proto-core-dev linux-libc-dev \
 	rpm alien sane-utils libsane rpm2cpio \
 	libx11-dev libx11-doc m4
 
