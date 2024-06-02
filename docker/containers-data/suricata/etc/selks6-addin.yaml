@@ -196,6 +196,7 @@ outputs:
       #facility: local5
       #level: Info ## possible levels: Emergency, Alert, Critical,
                    ## Error, Warning, Notice, Info, Debug
+      ethernet: yes  # log ethernet header in events when available
       #redis:
       #  server: 127.0.0.1
       #  port: 6379
@@ -387,15 +388,21 @@ outputs:
         - snmp
         - rfb
         - sip
-        - ssh
+        - quic
         - dhcp:
-            # DHCP logging requires Rust.
             enabled: yes
             # When extended mode is on, all DHCP messages are logged
             # with full detail. When extended mode is off (the
             # default), just enough information to map a MAC address
             # to an IP address is logged.
             extended: yes
+        - ssh
+        - mqtt:
+            # passwords: yes           # enable output of passwords
+        - http2
+        - pgsql:
+            enabled: no
+            # passwords: yes           # enable output of passwords. Disabled by default
         - stats:
             totals: yes       # stats for all threads merged together
             threads: no       # per thread stats
