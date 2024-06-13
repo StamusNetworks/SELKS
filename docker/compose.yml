@@ -66,7 +66,7 @@ services:
 
     kibana:
         container_name: kibana
-        image: elastic/kibana:${ELK_VERSION:-7.16.1}
+        image: elastic/kibana:${ELK_VERSION:-7.17.20}
         restart: ${RESTART_MODE:-unless-stopped}
         healthcheck:
             test: ['CMD-SHELL', 'curl --silent --fail localhost:5601 || exit 1']
@@ -82,7 +82,7 @@ services:
 
     logstash:
         container_name: logstash
-        image: elastic/logstash:${ELK_VERSION:-7.16.1}
+        image: elastic/logstash:${ELK_VERSION:-7.17.20}
         depends_on:
             scirius:
                 condition: service_healthy #because we need to wait for scirius to populate ILM policy
