@@ -176,6 +176,8 @@ services:
         environment:
             - EVEBOX_HTTP_TLS_ENABLED=false
             - EVEBOX_AUTHENTICATION_REQUIRED=false
+        ports:
+            - 5636:5636
         networks:
             network:
 
