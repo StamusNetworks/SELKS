@@ -81,7 +81,7 @@ function reindex()
 
     if [ "$failures" != "" ]
     then
-        echo "Failures occured while reindexing $index:" >> $ERRFILE
+        echo "Failures occurred while reindexing $index:" >> $ERRFILE
         echo "$failures" >> $ERRFILE
         status=1
     fi
