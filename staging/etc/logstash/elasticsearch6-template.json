@@ -39,6 +39,15 @@
             "latitude" : { "type" : "half_float" },
             "longitude" : { "type" : "half_float" }
           }
+        },
+        "geoip_dest"  : {
+          "dynamic": true,
+          "properties" : {
+            "ip": { "type": "ip" },
+            "location" : { "type" : "geo_point" },
+            "latitude" : { "type" : "half_float" },
+            "longitude" : { "type" : "half_float" }
+          }
         }
       }
     }
