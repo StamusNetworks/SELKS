@@ -36,7 +36,7 @@ If the setup script fails and you think it's a bug,  please [Report an issue](#r
 
 ### Credentials and log in
 
-In order to access scirius, you will need following credentials:
+In order to access Stamus CE, you will need following credentials:
 
 -   user: `selks-user`
 -   password: `selks-user`
